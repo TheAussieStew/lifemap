@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { ForceGraph2D } from "react-force-graph";
-import data from "./miserables.json";
+import data from "./kongweilifemap.json";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       nodeLabel="id"
       nodeAutoColorBy="group"
       linkDirectionalParticles="value"
-      linkDirectionalParticleSpeed={0.001}
+      linkDirectionalParticleSpeed={0.01}
     />
   );
 }
