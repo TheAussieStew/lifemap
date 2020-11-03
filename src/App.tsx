@@ -3,7 +3,7 @@ import "./App.css";
 import { ForceGraph2D } from "react-force-graph";
 import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
-import Typography from "@material-ui/core/Typography";
+import TextField from '@material-ui/core/TextField';
 import { makeStyles } from "@material-ui/core/styles";
 
 
@@ -43,17 +43,23 @@ const App = () => {
         anchorReference="anchorPosition"
         anchorPosition={{ top: anchorY, left: anchorX }}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left",
         }}
       >
-        <Typography className={classes.typography}>
-          The content of the Popover.
-        </Typography>
+        <TextField
+          id="outlined-multiline-static"
+          label="Details"
+          multiline
+          rows={6}
+          defaultValue="Default Value"
+          variant="outlined"
+          style={{ margin: 24 }}
+        />
       </Popover>
       <ForceGraph2D
         graphData={data}
