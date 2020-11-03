@@ -4,7 +4,7 @@ import { ForceGraph2D } from "react-force-graph";
 import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
+import Button from '@material-ui/core/Button';
 
 type NodeObject$3 = object & {
   id?: string | number;
@@ -27,23 +27,35 @@ const App = () => {
     fx: 0,
     fy: 0
   };
+
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
   const [selectedNode, setSelectedNode] = React.useState(initialNode);
   const [textValue, setTextValue] = React.useState("");
+  const [graphData, setGraphData] = React.useState(data);
 
-  const updatedData = data;
-
-  const updateId = (oldId: string, newId: string) => {
-    for (var i = 0; i < updatedData.nodes.length; i++) {
-      if (updatedData.nodes[i].id === oldId) {
-        updatedData.nodes[i].id = newId;
+  const updateNodeId = (oldId: string, newId: string) => {
+    for (var i = 0; i < graphData.nodes.length; i++) {
+      if (graphData.nodes[i].id === oldId) {
+        graphData.nodes[i].id = newId;
         return;
       }
     }
   };
 
-  const handleClick = (node: NodeObject$3, event: MouseEvent) => {
+  const addNode = (id: string) => {
+    graphData.nodes.push({id: id, group: 1});
+    setGraphData(graphData);
+  };
+
+  const handleBackgroundClick = (event: MouseEvent) => {  
+    console.log("background");
+    addNode("default");
+    console.log(graphData);
+  };
+
+
+  const handleNodeClick = (node: NodeObject$3, event: MouseEvent) => {
     setAnchorX(event.x);
     setAnchorY(event.y);
     setTextValue(node.id ? node.id.toString() : "");
@@ -53,11 +65,12 @@ const App = () => {
   const handleClose = () => {
     setAnchorX(0);
     setAnchorY(0);
+    // Would save updatedjson here
   };
 
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTextValue(event.target.value);
-    updateId(
+    updateNodeId(
       selectedNode.id ? selectedNode.id.toString() : "",
       event.target.value
     );
@@ -83,25 +96,31 @@ const App = () => {
           horizontal: "left",
         }}
       >
-        <TextField
-          id="outlined-multiline-static"
-          label="Details"
-          multiline
-          rows={6}
-          variant="outlined"
-          onChange={handleTextChange}
-          style={{ margin: 24 }}
-          value={textValue}
-        />
+        <div style={{ flexDirection: "column", display: "flex" }}>
+          <TextField
+            id="outlined-multiline-static"
+            label="Details"
+            multiline
+            rows={6}
+            variant="outlined"
+            onChange={handleTextChange}
+            style={{ margin: 24 }}
+            value={textValue}
+          />
+          <Button variant="contained" color="primary" onClick={() => {}}>
+            Click me
+          </Button>
+        </div>
       </Popover>
       <ForceGraph2D
-        graphData={updatedData}
+        graphData={graphData}
         nodeLabel="id"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
         linkDirectionalParticleSpeed={0.01}
         linkDirectionalParticleWidth={5}
-        onNodeClick={handleClick}
+        onNodeClick={handleNodeClick}
+        onBackgroundClick={handleBackgroundClick}
       />
     </div>
   );
