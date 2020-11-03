@@ -1,43 +1,60 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./App.css";
 import { ForceGraph2D } from "react-force-graph";
-import { makeStyles } from "@material-ui/core/styles";
+import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import data from "./kongweilifemap.json";
+import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-  typography: {
-    padding: theme.spacing(2),
-  },
-}));
 
-const classes = useStyles();
-const [anchorEl, setAnchorEl] = React.useState(null);
+const App = () => {
 
-const handleClick = (event: any) => {
-  setAnchorEl(event.currentTarget);
-};
+  const useStyles = makeStyles((theme) => ({
+    typography: {
+      padding: theme.spacing(2),
+    },
+  }));
 
-const handleClose = () => {
-  setAnchorEl(null);
-};
+  const classes = useStyles();
+  let initialAnchor: number = 0;
 
-const open = Boolean(anchorEl);
-const id = open ? "simple-popover" : undefined;
+  const [anchorX, setAnchorX] = React.useState(initialAnchor);
+  const [anchorY, setAnchorY] = React.useState(initialAnchor);
 
-function App() {
+  const handleClick = (node: any, event: MouseEvent) => {
+    setAnchorX(event.x);
+    setAnchorY(event.y);
+  };
+
+  const handleClose = () => {
+    setAnchorX(0);
+    setAnchorY(0);
+  };
+
+  const open = Boolean(anchorX && anchorY);
+  const id = open ? "simple-popover" : undefined;
+
   return (
     <div>
-      <Button
-        aria-describedby={id}
-        variant="contained"
-        color="primary"
-        onClick={handleClick}
+      <Popover
+        id={id}
+        open={open}
+        onClose={handleClose}
+        anchorReference="anchorPosition"
+        anchorPosition={{ top: anchorY, left: anchorX }}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
       >
-        Open Popover
-      </Button>
+        <Typography className={classes.typography}>
+          The content of the Popover.
+        </Typography>
+      </Popover>
       <ForceGraph2D
         graphData={data}
         nodeLabel="id"
@@ -45,25 +62,8 @@ function App() {
         linkDirectionalParticles="value"
         linkDirectionalParticleSpeed={0.01}
         linkDirectionalParticleWidth={5}
+        onNodeClick={handleClick}
       />
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <Typography className={classes.typography}>
-          The content of the Popover.
-        </Typography>
-      </Popover>
     </div>
   );
 }
