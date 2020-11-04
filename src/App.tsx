@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import "./App.css";
-import { ForceGraph2D } from "react-force-graph";
+import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
@@ -112,13 +112,13 @@ const App = () => {
           </Button>
         </div>
       </Popover>
-      <ForceGraph2D
+      <ForceGraph3D
         graphData={graphData}
         nodeLabel="id"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
-        linkDirectionalParticleSpeed={0.01}
-        linkDirectionalParticleWidth={5}
+        linkDirectionalParticleSpeed={0.03}
+        linkDirectionalParticleWidth={2}
         onNodeClick={handleNodeClick}
         onBackgroundClick={handleBackgroundClick}
       />
