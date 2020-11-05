@@ -48,6 +48,23 @@ const App = () => {
     setGraphData(graphData);
   };
 
+  const addLink = (nodeSource: NodeObject$3, nodeTarget: NodeObject$3) => {
+    graphData.links.push(
+        { "source": nodeSource.id ? nodeSource.id.toString() : "", "target" : nodeTarget.id ? nodeTarget.id.toString() : "", "value": 1, "curvature": 0.6 },
+      );
+  }
+  const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    graphData.nodes.push({id: "testing", group: 1});
+    graphData.links.push({
+      source: selectedNode.id ? selectedNode.id.toString() : "",
+      target: "Testing",
+      value: 1,
+      curvature: 0.6,
+    });
+    setGraphData(graphData);
+    console.log(graphData)
+  };
+
   const handleBackgroundClick = (event: MouseEvent) => {  
     console.log("background");
     addNode("default");
@@ -61,6 +78,7 @@ const App = () => {
     setTextValue(node.id ? node.id.toString() : "");
     setSelectedNode(node);
   };
+
 
   const handleClose = () => {
     setAnchorX(0);
@@ -107,18 +125,19 @@ const App = () => {
             style={{ margin: 24 }}
             value={textValue}
           />
-          <Button variant="contained" color="primary" onClick={() => {}}>
-            Click me
+          <Button variant="contained" color="primary" onClick={addChild}>
+            Add child 
           </Button>
         </div>
       </Popover>
-      <ForceGraph3D
+      <ForceGraph2D
         graphData={graphData}
         nodeLabel="id"
+        linkCurvature="curvature"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
-        linkDirectionalParticleSpeed={0.03}
-        linkDirectionalParticleWidth={2}
+        linkDirectionalParticleSpeed={0.01}
+        linkDirectionalParticleWidth={3}
         onNodeClick={handleNodeClick}
         onBackgroundClick={handleBackgroundClick}
       />
