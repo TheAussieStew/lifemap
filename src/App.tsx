@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import "./App.css";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
+import Fab from '@material-ui/core/Fab';
+import EditIcon from '@material-ui/icons/Edit';
 import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
@@ -69,6 +71,9 @@ const App = () => {
     console.log(graphData)
   };
 
+  const saveToFile = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  };
+
   const handleBackgroundClick = (event: MouseEvent) => {  
     console.log("background");
     addNode("default");
@@ -96,6 +101,12 @@ const App = () => {
       selectedNode.id ? selectedNode.id.toString() : "",
       event.target.value
     );
+    var fs = require("fs");
+    fs.writeFile("kongweilifemap.json", graphData, function (err: any) {
+      if (err) {
+        console.log(err);
+      }
+    });
   };
 
   const open = Boolean(anchorX && anchorY);
@@ -103,6 +114,18 @@ const App = () => {
 
   return (
     <div>
+      <Fab
+        color="secondary"
+        aria-label="edit"
+        onClick={saveToFile}
+        style={{
+          position: "absolute",
+          bottom: 30,
+          right: 30,
+        }}
+      >
+        <EditIcon />
+      </Fab>
       <Popover
         id={id}
         open={open}
@@ -130,7 +153,7 @@ const App = () => {
             value={textValue}
           />
           <Button variant="contained" color="primary" onClick={addChild}>
-            Add child 
+            Add child
           </Button>
         </div>
       </Popover>
