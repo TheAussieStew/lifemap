@@ -54,14 +54,18 @@ const App = () => {
       );
   }
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    graphData.nodes.push({id: "testing", group: 1});
-    graphData.links.push({
-      source: selectedNode.id ? selectedNode.id.toString() : "",
-      target: "Testing",
-      value: 1,
-      curvature: 0.6,
+    setGraphData({
+      nodes: [...graphData.nodes, { id: "Testing", group: 1 }],
+      links: [
+        ...graphData.links,
+        {
+          source: selectedNode.id ? selectedNode.id.toString() : "",
+          target: "Testing",
+          value: 1,
+          curvature: 0.6,
+        },
+      ],
     });
-    setGraphData(graphData);
     console.log(graphData)
   };
 
