@@ -3,12 +3,13 @@ import "./App.css";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
-import data from "./kongweilifemap.json";
+import data from "./firebasegraphcopy.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import firebase from "firebase";
 import "firebase/database";
+import { useEffect } from "react";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -35,8 +36,10 @@ type NodeObject$3 = object & {
   fy?: number;
 };
 
+
 const kongweiUserId: number = 1;
 
+let initialGraph = { nodes: [{ id: "Life", group: 0 }], links: [] };
 let initialAnchor: number = 0;
 let initialNode: NodeObject$3 = {
   id: 0,
@@ -48,8 +51,9 @@ let initialNode: NodeObject$3 = {
   fy: 0,
 };
 
+// Post issue here https://github.com/vasturiano/react-force-graph/issues/234
 const Main = () => {
-  const [graphData, setGraphData] = React.useState(data);
+  const [graphData, setGraphData] = React.useState<any>(data);
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
   const [selectedNode, setSelectedNode] = React.useState(initialNode);
@@ -59,13 +63,21 @@ const Main = () => {
     .database()
     .ref("users/" + kongweiUserId + "/graphData");
 
-  const downloadGraph = () => {
+  // Same as didMount
+  useEffect(() => {
     graphDataRef.on("value", (snapshot) => {
+      console.log("initial graph data before load from server", graphData);
+      console.log("graph data from firebase", snapshot.val());
       setGraphData(snapshot.val());
-      console.log("snapshot", snapshot.val());
+      console.log("graph data after load", graphData);
     });
-  };
-  downloadGraph();
+
+    // cleanup this component
+    return () => {
+      graphDataRef.off();
+      console.log("listener dismounted")
+    };
+  }, []);
 
   const updateNodeId = (oldId: string, newId: string) => {
     for (var i = 0; i < graphData.nodes.length; i++) {
@@ -109,11 +121,14 @@ const Main = () => {
     setAnchorY(event.y);
     setTextValue(node.id ? node.id.toString() : "");
     setSelectedNode(node);
+    console.log("current graph data", graphData);
   };
 
   const handleClose = () => {
     setAnchorX(0);
     setAnchorY(0);
+    console.log("raw graph data being written", graphData)
+    console.log("parsed and stringified data", JSON.parse(JSON.stringify(graphData)))
     writeGraphData(kongweiUserId, JSON.parse(JSON.stringify(graphData)));
   };
 
