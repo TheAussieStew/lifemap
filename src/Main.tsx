@@ -3,7 +3,7 @@ import "./App.css";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
-import data from "./firebasegraphcopy.json";
+import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
