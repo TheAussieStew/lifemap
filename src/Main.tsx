@@ -39,6 +39,7 @@ type NodeObject$3 = object & {
 
 const kongweiUserId: number = 1;
 
+// TODO: Really need to figure out typing for the graph
 let initialGraph = { nodes: [{ id: "Life", group: 0 }], links: [] };
 let initialAnchor: number = 0;
 let initialNode: NodeObject$3 = {
@@ -53,7 +54,7 @@ let initialNode: NodeObject$3 = {
 
 // Post issue here https://github.com/vasturiano/react-force-graph/issues/234
 const Main = () => {
-  const [graphData, setGraphData] = React.useState<any>(data);
+  const [graphData, setGraphData] = React.useState<any>(initialGraph);
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
   const [selectedNode, setSelectedNode] = React.useState(initialNode);
@@ -103,6 +104,8 @@ const Main = () => {
   };
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setGraphData({
+      // TODO: Figure out how to have the correct colour
+      // TODO: Maybe have a pass function that auto assigns groups, and have cool colours 
       nodes: [...graphData.nodes, { id: "Testing", group: 1 }],
       links: [
         ...graphData.links,
