@@ -132,14 +132,27 @@ const Main = () => {
     writeGraphData(kongweiUserId, JSON.parse(JSON.stringify(graphData)));
   };
 
-  // need to represent graph data as a type
+  const replacer = (key: any, value: any) => {
+    // Filtering out properties
+    if (key === 'source' || key === 'target') {
+      return value.id;
+    }
+    return value;
+  }
+
+  const convertGraphDataToSimple = (graphData: any) => {
+    return JSON.parse(JSON.stringify(graphData, replacer));
+  };
+
+  // TODO: need to represent graph data as a type
   const writeGraphData = (userId: number, graphData: any) => {
+    console.log("data being uploaded", convertGraphDataToSimple(graphData));
     firebase
       .database()
       .ref("users/" + userId)
       .set({
         username: userId,
-        graphData: graphData,
+        graphData: convertGraphDataToSimple(graphData),
       });
   };
 
