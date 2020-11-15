@@ -1,6 +1,5 @@
 import React from "react";
 import * as THREE from 'three'
-import { useThree } from 'react-three-fiber'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 import "./App.css";
 import { ForceGraph2D, ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
@@ -71,7 +70,6 @@ const Main = () => {
   }
 
   const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
-  const { gl, size } = useThree()
 
   var graphDataRef = firebase
     .database()
@@ -91,12 +89,12 @@ const Main = () => {
     if (null !== fgRef.current && undefined !== fgRef.current) {
       const bloomPass = new UnrealBloomPass(
         new THREE.Vector2(width, height),
-        1.25,
-        1,
+        0,
+        0,
         0
       );
-      bloomPass.strength = 3;
-      bloomPass.radius = 1;
+      bloomPass.strength = 4;
+      bloomPass.radius = 0.9;
       bloomPass.threshold = 0.1;
       fgRef.current.postProcessingComposer().addPass(bloomPass);
     }
