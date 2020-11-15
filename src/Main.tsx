@@ -26,8 +26,10 @@ firebase.initializeApp(firebaseConfig);
 
 export const db = firebase.database();
 
-type NodeObject$3 = object & {
-  id?: string | number;
+type Node = {
+  id?: string | number | undefined;
+  colour?: string;
+  group?: number;
   x?: number;
   y?: number;
   vx?: number;
@@ -36,31 +38,35 @@ type NodeObject$3 = object & {
   fy?: number;
 };
 
-
-const kongweiUserId: number = 1;
-
-// TODO: Really need to figure out typing for the graph
-let initialGraph = { nodes: [{ id: "Life", group: 0 }], links: [] };
-let initialAnchor: number = 0;
-let initialNode: NodeObject$3 = {
-  id: 0,
-  x: 0,
-  y: 0,
-  vx: 0,
-  vy: 0,
-  fx: 0,
-  fy: 0,
+type Link = {
+  curvature?: number;
+  index?: number;
+  source: string;
+  target: string;
+  value?: number;
 };
 
-// Post issue here https://github.com/vasturiano/react-force-graph/issues/234
+type Graph = {
+  nodes: Node[],
+  links: Link[]
+}
+
+const kongweiUserId: number = 1;
+const initialNode: Node = {
+  id: "Life",
+  group: 0
+}
+const initialGraph: Graph = { nodes: [initialNode], links: [] };
+const initialAnchor: number = 0;
+
 const Main = () => {
-  const [graphData, setGraphData] = React.useState<any>(initialGraph);
+  const [graphData, setGraphData] = React.useState<Graph>(initialGraph);
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
   const [selectedNode, setSelectedNode] = React.useState(initialNode);
   const [textValue, setTextValue] = React.useState("");
 
-  var graphDataRef = firebase
+  const graphDataRef = firebase
     .database()
     .ref("users/" + kongweiUserId + "/graphData");
 
@@ -89,19 +95,23 @@ const Main = () => {
     }
   };
 
-  const addNode = (id: string) => {
-    graphData.nodes.push({ id: id, group: 1 });
-    setGraphData(graphData);
+  const addNode = (id: string, group: number) => {
+    let newGraphData = graphData;
+    newGraphData.nodes.push({ id: id, group: group });
+    setGraphData(newGraphData);
   };
 
-  const addLink = (nodeSource: NodeObject$3, nodeTarget: NodeObject$3) => {
-    graphData.links.push({
+  const addLink = (nodeSource: Node, nodeTarget: Node) => {
+    let newGraphData = graphData;
+    newGraphData.links.push({
       source: nodeSource.id ? nodeSource.id.toString() : "",
       target: nodeTarget.id ? nodeTarget.id.toString() : "",
       value: 1,
       curvature: 0.6,
     });
+    setGraphData(newGraphData);
   };
+
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setGraphData({
       // TODO: Figure out how to have the correct colour
@@ -119,7 +129,7 @@ const Main = () => {
     });
   };
 
-  const handleNodeClick = (node: NodeObject$3, event: MouseEvent) => {
+  const handleNodeClick = (node: Node, event: MouseEvent) => {
     setAnchorX(event.x);
     setAnchorY(event.y);
     setTextValue(node.id ? node.id.toString() : "");
