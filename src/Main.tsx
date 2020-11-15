@@ -245,6 +245,7 @@ const Main = () => {
         ref={fgRef}
         graphData={graphData}
         nodeLabel="id"
+        nodeResolution={6}
         linkCurvature="curvature"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
