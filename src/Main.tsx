@@ -1,6 +1,9 @@
 import React from "react";
+import * as THREE from 'three'
+import { useThree } from 'react-three-fiber'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 import "./App.css";
-import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
+import { ForceGraph2D, ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
 import data from "./kongweilifemap.json";
@@ -9,7 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import firebase from "firebase";
 import "firebase/database";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -53,12 +56,22 @@ let initialNode: NodeObject$3 = {
 };
 
 // Post issue here https://github.com/vasturiano/react-force-graph/issues/234
+
 const Main = () => {
   const [graphData, setGraphData] = React.useState<any>(initialGraph);
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
   const [selectedNode, setSelectedNode] = React.useState(initialNode);
   const [textValue, setTextValue] = React.useState("");
+  const [width, setWidth]   = React.useState(window.innerWidth);
+  const [height, setHeight] = React.useState(window.innerHeight);
+  const updateDimensions = () => {
+      setWidth(window.innerWidth);
+      setHeight(window.innerHeight);
+  }
+
+  const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
+  const { gl, size } = useThree()
 
   var graphDataRef = firebase
     .database()
@@ -73,9 +86,25 @@ const Main = () => {
       console.log("graph data after load", graphData);
     });
 
+    window.addEventListener("resize", updateDimensions);
+
+    if (null !== fgRef.current && undefined !== fgRef.current) {
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(width, height),
+        1.25,
+        1,
+        0
+      );
+      bloomPass.strength = 3;
+      bloomPass.radius = 1;
+      bloomPass.threshold = 0.1;
+      fgRef.current.postProcessingComposer().addPass(bloomPass);
+    }
+
     // cleanup this component
     return () => {
       graphDataRef.off();
+      window.removeEventListener("resize", updateDimensions)
       console.log("listener dismounted")
     };
   }, []);
@@ -214,7 +243,8 @@ const Main = () => {
           </Button>
         </div>
       </Popover>
-      <ForceGraph2D
+      <ForceGraph3D
+        ref={fgRef}
         graphData={graphData}
         nodeLabel="id"
         linkCurvature="curvature"
