@@ -3,7 +3,7 @@ import "./App.css";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
-import data from "./kongweilifemap.json";
+import seedGraph from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -54,13 +54,20 @@ type Graph = {
 const kongweiUserId: number = 1;
 const initialNode: Node = {
   id: "Life",
-  group: 0
+  group: 0,
+  colour: "#FFFFFF",
+  x: 0,
+  y: 0,
+  vx: 0,
+  vy: 0,
+  fx: 0,
+  fy: 0
 }
 const initialGraph: Graph = { nodes: [initialNode], links: [] };
 const initialAnchor: number = 0;
 
 const Main = () => {
-  const [graphData, setGraphData] = React.useState<Graph>(initialGraph);
+  const [graphData, setGraphData] = React.useState<Graph>(seedGraph);
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
   const [selectedNode, setSelectedNode] = React.useState(initialNode);
@@ -96,9 +103,14 @@ const Main = () => {
   };
 
   const addNode = (id: string, group: number) => {
-    let newGraphData = graphData;
-    newGraphData.nodes.push({ id: id, group: group });
+    let newGraphData: Graph = graphData;
+    //TODO: Currently having issues with adding the vx property on nodes...
+    let newNode: Node = initialNode;
+    newNode.id = id;
+    newNode.group = group;
+    newGraphData.nodes.push(newNode);
     setGraphData(newGraphData);
+    return newNode;
   };
 
   const addLink = (nodeSource: Node, nodeTarget: Node) => {
@@ -113,20 +125,11 @@ const Main = () => {
   };
 
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    setGraphData({
-      // TODO: Figure out how to have the correct colour
-      // TODO: Maybe have a pass function that auto assigns groups, and have cool colours 
-      nodes: [...graphData.nodes, { id: "Testing", group: 1 }],
-      links: [
-        ...graphData.links,
-        {
-          source: selectedNode.id ? selectedNode.id.toString() : "",
-          target: "Testing",
-          value: 1,
-          curvature: 0.6,
-        },
-      ],
-    });
+    // TODO: Figure out how to have the correct colour
+    // TODO: Maybe have a pass function that auto assigns groups, and have cool colours
+    const randomString = Math.random().toString(36).slice(2);
+    let newNode = addNode(randomString, 1);
+    addLink(selectedNode, newNode);
   };
 
   const handleNodeClick = (node: Node, event: MouseEvent) => {
@@ -147,7 +150,10 @@ const Main = () => {
 
   const replacer = (key: any, value: any) => {
     // Filtering out properties
-    if (key === 'source' || key === 'target') {
+    if (
+      (key === "source" && typeof value !== "string") ||
+      (key === "target" && typeof value !== "string")
+    ) {
       return value.id;
     }
     return value;
