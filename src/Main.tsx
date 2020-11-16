@@ -46,7 +46,13 @@ type NodeObject$3 = object & {
 const kongweiUserId: number = 1;
 
 // TODO: Really need to figure out typing for the graph
-let initialGraph = { nodes: [{ id: "Life", group: 0 }], links: [] };
+let initialGraph = {
+  nodes: [
+    { id: "Life", group: 0 },
+    { id: "Topic", group: 1 },
+  ],
+  links: [{ source: "Life", target: "Topic", curvature: 0.6, index: 0 }],
+};
 let initialAnchor: number = 0;
 let initialNode: NodeObject$3 = {
   id: 0,
@@ -57,6 +63,9 @@ let initialNode: NodeObject$3 = {
   fx: 0,
   fy: 0,
 };
+
+let useDatabase = true;
+let resetDatabaseToLocal = false;
 
 // Post issue here https://github.com/vasturiano/react-force-graph/issues/234
 
@@ -79,14 +88,20 @@ const Main = () => {
     .database()
     .ref("users/" + kongweiUserId + "/graphData");
 
-  // Same as didMount
   useEffect(() => {
-    graphDataRef.on("value", (snapshot) => {
-      console.log("initial graph data before load from server", graphData);
-      console.log("graph data from firebase", snapshot.val());
-      setGraphData(snapshot.val());
-      console.log("graph data after load", graphData);
-    });
+    if (resetDatabaseToLocal) {
+      useDatabase = false;
+      writeGraphData(kongweiUserId, JSON.parse(JSON.stringify(graphData)));
+    }
+
+    if (useDatabase) {
+      graphDataRef.on("value", (snapshot) => {
+        console.log("initial graph data before load from server", graphData);
+        console.log("graph data from firebase", snapshot.val());
+        setGraphData(snapshot.val());
+        console.log("graph data after load", graphData);
+      });
+    }
 
     window.addEventListener("resize", updateDimensions);
 
@@ -105,7 +120,7 @@ const Main = () => {
 
     // cleanup this component
     return () => {
-      graphDataRef.off();
+      if (useDatabase) graphDataRef.off();
       window.removeEventListener("resize", updateDimensions);
       console.log("listener dismounted");
     };
@@ -121,13 +136,23 @@ const Main = () => {
   };
 
   const deleteNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    console.log("before delete node", graphData);
     let id = selectedNode.id;
-    let newGraphData = graphData.filter((elem: any) => {
-      if (elem.id !== id && elem.source !== id && elem.target !== id ) {
-        return elem;
+    let newNodeData = graphData.nodes.filter((elem: any) => {
+      if (elem.id === id || elem.target === id) {
+        return;
       }
+      return elem;
     });
+    let newLinkData = graphData.links.filter((elem: any) => {
+      if (elem.source.id === id || elem.target.id === id) {
+        return;
+      }
+      return elem;
+    });
+    let newGraphData = {nodes: newNodeData, links: newLinkData};
     setGraphData(newGraphData);
+    console.log("after delete node", graphData);
   };
 
   const addNode = (id: string) => {
@@ -181,8 +206,10 @@ const Main = () => {
 
   const replacer = (key: any, value: any) => {
     // Filtering out properties
-    if (key === "source" || key === "target") {
-      return value.id;
+    if (!resetDatabaseToLocal) {
+      if (key === "source" || key === "target") {
+        return value.id;
+      }
     }
     return value;
   };
@@ -265,7 +292,7 @@ const Main = () => {
               variant="outlined"
               color="primary"
               onClick={addChild}
-              style={{borderRadius: 40, marginRight: 10}}
+              style={{borderRadius: 40, textTransform: 'none', marginRight: 10}}
             >
               Add child
             </Button>
@@ -273,7 +300,7 @@ const Main = () => {
               variant="outlined"
               color="primary"
               onClick={deleteNode}
-              style={{borderRadius: 40}}
+              style={{borderRadius: 40, textTransform: 'none'}}
             >
               Delete node
             </Button>
