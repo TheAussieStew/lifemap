@@ -49,6 +49,12 @@ const kongweiUserId: number = 1;
 let initialGraph = {
   nodes: [
     { id: "Life", group: 0 },
+  ],
+  links: [],
+};
+let initialLinkedGraph = {
+  nodes: [
+    { id: "Life", group: 0 },
     { id: "Topic", group: 1 },
   ],
   links: [{ source: "Life", target: "Topic", curvature: 0.6, index: 0 }],
@@ -98,7 +104,12 @@ const Main = () => {
       graphDataRef.on("value", (snapshot) => {
         console.log("initial graph data before load from server", graphData);
         console.log("graph data from firebase", snapshot.val());
-        setGraphData(snapshot.val());
+        if ("links" in snapshot.val()) {
+          setGraphData(snapshot.val());
+        }
+        else {
+          setGraphData(initialGraph);
+        }
         console.log("graph data after load", graphData);
       });
     }
