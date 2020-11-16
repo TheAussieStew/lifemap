@@ -120,6 +120,16 @@ const Main = () => {
     }
   };
 
+  const deleteNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    let id = selectedNode.id;
+    let newGraphData = graphData.filter((elem: any) => {
+      if (elem.id !== id && elem.source !== id && elem.target !== id ) {
+        return elem;
+      }
+    });
+    setGraphData(newGraphData);
+  };
+
   const addNode = (id: string) => {
     graphData.nodes.push({ id: id, group: 1 });
     setGraphData(graphData);
@@ -262,7 +272,7 @@ const Main = () => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={addChild}
+              onClick={deleteNode}
               style={{borderRadius: 40}}
             >
               Delete node
