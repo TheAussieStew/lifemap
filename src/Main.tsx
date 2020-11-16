@@ -1,14 +1,19 @@
 import React from "react";
-import * as THREE from 'three'
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
+import * as THREE from "three";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import "./App.css";
-import { ForceGraph2D, ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
+import {
+  ForceGraph2D,
+  ForceGraph3D,
+  ForceGraphMethods$2,
+} from "react-force-graph";
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
 import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import { borders } from '@material-ui/system';
 import firebase from "firebase";
 import "firebase/database";
 import { useEffect, useRef } from "react";
@@ -38,7 +43,6 @@ type NodeObject$3 = object & {
   fy?: number;
 };
 
-
 const kongweiUserId: number = 1;
 
 // TODO: Really need to figure out typing for the graph
@@ -62,12 +66,12 @@ const Main = () => {
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
   const [selectedNode, setSelectedNode] = React.useState(initialNode);
   const [textValue, setTextValue] = React.useState("");
-  const [width, setWidth]   = React.useState(window.innerWidth);
+  const [width, setWidth] = React.useState(window.innerWidth);
   const [height, setHeight] = React.useState(window.innerHeight);
   const updateDimensions = () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
-  }
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
+  };
 
   const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
 
@@ -102,8 +106,8 @@ const Main = () => {
     // cleanup this component
     return () => {
       graphDataRef.off();
-      window.removeEventListener("resize", updateDimensions)
-      console.log("listener dismounted")
+      window.removeEventListener("resize", updateDimensions);
+      console.log("listener dismounted");
     };
   }, []);
 
@@ -132,7 +136,7 @@ const Main = () => {
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setGraphData({
       // TODO: Figure out how to have the correct colour
-      // TODO: Maybe have a pass function that auto assigns groups, and have cool colours 
+      // TODO: Maybe have a pass function that auto assigns groups, and have cool colours
       nodes: [...graphData.nodes, { id: "Testing", group: 1 }],
       links: [
         ...graphData.links,
@@ -157,18 +161,21 @@ const Main = () => {
   const handleClose = () => {
     setAnchorX(0);
     setAnchorY(0);
-    console.log("raw graph data being written", graphData)
-    console.log("parsed and stringified data", JSON.parse(JSON.stringify(graphData)))
+    console.log("raw graph data being written", graphData);
+    console.log(
+      "parsed and stringified data",
+      JSON.parse(JSON.stringify(graphData))
+    );
     writeGraphData(kongweiUserId, JSON.parse(JSON.stringify(graphData)));
   };
 
   const replacer = (key: any, value: any) => {
     // Filtering out properties
-    if (key === 'source' || key === 'target') {
+    if (key === "source" || key === "target") {
       return value.id;
     }
     return value;
-  }
+  };
 
   const convertGraphDataToSimple = (graphData: any) => {
     return JSON.parse(JSON.stringify(graphData, replacer));
@@ -225,7 +232,7 @@ const Main = () => {
           horizontal: "left",
         }}
       >
-        <div style={{ flexDirection: "column", display: "flex" }}>
+        <div style={{ flexDirection: "column", display: "flex", margin: 20 }}>
           <TextField
             id="outlined-multiline-static"
             label="Details"
@@ -233,12 +240,34 @@ const Main = () => {
             rows={6}
             variant="outlined"
             onChange={handleTextChange}
-            style={{ margin: 24 }}
+            style={{ width: 300 }}
             value={textValue}
           />
-          <Button variant="contained" color="primary" onClick={addChild}>
-            Add child
-          </Button>
+          <div
+            style={{
+              flexDirection: "row",
+              display: "flex",
+              marginTop: 15,
+              justifyContent: "flex-end"
+            }}
+          >
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={addChild}
+              style={{borderRadius: 40, marginRight: 10}}
+            >
+              Add child
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={addChild}
+              style={{borderRadius: 40}}
+            >
+              Delete node
+            </Button>
+          </div>
         </div>
       </Popover>
       <ForceGraph3D
