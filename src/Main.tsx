@@ -180,15 +180,16 @@ const Main = () => {
     });
   };
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const randomString = Math.random().toString(36).slice(2);
     setGraphData({
       // TODO: Figure out how to have the correct colour
       // TODO: Maybe have a pass function that auto assigns groups, and have cool colours
-      nodes: [...graphData.nodes, { id: "Testing", group: 1 }],
+      nodes: [...graphData.nodes, { id: randomString, group: 1 }],
       links: [
         ...graphData.links,
         {
           source: selectedNode.id ? selectedNode.id.toString() : "",
-          target: "Testing",
+          target: randomString,
           value: 1,
           curvature: 0.6,
         },
