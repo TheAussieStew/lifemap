@@ -170,18 +170,18 @@ const Main = () => {
   };
 
   const addLink = (nodeSource: NodeObject$3, nodeTarget: NodeObject$3) => {
-    let newGraphData = graphData;
-    console.log("data before linking", newGraphData);
-    console.log("selectedNode array before linking", selectedNodes);
-
-    newGraphData.links.push({
-      source: nodeSource.id ? nodeSource.id.toString() : "",
-      target: nodeTarget.id ? nodeTarget.id.toString() : "",
-      value: 1,
-      curvature: 0.6,
+    setGraphData({
+      nodes: [...graphData.nodes],
+      links: [
+        ...graphData.links,
+        {
+          source: nodeSource.id ? nodeSource.id.toString() : "",
+          target: nodeTarget.id ? nodeTarget.id.toString() : "",
+          value: 1,
+          curvature: 0.6,
+        },
+      ],
     });
-    console.log("new graph data after linking", newGraphData);
-    setGraphData(newGraphData);
   };
 
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
