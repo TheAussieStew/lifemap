@@ -353,6 +353,7 @@ const Main = () => {
         linkDirectionalParticles="value"
         linkDirectionalParticleSpeed={0.01}
         linkDirectionalParticleWidth={3}
+        linkWidth={0.5}
         onNodeClick={handleNodeClick}
       />
     </div>
