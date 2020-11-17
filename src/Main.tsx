@@ -173,7 +173,7 @@ const Main = () => {
     let newGraphData = graphData;
     console.log("data before linking", newGraphData);
     console.log("selectedNode array before linking", selectedNodes);
-    
+
     newGraphData.links.push({
       source: nodeSource.id ? nodeSource.id.toString() : "",
       target: nodeTarget.id ? nodeTarget.id.toString() : "",
@@ -297,7 +297,7 @@ const Main = () => {
           horizontal: "left",
         }}
       >
-        <div style={{ flexDirection: "column", display: "flex", margin: 20 }}>
+        <div style={{ flexDirection: "column", display: "flex", margin: 25 }}>
           <TextField
             id="outlined-multiline-static"
             label="Details"
