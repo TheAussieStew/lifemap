@@ -13,7 +13,6 @@ import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { borders } from '@material-ui/system';
 import firebase from "firebase";
 import "firebase/database";
 import { useEffect, useRef } from "react";
@@ -171,13 +170,20 @@ const Main = () => {
   };
 
   const addLink = (nodeSource: NodeObject$3, nodeTarget: NodeObject$3) => {
-    graphData.links.push({
+    let newGraphData = graphData;
+    console.log("data before linking", newGraphData);
+    console.log("selectedNode array before linking", selectedNodes);
+    
+    newGraphData.links.push({
       source: nodeSource.id ? nodeSource.id.toString() : "",
       target: nodeTarget.id ? nodeTarget.id.toString() : "",
       value: 1,
       curvature: 0.6,
     });
+    console.log("new graph data after linking", newGraphData);
+    setGraphData(newGraphData);
   };
+
   const addChild = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const randomString = Math.random().toString(36).slice(2);
     setGraphData({
@@ -195,6 +201,12 @@ const Main = () => {
       ],
     });
   };
+
+  const handleLinkClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (selectedNodes.length === 2) {
+      addLink(selectedNodes[0], selectedNodes[1]);
+    }
+  }
 
   const handleNodeClick = (node: NodeObject$3, event: MouseEvent) => {
     setAnchorX(event.x);
@@ -220,7 +232,11 @@ const Main = () => {
     // Filtering out properties
     if (!resetDatabaseToLocal) {
       if (key === "source" || key === "target") {
-        return value.id;
+        if (typeof value === "string") {
+          return value;
+        } else {
+          return value.id;
+        }
       }
     }
     return value;
@@ -303,6 +319,14 @@ const Main = () => {
             <Button
               variant="outlined"
               color="primary"
+              onClick={handleLinkClick}
+              style={{borderRadius: 40, textTransform: 'none', marginRight: 10}}
+            >
+              Link
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
               onClick={addChild}
               style={{borderRadius: 40, textTransform: 'none', marginRight: 10}}
             >
@@ -314,7 +338,7 @@ const Main = () => {
               onClick={deleteNode}
               style={{borderRadius: 40, textTransform: 'none'}}
             >
-              Delete node
+              Delete
             </Button>
           </div>
         </div>
