@@ -352,7 +352,7 @@ const Main = () => {
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
         linkDirectionalParticleSpeed={0.01}
-        linkDirectionalParticleWidth={3}
+        linkDirectionalParticleWidth={2}
         linkWidth={0.5}
         onNodeClick={handleNodeClick}
       />
