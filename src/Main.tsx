@@ -144,6 +144,21 @@ const Main = () => {
     }
   };
 
+  // TODO: really need to separate graph api and handlers...
+  // TODO: need to create selectedLinks
+  const deleteLink = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    let id = selectedNodes.slice(-1)[0].id;
+    let newNodeData = graphData.nodes;
+    let newLinkData = graphData.links.filter((elem: any) => {
+      if (elem.source.id === id || elem.target.id === id) {
+        return;
+      }
+      return elem;
+    });
+    let newGraphData = {nodes: newNodeData, links: newLinkData};
+    setGraphData(newGraphData);
+  };
+
   const deleteNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     console.log("before delete node", graphData);
     let id = selectedNodes.slice(-1)[0].id;
