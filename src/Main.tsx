@@ -60,15 +60,6 @@ let initialLinkedGraph = {
   links: [{ source: "Life", target: "Topic", curvature: 0.6, index: 0 }],
 };
 let initialAnchor: number = 0;
-let initialNode: NodeObject$3 = {
-  id: 0,
-  x: 0,
-  y: 0,
-  vx: 0,
-  vy: 0,
-  fx: 0,
-  fy: 0,
-};
 
 let useDatabase = true;
 let resetDatabaseToLocal = false;
@@ -79,7 +70,7 @@ const Main = () => {
   const [graphData, setGraphData] = React.useState<any>(initialGraph);
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
-  const [selectedNode, setSelectedNode] = React.useState(initialNode);
+  const [selectedNodes, setSelectedNodeArray] = React.useState<NodeObject$3[]>([]);
   const [textValue, setTextValue] = React.useState("");
   const [width, setWidth] = React.useState(window.innerWidth);
   const [height, setHeight] = React.useState(window.innerHeight);
@@ -137,6 +128,14 @@ const Main = () => {
     };
   }, []);
 
+  const pushSelectedNodeArray = (node: NodeObject$3) => {
+    let newSelectedNodeArray = selectedNodes;
+    if (newSelectedNodeArray.push(node) > 2) {
+      newSelectedNodeArray.shift(); // a queue
+    }
+    setSelectedNodeArray(newSelectedNodeArray);
+  }
+
   const updateNodeId = (oldId: string, newId: string) => {
     for (var i = 0; i < graphData.nodes.length; i++) {
       if (graphData.nodes[i].id === oldId) {
@@ -148,7 +147,7 @@ const Main = () => {
 
   const deleteNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     console.log("before delete node", graphData);
-    let id = selectedNode.id;
+    let id = selectedNodes.slice(-1)[0].id;
     let newNodeData = graphData.nodes.filter((elem: any) => {
       if (elem.id === id || elem.target === id) {
         return;
@@ -188,7 +187,7 @@ const Main = () => {
       links: [
         ...graphData.links,
         {
-          source: selectedNode.id ? selectedNode.id.toString() : "",
+          source: selectedNodes[selectedNodes.length - 1].id ? selectedNodes[selectedNodes.length - 1].id!.toString() : "",
           target: randomString,
           value: 1,
           curvature: 0.6,
@@ -201,7 +200,8 @@ const Main = () => {
     setAnchorX(event.x);
     setAnchorY(event.y);
     setTextValue(node.id ? node.id.toString() : "");
-    setSelectedNode(node);
+    pushSelectedNodeArray(node);
+    // setSelectedNode(node);
     console.log("current graph data", graphData);
   };
 
@@ -245,7 +245,7 @@ const Main = () => {
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTextValue(event.target.value);
     updateNodeId(
-      selectedNode.id ? selectedNode.id.toString() : "",
+      selectedNodes.slice(-1)[0].id ? selectedNodes.slice(-1)[0].id!.toString() : "",
       event.target.value
     );
   };
