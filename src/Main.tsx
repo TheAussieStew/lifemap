@@ -363,7 +363,7 @@ const Main = () => {
         ref={fgRef}
         graphData={graphData}
         nodeLabel="id"
-        nodeResolution={6}
+        nodeResolution={7}
         linkCurvature="curvature"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
@@ -375,7 +375,7 @@ const Main = () => {
           const sprite = new SpriteText(node.id ? node.id.toString() : '');
           // sprite.color = node.color;
           sprite.textHeight = 3;
-          sprite.center = new THREE.Vector2(0.5, 2)
+          sprite.position.set(0,-8,0);
           sprite.color = "#000000"
           sprite.strokeWidth = 0.5;
           sprite.strokeColor = "#888888";
