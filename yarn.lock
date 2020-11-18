@@ -12112,10 +12112,20 @@ three-render-objects@^1.24.6:
     kapsule "^1.13.3"
     polished "^3.6.6"
 
+three-spritetext@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/three-spritetext/-/three-spritetext-1.5.2.tgz#8b91ab492b6765a8bb1e73b928f7be784c6c16ce"
+  integrity sha512-gBlDnkpCSj0hVOoiAVJUx55dczZFQ3DZe5/tuDrKWD3ywh7Iyfr5fYc3YpXxazO6KqJrVvH+K9OeRo7CFJRY+Q==
+
 three@^0.119.1:
   version "0.119.1"
   resolved "https://registry.yarnpkg.com/three/-/three-0.119.1.tgz"
   integrity sha512-GHyh/RiUfQ5VTiWIVRRTANYoXc1PFB1y+jDVRTb649nif1uX1F06PT1TKU3k2+F/MN4UJ3PWvQB53fY2OqKqKw==
+
+three@^0.122.0:
+  version "0.122.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.122.0.tgz#bd9ed8a8820074856e8ba7b63fe0a65176e01aeb"
+  integrity sha512-bgYMo0WdaQhf7DhLE8OSNN/rVFO5J4K1A2VeeKqoV4MjjuHjfCP6xLpg8Xedhns7NlEnN3sZ6VJROq19Qyl6Sg==
 
 throat@^5.0.0:
   version "5.0.0"

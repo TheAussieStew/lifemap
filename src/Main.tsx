@@ -1,5 +1,6 @@
 import React from "react";
 import * as THREE from "three";
+import SpriteText from 'three-spritetext';
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import "./App.css";
 import {
@@ -370,6 +371,18 @@ const Main = () => {
         linkDirectionalParticleWidth={2}
         linkWidth={0.5}
         onNodeClick={handleNodeClick}
+        nodeThreeObject={node => {
+          const sprite = new SpriteText(node.id ? node.id.toString() : '');
+          // sprite.color = node.color;
+          sprite.textHeight = 3;
+          sprite.center = new THREE.Vector2(0.5, 2)
+          sprite.color = "#000000"
+          sprite.strokeWidth = 0.5;
+          sprite.strokeColor = "#888888";
+          sprite.padding = 1;
+          return sprite;
+        }}
+        nodeThreeObjectExtend={true}
       />
     </div>
   );
