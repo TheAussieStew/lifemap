@@ -28,9 +28,13 @@ var firebaseConfig = {
   appId: "1:908420793581:web:43079e2e62752ab77038e4",
 };
 
+const kongweiUserId: number = 1;
+
+let useDatabase = true;
+let resetDatabaseToLocal = false;
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
 export const db = firebase.database();
 
 type NodeObject$3 = object & {
@@ -43,7 +47,6 @@ type NodeObject$3 = object & {
   fy?: number;
 };
 
-const kongweiUserId: number = 1;
 
 // TODO: Really need to figure out typing for the graph
 let initialGraph = {
@@ -61,19 +64,15 @@ let initialLinkedGraph = {
 };
 let initialAnchor: number = 0;
 
-let useDatabase = true;
-let resetDatabaseToLocal = false;
-
-// Post issue here https://github.com/vasturiano/react-force-graph/issues/234
-
 const Main = () => {
   const [graphData, setGraphData] = React.useState<any>(initialGraph);
   const [anchorX, setAnchorX] = React.useState(initialAnchor);
   const [anchorY, setAnchorY] = React.useState(initialAnchor);
-  const [selectedNodes, setSelectedNodeArray] = React.useState<NodeObject$3[]>([]);
+  const [selectedNodes, setSelectedNodes] = React.useState<NodeObject$3[]>([]);
   const [textValue, setTextValue] = React.useState("");
   const [width, setWidth] = React.useState(window.innerWidth);
   const [height, setHeight] = React.useState(window.innerHeight);
+
   const updateDimensions = () => {
     setWidth(window.innerWidth);
     setHeight(window.innerHeight);
@@ -82,8 +81,8 @@ const Main = () => {
   const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
 
   var graphDataRef = firebase
-    .database()
-    .ref("users/" + kongweiUserId + "/graphData");
+  .database()
+  .ref("users/" + kongweiUserId + "/graphData");
 
   useEffect(() => {
     if (resetDatabaseToLocal) {
@@ -110,30 +109,25 @@ const Main = () => {
     if (null !== fgRef.current && undefined !== fgRef.current) {
       const bloomPass = new UnrealBloomPass(
         new THREE.Vector2(width, height),
-        0,
-        0,
-        0
+        4,
+        0.9,
+        0.1
       );
-      bloomPass.strength = 4;
-      bloomPass.radius = 0.9;
-      bloomPass.threshold = 0.1;
       fgRef.current.postProcessingComposer().addPass(bloomPass);
     }
 
-    // cleanup this component
     return () => {
       if (useDatabase) graphDataRef.off();
       window.removeEventListener("resize", updateDimensions);
-      console.log("listener dismounted");
     };
   }, []);
 
-  const pushSelectedNodeArray = (node: NodeObject$3) => {
-    let newSelectedNodeArray = selectedNodes;
-    if (newSelectedNodeArray.push(node) > 2) {
-      newSelectedNodeArray.shift(); // a queue
+  const pushSelectedNodes = (node: NodeObject$3) => {
+    let newSelectedNodes = selectedNodes;
+    if (newSelectedNodes.push(node) > 2) {
+      newSelectedNodes.shift(); // a queue
     }
-    setSelectedNodeArray(newSelectedNodeArray);
+    setSelectedNodes(newSelectedNodes);
   }
 
   const updateNodeId = (oldId: string, newId: string) => {
@@ -228,7 +222,7 @@ const Main = () => {
     setAnchorX(event.x);
     setAnchorY(event.y);
     setTextValue(node.id ? node.id.toString() : "");
-    pushSelectedNodeArray(node);
+    pushSelectedNodes(node);
     // setSelectedNode(node);
     console.log("current graph data", graphData);
   };
@@ -242,6 +236,14 @@ const Main = () => {
       JSON.parse(JSON.stringify(graphData))
     );
     writeGraphData(kongweiUserId, JSON.parse(JSON.stringify(graphData)));
+  };
+
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTextValue(event.target.value);
+    updateNodeId(
+      selectedNodes.slice(-1)[0].id ? selectedNodes.slice(-1)[0].id!.toString() : "",
+      event.target.value
+    );
   };
 
   const replacer = (key: any, value: any) => {
@@ -272,14 +274,6 @@ const Main = () => {
         username: userId,
         graphData: convertGraphDataToSimple(graphData),
       });
-  };
-
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTextValue(event.target.value);
-    updateNodeId(
-      selectedNodes.slice(-1)[0].id ? selectedNodes.slice(-1)[0].id!.toString() : "",
-      event.target.value
-    );
   };
 
   const open = Boolean(anchorX && anchorY);
@@ -374,7 +368,7 @@ const Main = () => {
         nodeThreeObject={node => {
           const sprite = new SpriteText(node.id ? node.id.toString() : '');
           // sprite.color = node.color;
-          sprite.textHeight = 3;
+          sprite.textHeight = 2;
           sprite.position.set(0,-8,0);
           sprite.color = "#000000"
           sprite.strokeWidth = 0.5;
