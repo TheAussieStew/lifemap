@@ -7,10 +7,10 @@ export function oneOf(array: any) {
   // Generate 3 items.
   export function generateItems() {
     const items = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 2; i++) {
       const color = oneOf(["green", "blue"]);
       const width = oneOf([2]);
-      const height = oneOf([1, 2]);
+      const height = oneOf([1]);
   
       const alphabet = "abcdefghijklmnopqrstuvwxyz";
       const title = oneOf(alphabet) + oneOf(alphabet);
