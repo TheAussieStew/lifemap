@@ -1,8 +1,12 @@
 import React from "react";
 import * as THREE from "three";
-import SpriteText from 'three-spritetext';
+import SpriteText from "three-spritetext";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import "./App.css";
+/* Utils & components */
+import { generateItems } from "./utils/Utils";
+import { Header, Demo } from "./components/Muuri";
+import "./style.css";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -17,6 +21,8 @@ import Button from "@material-ui/core/Button";
 import firebase from "firebase";
 import "firebase/database";
 import { useEffect, useRef } from "react";
+import { MuuriComponent, useDrag } from "muuri-react";
+import { Card } from "@material-ui/core";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -47,12 +53,9 @@ type NodeObject$3 = object & {
   fy?: number;
 };
 
-
 // TODO: Really need to figure out typing for the graph
 let initialGraph = {
-  nodes: [
-    { id: "Life", group: 0 },
-  ],
+  nodes: [{ id: "Life", group: 0 }],
   links: [],
 };
 let initialLinkedGraph = {
@@ -81,8 +84,8 @@ const Main = () => {
   const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
 
   var graphDataRef = firebase
-  .database()
-  .ref("users/" + kongweiUserId + "/graphData");
+    .database()
+    .ref("users/" + kongweiUserId + "/graphData");
 
   useEffect(() => {
     if (resetDatabaseToLocal) {
@@ -96,8 +99,7 @@ const Main = () => {
         console.log("graph data from firebase", snapshot.val());
         if ("links" in snapshot.val()) {
           setGraphData(snapshot.val());
-        }
-        else {
+        } else {
           setGraphData(initialGraph);
         }
         console.log("graph data after load", graphData);
@@ -128,7 +130,7 @@ const Main = () => {
       newSelectedNodes.shift(); // a queue
     }
     setSelectedNodes(newSelectedNodes);
-  }
+  };
 
   const updateNodeId = (oldId: string, newId: string) => {
     for (var i = 0; i < graphData.nodes.length; i++) {
@@ -141,7 +143,9 @@ const Main = () => {
 
   // TODO: really need to separate graph api and handlers...
   // TODO: need to create selectedLinks
-  const deleteLink = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const deleteLink = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     let id = selectedNodes.slice(-1)[0].id;
     let newNodeData = graphData.nodes;
     let newLinkData = graphData.links.filter((elem: any) => {
@@ -150,11 +154,13 @@ const Main = () => {
       }
       return elem;
     });
-    let newGraphData = {nodes: newNodeData, links: newLinkData};
+    let newGraphData = { nodes: newNodeData, links: newLinkData };
     setGraphData(newGraphData);
   };
 
-  const deleteNode = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const deleteNode = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     console.log("before delete node", graphData);
     let id = selectedNodes.slice(-1)[0].id;
     let newNodeData = graphData.nodes.filter((elem: any) => {
@@ -169,7 +175,7 @@ const Main = () => {
       }
       return elem;
     });
-    let newGraphData = {nodes: newNodeData, links: newLinkData};
+    let newGraphData = { nodes: newNodeData, links: newLinkData };
     setGraphData(newGraphData);
     console.log("after delete node", graphData);
   };
@@ -203,7 +209,9 @@ const Main = () => {
       links: [
         ...graphData.links,
         {
-          source: selectedNodes[selectedNodes.length - 1].id ? selectedNodes[selectedNodes.length - 1].id!.toString() : "",
+          source: selectedNodes[selectedNodes.length - 1].id
+            ? selectedNodes[selectedNodes.length - 1].id!.toString()
+            : "",
           target: randomString,
           value: 1,
           curvature: 0.6,
@@ -212,11 +220,13 @@ const Main = () => {
     });
   };
 
-  const handleLinkClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleLinkClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     if (selectedNodes.length === 2) {
       addLink(selectedNodes[0], selectedNodes[1]);
     }
-  }
+  };
 
   const handleNodeClick = (node: NodeObject$3, event: MouseEvent) => {
     setAnchorX(event.x);
@@ -241,7 +251,9 @@ const Main = () => {
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTextValue(event.target.value);
     updateNodeId(
-      selectedNodes.slice(-1)[0].id ? selectedNodes.slice(-1)[0].id!.toString() : "",
+      selectedNodes.slice(-1)[0].id
+        ? selectedNodes.slice(-1)[0].id!.toString()
+        : "",
       event.target.value
     );
   };
@@ -276,12 +288,16 @@ const Main = () => {
       });
   };
 
+  // Item component.
+  const [items, setItems] = React.useState(generateItems());
+  const children = items.map(props => <Item key={props.id} {...props} />);
+
   const open = Boolean(anchorX && anchorY);
   const id = open ? "simple-popover" : undefined;
 
   return (
     <div>
-      <Fab
+      {/* <Fab
         color="secondary"
         aria-label="edit"
         style={{
@@ -352,8 +368,12 @@ const Main = () => {
             </Button>
           </div>
         </div>
-      </Popover>
-      <ForceGraph3D
+      </Popover> */}
+      <Demo>
+        <Header />
+        <MuuriComponent dragEnabled>{children}</MuuriComponent>
+      </Demo>
+      {/* <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
         nodeLabel="id"
@@ -377,7 +397,21 @@ const Main = () => {
           return sprite;
         }}
         nodeThreeObjectExtend={true}
-      />
+      /> */}
+    </div>
+  );
+};
+
+const Item = ({ id, color, width, height, title }: any) => {
+  // Add a shadow when the item is dragging.
+  const isDragging = useDrag();
+  // Based on isDragging.
+  const shadow = isDragging ? "shadow" : "";
+  const cardTitle = isDragging ? "Release me!" : title;
+
+  return (
+    <div className={`item h${height} w${width} ${color} ${shadow}`}>
+      <div className="item-content">{cardTitle}</div>
     </div>
   );
 };
