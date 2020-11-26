@@ -8676,10 +8676,10 @@ muuri-react@^3.1.6:
     "@babel/runtime" "^7.9.2"
     prop-types "^15.7.2"
 
-muuri@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/muuri/-/muuri-0.8.0.tgz#60e84d2d322fa207efd113905eeb5d9750005a53"
-  integrity sha512-uqTi91q6mEKfHNHutlcDu3dS8/DXnxoWFh6fhUVJr426yaO4G/p2/LMoOeFb5Tl1hWzx7qoxl2v9RTJVFuskpQ==
+muuri@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/muuri/-/muuri-0.9.3.tgz#34c2bb785cca2dfaba39f5826b271edfb22477a8"
+  integrity sha512-GZGTaHxYALCCH04mmxkZ6nVr5nq2Ur8dQfbxFtyejP4U8kjae/6ZE2A9bugRBWMUIuyGRQ9btROj0gV6jQqFpQ==
 
 nan@^2.12.1:
   version "2.14.2"
