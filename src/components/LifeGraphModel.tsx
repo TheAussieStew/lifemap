@@ -38,12 +38,12 @@ export type QiLinks = {
 
 export type Qi = {
     readonly id: number; // number lookup is faster than string
-    mutability: boolean;
     pattern: Pattern;
-    transformable: boolean;
-    qiQuality: QiZhi;
-    pulsation: (qiQuality: QiZhi) => number // field/gravity strength;
-    timeHorizon: QiLink<TimeSpan>;
+    mutability?: boolean;
+    transformable?: boolean;
+    qiQuality?: QiZhi;
+    pulsation?: (qiQuality: QiZhi) => number // field/gravity strength;
+    timeHorizon?: QiLink<TimeSpan>;
 };
 
 export type QiLink<OrderKind> = {
