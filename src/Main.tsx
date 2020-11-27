@@ -4,7 +4,6 @@ import SpriteText from "three-spritetext";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import "./App.css";
 /* Utils & components */
-import { generateItems } from "./utils/Utils";
 import { Header, Demo } from "./components/Muuri";
 import "./style.css";
 import {
@@ -12,8 +11,7 @@ import {
   ForceGraph3D,
   ForceGraphMethods$2,
 } from "react-force-graph";
-import Fab from "@material-ui/core/Fab";
-import EditIcon from "@material-ui/icons/Edit";
+import { shadows } from '@material-ui/system';
 import data from "./kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
@@ -22,7 +20,8 @@ import firebase from "firebase";
 import "firebase/database";
 import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
-import { Card } from "@material-ui/core";
+import { Box, Card } from "@material-ui/core";
+import { Qi } from "./components/LifeGraphModel";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -288,15 +287,17 @@ const Main = () => {
       });
   };
 
-  const Item = ({ id, color, width, height, title }: any) => {
-    // Add a shadow when the item is dragging.
+  const Item = (qi: Qi) => {
     const isDragging = useDrag();
-    // Based on isDragging.
-    const shadow = isDragging ? "shadow" : "";
-    const cardTitle = isDragging ? "Release me!" : title;
+    const shadowHeight = isDragging ? 20 : 1;
+    const cardTitle = isDragging ? "Release me!" : qi.pattern;
 
     return (
-      <div className={`item h${height} w${width} ${color} ${shadow}`}>
+      <Box
+        style={{ transition: "box-shadow 0.2s", borderRadius: 10 }}
+        boxShadow={shadowHeight}
+        className={"item"}
+      >
         <div className="item-content">
           {cardTitle}
           <ForceGraph3D
@@ -327,16 +328,16 @@ const Main = () => {
             nodeThreeObjectExtend={true}
           />
         </div>
-      </div>
+      </Box>
     );
   };
 
   // Item component.
-  const [items, setItems] = React.useState(generateItems());
-  const children = items.map((props) => (
-    <Item key={props.id} {...props}></Item>
-  ));
-
+  const TextViewQi: Qi = {id: 0, pattern: "Text View"};
+  const GraphViewQi: Qi = {id: 1, pattern: "Graph View"};
+  const panes = [TextViewQi, GraphViewQi];
+  const [items, setItems] = React.useState(panes);
+  const children = items.map((props) => <Item key={props.id} {...props} />);
   const open = Boolean(anchorX && anchorY);
   const id = open ? "simple-popover" : undefined;
 
@@ -407,6 +408,6 @@ const Main = () => {
       <MuuriComponent dragEnabled>{children}</MuuriComponent>
     </div>
   );
-};
+};;
 
 export default Main;
