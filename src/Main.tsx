@@ -288,54 +288,53 @@ const Main = () => {
       });
   };
 
-const Item = ({ id, color, width, height, title }: any) => {
-  // Add a shadow when the item is dragging.
-  const isDragging = useDrag();
-  // Based on isDragging.
-  const shadow = isDragging ? "shadow" : "";
-  const cardTitle = isDragging ? "Release me!" : title;
+  const Item = ({ id, color, width, height, title }: any) => {
+    // Add a shadow when the item is dragging.
+    const isDragging = useDrag();
+    // Based on isDragging.
+    const shadow = isDragging ? "shadow" : "";
+    const cardTitle = isDragging ? "Release me!" : title;
 
-  return (
-    <Card className={`item h${height} w${width} ${color} ${shadow}`}>
-      <div className="item-content">
-        {cardTitle}
-      <ForceGraph3D
-        ref={fgRef}
-        graphData={graphData}
-        nodeLabel="id"
-        nodeResolution={7}
-        width={800}
-        height={800}
-        linkCurvature="curvature"
-        nodeAutoColorBy="group"
-        linkDirectionalParticles="value"
-        linkDirectionalParticleSpeed={0.01}
-        linkDirectionalParticleWidth={2}
-        linkWidth={0.5}
-        onNodeClick={handleNodeClick}
-        nodeThreeObject={node => {
-          const sprite = new SpriteText(node.id ? node.id.toString() : '');
-          // sprite.color = node.color;
-          sprite.textHeight = 2;
-          sprite.position.set(0,-8,0);
-          sprite.color = "#000000"
-          sprite.strokeWidth = 0.5;
-          sprite.strokeColor = "#888888";
-          sprite.padding = 1;
-          return sprite;
-        }}
-        nodeThreeObjectExtend={true}
-      />
+    return (
+      <div className={`item h${height} w${width} ${color} ${shadow}`}>
+        <div className="item-content">
+          {cardTitle}
+          <ForceGraph3D
+            ref={fgRef}
+            graphData={graphData}
+            nodeLabel="id"
+            nodeResolution={7}
+            width={600}
+            height={600}
+            linkCurvature="curvature"
+            nodeAutoColorBy="group"
+            linkDirectionalParticles="value"
+            linkDirectionalParticleSpeed={0.01}
+            linkDirectionalParticleWidth={2}
+            linkWidth={0.5}
+            onNodeClick={handleNodeClick}
+            nodeThreeObject={(node) => {
+              const sprite = new SpriteText(node.id ? node.id.toString() : "");
+              // sprite.color = node.color;
+              sprite.textHeight = 2;
+              sprite.position.set(0, -8, 0);
+              sprite.color = "#000000";
+              sprite.strokeWidth = 0.5;
+              sprite.strokeColor = "#888888";
+              sprite.padding = 1;
+              return sprite;
+            }}
+            nodeThreeObjectExtend={true}
+          />
         </div>
-    </Card>
-  );
-};
+      </div>
+    );
+  };
 
   // Item component.
   const [items, setItems] = React.useState(generateItems());
   const children = items.map((props) => (
-    <Item key={props.id} {...props}>
-    </Item>
+    <Item key={props.id} {...props}></Item>
   ));
 
   const open = Boolean(anchorX && anchorY);
@@ -419,6 +418,5 @@ const Item = ({ id, color, width, height, title }: any) => {
     </div>
   );
 };
-
 
 export default Main;
