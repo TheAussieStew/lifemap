@@ -342,17 +342,7 @@ const Main = () => {
 
   return (
     <div>
-      {/* <Fab
-        color="secondary"
-        aria-label="edit"
-        style={{
-          position: "absolute",
-          bottom: 30,
-          right: 30,
-        }}
-      >
-        <EditIcon />
-      </Fab>
+      {/* 
       <Popover
         id={id}
         open={open}
