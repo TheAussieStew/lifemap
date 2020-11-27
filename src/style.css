@@ -6,8 +6,8 @@
 .item {
   user-select: none;
   position: absolute;
-  width: 800px;
-  height: 800px;
+  width: 40vw;
+  height: 90vh;
   margin: 10px;
   z-index: 1;
   cursor: pointer;
@@ -30,10 +30,10 @@
   z-index: 0;
 }
 .item.h2 {
-  height: 500px;
+  /* height: 500px; */
 }
 .item.w2 {
-  width: 30%;
+  /* width: 30%; */
 }
 .item-content {
   position: absolute;
