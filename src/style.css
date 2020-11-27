@@ -4,16 +4,7 @@
   max-width: 100%;
 }
 .item {
-  user-select: none;
-  position: absolute;
-  width: 40vw;
-  height: 90vh;
-  margin: 10px;
   z-index: 1;
-  cursor: pointer;
-  will-change: transform;
-  border-radius: 6px;
-  border-top-right-radius: 20px;
 }
 .item.muuri-item-positioning {
   z-index: 2;
@@ -23,7 +14,7 @@
   z-index: 3;
 }
 .item.muuri-item-dragging {
-  cursor: move;
+  cursor: grab;
 }
 .item.muuri-item-hidden {
   z-index: 0;
@@ -52,15 +43,6 @@
   -ms-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
-}
-.item.red .item-content {
-  color: #f94a7a;
-}
-.item.green .item-content {
-  color: #2ac06d;
-}
-.item.blue .item-content {
-  color: #4a9ff9;
 }
 .border-tl {
   border-top-left-radius: 20px;

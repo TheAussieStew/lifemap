@@ -22,6 +22,7 @@ import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
 import { Box, Card } from "@material-ui/core";
 import { Qi } from "./components/LifeGraphModel";
+import zIndex from "@material-ui/core/styles/zIndex";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -293,12 +294,23 @@ const Main = () => {
     const cardTitle = isDragging ? "Release me!" : qi.pattern;
 
     return (
+      // Outer Grid Element, used by Muuri for positioning
       <Box
-        style={{ transition: "box-shadow 0.2s", borderRadius: 10 }}
+        style={{
+          transition: "box-shadow 0.2s",
+          width: "40vw",
+          height: "90vh",
+          margin: "10px",
+          cursor: "grab",
+          position: "absolute",
+          zIndex: 1 
+        }}
         boxShadow={shadowHeight}
         className={"item"}
       >
+        {/* Inner Grid Element, used by Muuri for animation */}
         <div className="item-content">
+          {/* Custom content here */}
           {cardTitle}
           <ForceGraph3D
             ref={fgRef}
