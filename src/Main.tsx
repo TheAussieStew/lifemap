@@ -287,6 +287,7 @@ const Main = () => {
         graphData: convertGraphDataToSimple(graphData),
       });
   };
+
 const Item = ({ id, color, width, height, title }: any) => {
   // Add a shadow when the item is dragging.
   const isDragging = useDrag();
@@ -303,8 +304,8 @@ const Item = ({ id, color, width, height, title }: any) => {
         graphData={graphData}
         nodeLabel="id"
         nodeResolution={7}
-        width={500}
-        height={500}
+        width={800}
+        height={800}
         linkCurvature="curvature"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
