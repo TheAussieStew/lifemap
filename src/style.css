@@ -6,8 +6,8 @@
 .item {
   user-select: none;
   position: absolute;
-  width: 500px;
-  height: 500px;
+  width: 800px;
+  height: 800px;
   margin: 10px;
   z-index: 1;
   cursor: pointer;
