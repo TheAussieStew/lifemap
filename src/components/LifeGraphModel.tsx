@@ -1,56 +1,189 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
-import { DateTime, Interval, Duration } from 'luxon';
+import { DateTime, Interval, Duration } from "luxon";
+import { LinearFilter } from "three";
 
-export type PartialOrder<OrderKind> = {
-    from: OrderKind;
-    to: OrderKind;
-    comparator: Comparator;
+
+enum Cardinal {
+  Left,
+  Right,
+  Up,
+  Down,
+  In,
+  Out,
 }
-export type Comparator = (from: OrderMetric, to: OrderMetric) => number;
-export type Unordered = undefined;
-
-export type Pattern = Time | number | string | Recurring;
-export type Recurring = unknown;
-
-export type OrderMetric = QiZhi | Ratio | List | TimePoint;
-export type QiZhi = number;
-export type Ratio = number;
-export type List = boolean;
-
-export type Time = TimePoint | TimeDuration | TimeSpan;
-export type TimePoint = DateTime;
-export type TimeDuration = Duration;
-export type TimeSpan = Interval;
-
-export type GraphData = {
-    nodes: Qis;
-    links: QiLinks;
+enum Trust {
+    信心 = 250,
+    Trust = 250,
+    Acceptance = 200,
+    Distrust = 170,
+    Suspicion = 170,
+    Doubt = 125,
+    Negativity = 125,
+    Worry = 125,
+    Fear = 100,
+    Anxiety = 80,
+    Paranoia = 50,
 }
 
-export type Qis = {
-    [id: number]: Qi;
+enum Openness {
+    Openness = 350,
+    Optimism = 275,
+    Confidence = 275,
+    Funny = 250,
+    Arrogance = 175,
+    Stubbornness = 160,
+    Controlling = 120,
+    Insecurity = 120,
+    Isolation = 100,
+    Sadness = 75,
+    Regret = 75,
+    Despair = 50,
+    Hopeless = 50,
+    Shame = 40
 }
 
-export type QiLinks = {
-    [id: number]: QiLink<OrderMetric>;
+enum Love {
+    Love = 500,
+    Compassion = 450,
+    Hate = 250,
+    Prejudiced = 175,
+    Judgmental = 175,
+    Pride = 175,
+    Anger = 175,
+    Apathy = 50,
+    Indifference = 50,
 }
 
-export type Qi = {
-    readonly id: number; // number lookup is faster than string
-    pattern: Pattern;
-    mutability?: boolean;
-    transformable?: boolean;
-    qiQuality?: QiZhi;
-    pulsation?: (qiQuality: QiZhi) => number // field/gravity strength;
-    timeHorizon?: QiLink<TimeSpan>;
+enum Gratitude {
+    Gratitude = 600,
+    Resentment = 120,
+}
+
+enum Peace {
+    Peace = 700,
+    Disrespect = 120,
+}
+
+type ViewModel = {
+    panes: Pane[];
+}
+type Pane = {
+    children: Element[]
+}
+type Element = {
+    lens: Lens[],
+    qi: Qi[],
+    style: StyleSheet,
+    otherProps: any
+} 
+
+// Lens - different ways of viewing information - material
+type Lens = FormattedText | List | Graph | Code | QiField | NonSymbolic; // don't represent these as qi, for now
+type FormattedText = unknown;
+type List = ListNumber | ListBullets;
+type ListNumber = unknown;
+type ListBullets = unknown;
+type Graph = Graph2D | Graph3D;
+type Graph2D = unknown;
+type Graph3D = unknown;
+type Code = unknown;
+type QiField = Colour | Brightness | Size;
+type Luminance = QiField;
+type Colour = string;
+type Brightness = number;
+type Size = number;
+type NonSymbolic = boolean;
+
+// Transformations - something changing
+type Transformation = () => {};
+type Recurring = (qi: Qi, graph: GraphData) => { graph: GraphData };
+type Pulsation = (qiQuality: QiZhi, qiField: QiField) => QiField;
+
+// Information - just information
+type Information = Time | number | string | Image;
+type Image = unknown;
+
+// Ordering - how to differentiate and evaluate
+type PartialOrder<OrderMetric> = {
+  from: OrderMetric;
+  to: OrderMetric;
+  comparator: Comparator;
+};
+type Unordered = undefined;
+type Comparator = (from: OrderMetric, to: OrderMetric) => number;
+
+type OrderMetric =
+  | QiZhi
+  | EmotionalState
+  | Time
+  | Ratio
+  | number
+  | Tuple;
+type EmotionalState = Peace | Gratitude | Love | Openness | Trust;
+type QiZhi = number;
+type Ratio = number;
+type Tuple = Cardinal.Left | Cardinal.Right;
+
+// Time related
+type Time = TimePoint | TimeDuration | TimeSpan;
+type TimePoint = DateTime;
+type TimeDuration = Duration;
+type TimeSpan = Interval;
+
+type GraphData = {
+  nodes: Qis;
+  links: QiLinks;
+  pickedNodes: Qis;
+  pickedLinks: QiLinks;
 };
 
-export type QiLink<OrderKind> = {
-    readonly id: number;
-    readonly from: Qi;
-    readonly to: Qi;
-    tong: QiZhi;
-    ordering: Unordered | PartialOrder<OrderKind>;
-};
+type Q = Qi | QiLink<OrderMetric>;
+type GraphOperations<Q> = {
+    create: CreateQi | CreateQiLink<OrderMetric> | CreateNeighbour;
+    change: Change<Q>,
+    delete: Delete<Q>,
+    pick: Pick<Q>,
+    unpick: Unpick<Q>
+    neighbours: Neighbours<Q>;
+}
+type CreateQi = (info: Information) => GraphData;
+type CreateQiLink<OrderMetric> = (from: Qi, to: Qi) => GraphData;
+type CreateNeighbour = (qi: Qi, info: Information) => GraphData;
+type Change<Q> = (something: any, q: Q) => GraphData;
+type Delete<Q> = (q: Q) => GraphData;
+type Pick<Q> = (q: Q) => GraphData;
+type Unpick<Q> = (q: Q) => GraphData;
+type Neighbours<Q> = (q: Q, degree: BigInt) => [Qi];
 
+type Qis = {
+  [id: number]: Qi;
+};
+type Nodes = Qis;
+
+type QiLinks = {
+  [id: number]: QiLink<OrderMetric>;
+};
+type NodeLinks = QiLinks;
+
+type Qi = {
+  readonly id: number; // number lookup is faster than string
+  // Information
+  information: Information;
+  mutability?: boolean;
+  transformable?: boolean;
+  qiQuality?: QiZhi;
+  // Energy 
+  transformations?: Transformation[]; // describes how this qi transforms itself and the graph
+  timeHorizon?: QiLink<TimeSpan>;
+};
+type Node = Qi;
+
+type QiLink<OrderMetric> = {
+  readonly id: number;
+  readonly from: Qi;
+  readonly to: Qi;
+  tong: QiZhi;
+  ordering: Unordered | PartialOrder<OrderMetric>;
+};
+type NodeLink = QiLink<OrderMetric>;

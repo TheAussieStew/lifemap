@@ -291,7 +291,7 @@ const Main = () => {
   const Item = (qi: Qi) => {
     const isDragging = useDrag();
     const shadowHeight = isDragging ? 20 : 1;
-    const cardTitle = isDragging ? "Release me!" : qi.pattern;
+    const cardTitle = isDragging ? "Release me!" : qi.information;
 
     return (
       // Outer Grid Element, used by Muuri for positioning
@@ -345,8 +345,8 @@ const Main = () => {
   };
 
   // Item component.
-  const TextViewQi: Qi = {id: 0, pattern: "Text View"};
-  const GraphViewQi: Qi = {id: 1, pattern: "Graph View"};
+  const TextViewQi: Qi = {id: 0, information: "Text View"};
+  const GraphViewQi: Qi = {id: 1, information: "Graph View"};
   const panes = [TextViewQi, GraphViewQi];
   const [items, setItems] = React.useState(panes);
   const children = items.map((props) => <Item key={props.id} {...props} />);
