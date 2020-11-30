@@ -1,8 +1,7 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
 import { DateTime, Interval, Duration } from "luxon";
-import { LinearFilter } from "three";
-
+import * as React from "react";
 
 enum Cardinal {
   Left,
@@ -13,74 +12,82 @@ enum Cardinal {
   Out,
 }
 enum Trust {
-    信心 = 250,
-    Trust = 250,
-    Acceptance = 200,
-    Distrust = 170,
-    Suspicion = 170,
-    Doubt = 125,
-    Negativity = 125,
-    Worry = 125,
-    Fear = 100,
-    Anxiety = 80,
-    Paranoia = 50,
+  信心 = 250,
+  Trust = 250,
+  Acceptance = 200,
+  Distrust = 170,
+  Suspicion = 170,
+  Doubt = 125,
+  Negativity = 125,
+  Worry = 125,
+  Fear = 100,
+  Anxiety = 80,
+  Paranoia = 50,
 }
 
 enum Openness {
-    Openness = 350,
-    Optimism = 275,
-    Confidence = 275,
-    Funny = 250,
-    Arrogance = 175,
-    Stubbornness = 160,
-    Controlling = 120,
-    Insecurity = 120,
-    Isolation = 100,
-    Sadness = 75,
-    Regret = 75,
-    Despair = 50,
-    Hopeless = 50,
-    Shame = 40
+  Openness = 350,
+  Optimism = 275,
+  Confidence = 275,
+  Funny = 250,
+  Arrogance = 175,
+  Stubbornness = 160,
+  Controlling = 120,
+  Insecurity = 120,
+  Isolation = 100,
+  Sadness = 75,
+  Regret = 75,
+  Despair = 50,
+  Hopeless = 50,
+  Shame = 40,
 }
 
 enum Love {
-    Love = 500,
-    Compassion = 450,
-    Hate = 250,
-    Prejudiced = 175,
-    Judgmental = 175,
-    Pride = 175,
-    Anger = 175,
-    Apathy = 50,
-    Indifference = 50,
+  Love = 500,
+  Compassion = 450,
+  Hate = 250,
+  Prejudiced = 175,
+  Judgmental = 175,
+  Pride = 175,
+  Anger = 175,
+  Apathy = 50,
+  Indifference = 50,
 }
 
 enum Gratitude {
-    Gratitude = 600,
-    Resentment = 120,
+  Gratitude = 600,
+  Resentment = 120,
 }
 
 enum Peace {
-    Peace = 700,
-    Disrespect = 120,
+  Peace = 700,
+  Disrespect = 120,
 }
 
 type ViewModel = {
-    panes: Pane[];
-}
-type Pane = {
-    children: Element[]
-}
-type Element = {
-    lens: Lens[],
-    qi: Qi[],
-    style: StyleSheet,
-    otherProps: any
-} 
+  portals: [Portal];
+};
+type ViewOperations = {
+  parsePortal: (p: Portal) => React.ReactNode;
+  createPortal: (ls: LensStack, qi: [Qi]) => Portal;
+  changePortal: (p: Portal, something: any) => Portal;
+  createLensStack: () => LensStack;
+  changeLensStack: (ls: LensStack, l: Lens) => LensStack;
+  createLens: (l: Lens) => Lens;
+};
+
+type Portal = {
+  children: [Portal | (LensStack & [Qi])];
+};
+
+type LensStack = {
+  lenses: [Lens];
+};
 
 // Lens - different ways of viewing information - material
-type Lens = FormattedText | List | Graph | Code | QiField | NonSymbolic; // don't represent these as qi, for now
-type FormattedText = unknown;
+type Lens = Clear | Language | List | Code | Graph | QiField | Symbolic | NonSymbolic; // don't represent these as qi, for now
+type Clear = unknown;
+type Language = unknown;
 type List = ListNumber | ListBullets;
 type ListNumber = unknown;
 type ListBullets = unknown;
@@ -88,11 +95,14 @@ type Graph = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = unknown;
 type Code = unknown;
-type QiField = Colour | Brightness | Size;
+type QiField = Colour & Brightness & Size;
 type Luminance = QiField;
 type Colour = string;
 type Brightness = number;
 type Size = number;
+type Symbolic = Emoji | Thumbnails;
+type Emoji = unknown;
+type Thumbnails = unknown;
 type NonSymbolic = boolean;
 
 // Transformations - something changing
@@ -113,13 +123,7 @@ type PartialOrder<OrderMetric> = {
 type Unordered = undefined;
 type Comparator = (from: OrderMetric, to: OrderMetric) => number;
 
-type OrderMetric =
-  | QiZhi
-  | EmotionalState
-  | Time
-  | Ratio
-  | number
-  | Tuple;
+type OrderMetric = QiZhi | EmotionalState | Time | Ratio | number | Tuple;
 type EmotionalState = Peace | Gratitude | Love | Openness | Trust;
 type QiZhi = number;
 type Ratio = number;
@@ -140,13 +144,13 @@ type GraphData = {
 
 type Q = Qi | QiLink<OrderMetric>;
 type GraphOperations<Q> = {
-    create: CreateQi | CreateQiLink<OrderMetric> | CreateNeighbour;
-    change: Change<Q>,
-    delete: Delete<Q>,
-    pick: Pick<Q>,
-    unpick: Unpick<Q>
-    neighbours: Neighbours<Q>;
-}
+  create: CreateQi | CreateQiLink<OrderMetric> | CreateNeighbour;
+  change: Change<Q>;
+  delete: Delete<Q>;
+  pick: Pick<Q>;
+  unpick: Unpick<Q>;
+  neighbours: Neighbours<Q>;
+};
 type CreateQi = (info: Information) => GraphData;
 type CreateQiLink<OrderMetric> = (from: Qi, to: Qi) => GraphData;
 type CreateNeighbour = (qi: Qi, info: Information) => GraphData;
@@ -172,8 +176,9 @@ type Qi = {
   information: Information;
   mutability?: boolean;
   transformable?: boolean;
-  qiQuality?: QiZhi;
-  // Energy 
+  qiQuality?: QiZhi; // composed of all connected relations
+  relation: EmotionalState; // how do you relate to this single qi
+  // Energy
   transformations?: Transformation[]; // describes how this qi transforms itself and the graph
   timeHorizon?: QiLink<TimeSpan>;
 };
