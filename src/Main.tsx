@@ -12,7 +12,7 @@ import {
   ForceGraphMethods$2,
 } from "react-force-graph";
 import { shadows } from '@material-ui/system';
-import data from "./kongweilifemap.json";
+import data from "./assets/kongweilifemap.json";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -21,7 +21,7 @@ import "firebase/database";
 import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
 import { Box, Card } from "@material-ui/core";
-import { Qi } from "./components/LifeGraphModel";
+import { Qi } from "./core/LifeGraphModel";
 import zIndex from "@material-ui/core/styles/zIndex";
 
 var firebaseConfig = {
