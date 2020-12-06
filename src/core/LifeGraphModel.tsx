@@ -47,7 +47,7 @@ namespace LifeGraphModel {
   enum Love {
     Love = 500,
     Compassion = 450,
-    Hate = 250,
+    Hate = 400,
     Prejudiced = 175,
     Judgmental = 175,
     Pride = 175,
@@ -62,6 +62,7 @@ namespace LifeGraphModel {
   }
 
   enum Peace {
+    Reverence = 800,
     Peace = 700,
     Disrespect = 120,
   }
@@ -169,6 +170,7 @@ namespace LifeGraphModel {
     delete: (graph: Graph, q: Q) => Graph;
     pick: (graph: Graph, q: Q) => Graph;
     popPicks: (graph: Graph, q: Q, nOfPicks: number) => Q[];
+    // neighbour: (graph: Graph, q: Q) => Qi[];
     neighbours: (graph: Graph, q: Q, degree: number) => Qi[];
   };
 
@@ -318,8 +320,37 @@ namespace LifeGraphModel {
       }
     },
     neighbours: (graph: Graph, q: Q, degree: number) => {
-      //TODO
-      const neighbours: Qi[] = [];
+      // BFS based off CLRS page 595
+      let neighbours: Qi[] = [];
+      if ((q as QiImp).information !== undefined) { 
+        let marked: {qi: Qi, done: EmotionalState, dist: number}[] = [];          
+        marked = graph.nodes.map((qi: Qi) => {return {qi: qi, done: Trust.Doubt, dist: Infinity}});
+        const source = q as Qi;
+        let markedQiInfo = marked.find((markedQiInfo) => {return markedQiInfo.qi === source});
+        markedQiInfo!.dist = 0;
+        let toTraverse: Qi[] = [];
+        // Start
+        toTraverse.push(source);
+        while (toTraverse.length !== 0) {
+          const currQi = toTraverse.shift();
+          let markedQiInfo = marked.find((markedQiInfo) => {return markedQiInfo.qi === currQi});
+          if (markedQiInfo!.dist > degree) break;
+          const currentAdjacentLinks: QiLink[] = graph.links.filter((ql: QiLink) => (ql.from === currQi));
+          const currentAdjacentQi: Qi[] = currentAdjacentLinks.map((ql: QiLink) => {return ql.to});
+          for (let adjQi of currentAdjacentQi) {
+            let markedQiInfo = marked.find((markedQiInfo) => {return markedQiInfo.qi === adjQi});
+            if (markedQiInfo!.done === Trust.Doubt) {
+              markedQiInfo!.done = Trust.Trust;
+              markedQiInfo!.dist += 1;
+              toTraverse.push(adjQi);
+            }
+          }
+          markedQiInfo = marked.find((markedQiInfo) => {return markedQiInfo.qi === currQi});
+          markedQiInfo!.done = Peace.Peace;
+        }
+      } else {          
+        // TODO: Some other day when needed
+      }
       return neighbours;
     },
   };
@@ -329,7 +360,7 @@ namespace LifeGraphModel {
   // Qi Definitions
 
   type Q = Qi | QiLink;
-  type Qi = {
+  export type Qi = {
     readonly id: number; // number lookup is faster than string
     // Information
     information: Information;
@@ -376,7 +407,7 @@ namespace LifeGraphModel {
   class QiLinkImp implements QiLink {
     readonly id: number;
     readonly from: Qi;
-    readonly to: Qi;
+    readonly to: Qi
     tong: QiZhi;
     ordering: Order;
 
