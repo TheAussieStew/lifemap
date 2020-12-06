@@ -11,18 +11,13 @@ import {
   ForceGraph3D,
   ForceGraphMethods$2,
 } from "react-force-graph";
-import { shadows } from '@material-ui/system';
 import data from "./assets/kongweilifemap.json";
-import Popover from "@material-ui/core/Popover";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import firebase from "firebase";
 import "firebase/database";
 import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
 import { Box, Card } from "@material-ui/core";
-import { Qi } from "./core/LifeGraphModel";
-import zIndex from "@material-ui/core/styles/zIndex";
+import { lgm } from "./core/LifeGraphModel";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -68,9 +63,7 @@ let initialLinkedGraph = {
 let initialAnchor: number = 0;
 
 const Main = () => {
-  const [graphData, setGraphData] = React.useState<any>(initialGraph);
-  const [anchorX, setAnchorX] = React.useState(initialAnchor);
-  const [anchorY, setAnchorY] = React.useState(initialAnchor);
+  const [graphData, setGraphData] = React.useState<any>(data);
   const [selectedNodes, setSelectedNodes] = React.useState<NodeObject$3[]>([]);
   const [textValue, setTextValue] = React.useState("");
   const [width, setWidth] = React.useState(window.innerWidth);
@@ -132,17 +125,6 @@ const Main = () => {
     setSelectedNodes(newSelectedNodes);
   };
 
-  const updateNodeId = (oldId: string, newId: string) => {
-    for (var i = 0; i < graphData.nodes.length; i++) {
-      if (graphData.nodes[i].id === oldId) {
-        graphData.nodes[i].id = newId;
-        return;
-      }
-    }
-  };
-
-  // TODO: really need to separate graph api and handlers...
-  // TODO: need to create selectedLinks
   const deleteLink = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -228,36 +210,6 @@ const Main = () => {
     }
   };
 
-  const handleNodeClick = (node: NodeObject$3, event: MouseEvent) => {
-    setAnchorX(event.x);
-    setAnchorY(event.y);
-    setTextValue(node.id ? node.id.toString() : "");
-    pushSelectedNodes(node);
-    // setSelectedNode(node);
-    console.log("current graph data", graphData);
-  };
-
-  const handleClose = () => {
-    setAnchorX(0);
-    setAnchorY(0);
-    console.log("raw graph data being written", graphData);
-    console.log(
-      "parsed and stringified data",
-      JSON.parse(JSON.stringify(graphData))
-    );
-    writeGraphData(kongweiUserId, JSON.parse(JSON.stringify(graphData)));
-  };
-
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTextValue(event.target.value);
-    updateNodeId(
-      selectedNodes.slice(-1)[0].id
-        ? selectedNodes.slice(-1)[0].id!.toString()
-        : "",
-      event.target.value
-    );
-  };
-
   const replacer = (key: any, value: any) => {
     // Filtering out properties
     if (!resetDatabaseToLocal) {
@@ -288,7 +240,37 @@ const Main = () => {
       });
   };
 
-  const Item = (qi: Qi) => {
+  const initialisedForceGraph3D = (
+    <ForceGraph3D
+      ref={fgRef}
+      graphData={graphData}
+      nodeLabel="id"
+      nodeResolution={7}
+      width={600}
+      height={600}
+      linkCurvature="curvature"
+      nodeAutoColorBy="group"
+      linkDirectionalParticles="value"
+      linkDirectionalParticleSpeed={0.005}
+      linkDirectionalParticleWidth={2}
+      linkWidth={0.5}
+      onNodeClick={() => {}}
+      nodeThreeObject={(node) => {
+        const sprite = new SpriteText(node.id ? node.id.toString() : "");
+        // sprite.color = node.color;
+        sprite.textHeight = 2;
+        sprite.position.set(0, -8, 0);
+        sprite.color = "#000000";
+        sprite.strokeWidth = 0.5;
+        sprite.strokeColor = "#888888";
+        sprite.padding = 1;
+        return sprite;
+      }}
+      nodeThreeObjectExtend={true}
+    />
+  );
+
+  const Item = (qi: lgm.Qi) => {
     const isDragging = useDrag();
     const shadowHeight = isDragging ? 20 : 1;
     const cardTitle = isDragging ? "Release me!" : qi.information;
@@ -303,7 +285,7 @@ const Main = () => {
           margin: "10px",
           cursor: "grab",
           position: "absolute",
-          zIndex: 1 
+          zIndex: 1,
         }}
         boxShadow={shadowHeight}
         className={"item"}
@@ -312,111 +294,26 @@ const Main = () => {
         <div className="item-content">
           {/* Custom content here */}
           {cardTitle}
-          <ForceGraph3D
-            ref={fgRef}
-            graphData={graphData}
-            nodeLabel="id"
-            nodeResolution={7}
-            width={600}
-            height={600}
-            linkCurvature="curvature"
-            nodeAutoColorBy="group"
-            linkDirectionalParticles="value"
-            linkDirectionalParticleSpeed={0.01}
-            linkDirectionalParticleWidth={2}
-            linkWidth={0.5}
-            onNodeClick={handleNodeClick}
-            nodeThreeObject={(node) => {
-              const sprite = new SpriteText(node.id ? node.id.toString() : "");
-              // sprite.color = node.color;
-              sprite.textHeight = 2;
-              sprite.position.set(0, -8, 0);
-              sprite.color = "#000000";
-              sprite.strokeWidth = 0.5;
-              sprite.strokeColor = "#888888";
-              sprite.padding = 1;
-              return sprite;
-            }}
-            nodeThreeObjectExtend={true}
-          />
+          {qi.information === "Graph View" ? (
+            initialisedForceGraph3D
+          ) : (
+            <Card style={{marginTop: 20}} >{JSON.stringify(data).slice(0, 200)}</Card>
+             
+          )}
         </div>
       </Box>
     );
   };
 
   // Item component.
-  const TextViewQi: Qi = {id: 0, information: "Text View"};
-  const GraphViewQi: Qi = {id: 1, information: "Graph View"};
-  const panes = [TextViewQi, GraphViewQi];
+  const TextViewQi: lgm.Qi = {id: 0, information: "Text View"};
+  const GraphViewQi: lgm.Qi = {id: 1, information: "Graph View"};
+  const panes = [GraphViewQi, TextViewQi];
   const [items, setItems] = React.useState(panes);
   const children = items.map((props) => <Item key={props.id} {...props} />);
-  const open = Boolean(anchorX && anchorY);
-  const id = open ? "simple-popover" : undefined;
 
   return (
     <div>
-      {/* 
-      <Popover
-        id={id}
-        open={open}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={{ top: anchorY, left: anchorX }}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <div style={{ flexDirection: "column", display: "flex", margin: 25 }}>
-          <TextField
-            id="outlined-multiline-static"
-            label="Details"
-            multiline
-            rows={6}
-            variant="outlined"
-            onChange={handleTextChange}
-            style={{ width: 300 }}
-            value={textValue}
-          />
-          <div
-            style={{
-              flexDirection: "row",
-              display: "flex",
-              marginTop: 15,
-              justifyContent: "flex-end"
-            }}
-          >
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleLinkClick}
-              style={{borderRadius: 40, textTransform: 'none', marginRight: 10}}
-            >
-              Link
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={addChild}
-              style={{borderRadius: 40, textTransform: 'none', marginRight: 10}}
-            >
-              Add child
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={deleteNode}
-              style={{borderRadius: 40, textTransform: 'none'}}
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
-      </Popover> */}
       <MuuriComponent dragEnabled>{children}</MuuriComponent>
     </div>
   );
