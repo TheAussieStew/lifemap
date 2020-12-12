@@ -17,7 +17,8 @@ import "firebase/database";
 import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
 import { Box, Card } from "@material-ui/core";
-import { lgm } from "./core/LifeGraphModel";
+import { Qi } from "./core/LifeGraphModel";
+import { ListPointsView } from "./components/ViewModel";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -270,7 +271,7 @@ const Main = () => {
     />
   );
 
-  const Item = (qi: lgm.Qi) => {
+  const Item = (qi: Qi) => {
     const isDragging = useDrag();
     const shadowHeight = isDragging ? 20 : 1;
     const cardTitle = isDragging ? "Release me!" : qi.information;
@@ -297,8 +298,9 @@ const Main = () => {
           {qi.information === "Graph View" ? (
             initialisedForceGraph3D
           ) : (
-            <Card style={{marginTop: 20}} >{JSON.stringify(data).slice(0, 200)}</Card>
-             
+            <Card style={{ marginTop: 20 }}>
+              <ListPointsView />
+            </Card>
           )}
         </div>
       </Box>
@@ -306,8 +308,8 @@ const Main = () => {
   };
 
   // Item component.
-  const TextViewQi: lgm.Qi = {id: 0, information: "Text View"};
-  const GraphViewQi: lgm.Qi = {id: 1, information: "Graph View"};
+  const TextViewQi: Qi = { id: 0, information: "Text View" };
+  const GraphViewQi: Qi = { id: 1, information: "Graph View" };
   const panes = [GraphViewQi, TextViewQi];
   const [items, setItems] = React.useState(panes);
   const children = items.map((props) => <Item key={props.id} {...props} />);
@@ -317,6 +319,6 @@ const Main = () => {
       <MuuriComponent dragEnabled>{children}</MuuriComponent>
     </div>
   );
-};;
+};
 
 export default Main;
