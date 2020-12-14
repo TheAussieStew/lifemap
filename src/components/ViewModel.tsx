@@ -1,3 +1,4 @@
+import { Card } from "@material-ui/core";
 import React from "react";
 import { useRef } from "react";
 import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
@@ -35,12 +36,11 @@ import { Qi, ListPoints, Graph, GraphImp, GraphOpsImp } from "../core/LifeGraphM
 //   />
 // );
 
-export const ListPointsView = () => {
+export const ListPointsView: ListPoints = (centre: Qi, g: Graph) => {
   const exampleGraph = new GraphImp();
   GraphOpsImp.createQi(exampleGraph, "Hi, I am testing");
   GraphOpsImp.createQi(exampleGraph, "Hello, I am testing");
   GraphOpsImp.createQi(exampleGraph, "Ni hao, I am testing");
-  console.log("ex graph", exampleGraph);
   let list = (
     <ul>
       {exampleGraph.nodes.map((qi: Qi, index: number) => {
@@ -48,6 +48,5 @@ export const ListPointsView = () => {
       })}
     </ul>
   );
-  console.log('mapped list', list)
   return list;
 };

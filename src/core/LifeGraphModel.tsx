@@ -133,7 +133,7 @@ type Transformation = () => {};
 type Recurring = (qi: Qi, graph: Graph) => { graph: Graph };
 type Pulsation = (qiQuality: QiZhi, qiField: QiField) => QiField;
 
-// Structure
+// Structure - configurations of information
 type Structure =
   | List
   | GraphStructure
