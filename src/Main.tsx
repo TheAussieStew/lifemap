@@ -3,7 +3,6 @@ import * as THREE from "three";
 import SpriteText from "three-spritetext";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import "./App.css";
-/* Utils & components */
 import { Header, Demo } from "./components/Muuri";
 import "./style.css";
 import {
@@ -17,8 +16,9 @@ import "firebase/database";
 import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
 import { Box, Card } from "@material-ui/core";
-import { Qi } from "./core/LifeGraphModel";
+import { GraphImp, GraphOpsImp, Qi } from "./core/LifeGraphModel";
 import { ListPointsView } from "./components/ViewModel";
+import { initialisedGraph } from "./core/Initialiser";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCqulAS9_9MHrnn0ly8zQpQR3QDBSFl5Oo",
@@ -49,7 +49,9 @@ type NodeObject$3 = object & {
   fy?: number;
 };
 
-// TODO: Really need to figure out typing for the graph
+
+let g = initialisedGraph();
+console.log("new graph", g);
 let initialGraph = {
   nodes: [{ id: "Life", group: 0 }],
   links: [],
@@ -271,6 +273,33 @@ const Main = () => {
     />
   );
 
+  const MuuriContainer = () => {
+    const isDragging = useDrag();
+    const shadowHeight = isDragging ? 20 : 1;
+    return (
+      <Box
+        style={{
+          transition: "box-shadow 0.2s",
+          width: "40vw",
+          height: "90vh",
+          margin: "10px",
+          cursor: "grab",
+          position: "absolute",
+          zIndex: 1,
+        }}
+        boxShadow={shadowHeight}
+        className={"item"}
+      >
+        {/* Inner Grid Element, used by Muuri for animation */}
+        <div className="item-content">
+          {/* Custom content here 
+           how to add children of this thing here?
+          */}
+        </div>
+      </Box>
+    );
+  }
+
   const Item = (qi: Qi) => {
     const isDragging = useDrag();
     const shadowHeight = isDragging ? 20 : 1;
@@ -298,7 +327,7 @@ const Main = () => {
           {qi.information === "Graph View" ? (
             initialisedForceGraph3D
           ) : (
-            <Card style={{ marginTop: 20 }}>
+            <Card style={{ margin: 20 }}>
               <ListPointsView />
             </Card>
           )}
