@@ -16,7 +16,7 @@ import "firebase/database";
 import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
 import { Box, Card } from "@material-ui/core";
-import { GraphImp, GraphOpsImp, Qi } from "./core/LifeGraphModel";
+import { GraphObj, GraphOps, Qi } from "./core/LifeGraphModel";
 import { ListPointsView } from "./components/ViewModel";
 import { initialisedGraph } from "./core/Initialiser";
 
