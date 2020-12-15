@@ -1,14 +1,14 @@
-import { GraphImp, GraphOpsImp } from "./LifeGraphModel";
+import { GraphObj, GraphOps } from "./LifeGraphModel";
 
 export const initialisedGraph = () => {
-    let g = new GraphImp();
-    GraphOpsImp.createQi(g, "Red");
-    GraphOpsImp.createQi(g, "Blue");
-    GraphOpsImp.createQi(g, "Purple");
-    GraphOpsImp.createQi(g, "White");
-    const fst = GraphOpsImp.queryQi(g, 0);
-    const snd = GraphOpsImp.queryQi(g, 0);
-    GraphOpsImp.createLink(g, fst, snd);
-    GraphOpsImp.createNeighbour(g, fst, "Red White");
+    let g = new GraphObj();
+    GraphOps.createQi(g, "Red");
+    GraphOps.createQi(g, "Blue");
+    GraphOps.createQi(g, "Purple");
+    GraphOps.createQi(g, "White");
+    const fst = GraphOps.queryQi(g, 0);
+    const snd = GraphOps.queryQi(g, 0);
+    GraphOps.createLink(g, fst, snd);
+    GraphOps.createNeighbour(g, fst, "Red White");
     return g;
 }

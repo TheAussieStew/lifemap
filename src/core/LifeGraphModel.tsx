@@ -1,6 +1,6 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
-import { GraphicEq } from "@material-ui/icons";
+import { GraphicEq, TrendingDownOutlined } from "@material-ui/icons";
 import { DateTime, Interval, Duration } from "luxon";
 import * as React from "react";
 
@@ -160,7 +160,7 @@ type Embed = unknown;
 
 // Ordering - how to differentiate and evaluate
 // Maybe model using GADT
-type Order = PartialOrder | Unordered;
+export type Order = PartialOrder | Unordered;
 type PartialOrder = {
   from: OrderRelation;
   to: OrderRelation;
@@ -197,7 +197,9 @@ export type Graph = {
 
 type GraphOperations = {
   createQi: (graph: Graph, info: Information) => Graph;
+  queryQi: (graph: Graph, id: number) => Qi;
   createLink: (graph: Graph, from: Qi, to: Qi) => Graph;
+  queryQiLink: (graph: Graph, id: number) => QiLink;
   createNeighbour: (graph: Graph, from: Qi, info: Information) => Graph;
   changeQi: (graph: Graph, info: Information, qi: Qi) => Graph;
   changeQiLink: (
@@ -206,8 +208,6 @@ type GraphOperations = {
     order: Order,
     qiLink: QiLink
   ) => Graph;
-  queryQi: (graph: Graph, id: number) => Qi;
-  queryQiLink: (graph: Graph, id: number) => QiLink;
   delete: (graph: Graph, q: Q) => Graph;
   pick: (graph: Graph, q: Q) => Graph;
   popPicks: (graph: Graph, q: Q, nOfPicks: number) => Q[];
@@ -215,25 +215,42 @@ type GraphOperations = {
   neighbours: (graph: Graph, q: Q, degree: number) => Qi[];
 };
 
-export class GraphImp implements Graph {
+export class GraphObj implements Graph {
   nodes: Qi[] = [];
   links: QiLink[] = [];
   pickedNodes: Qi[] = [];
   pickedLinks: QiLink[] = [];
 }
 
-export const GraphOpsImp: GraphOperations = {
+export const GraphOps: GraphOperations = {
   createQi: (graph: Graph, info: Information) => {
     const id = graph.nodes.length;
     const qi = new QiImp(id, info);
     graph.nodes.push(qi);
     return graph;
   },
+  queryQi: (graph: Graph, id: number) => {
+    const index = graph.nodes.findIndex((elem) => elem.id === id);
+    if (index === -1) {
+      return new QiImp(-1, "nothing"); //TODO: A better way of handling?
+    } else {
+      return graph.nodes[id];
+    }
+  },
   createLink: (graph: Graph, from: Qi, to: Qi) => {
     const id = graph.links.length;
     const qiLink = new QiLinkImp(id, from, to);
     graph.links.push(qiLink);
     return graph;
+  },
+  queryQiLink: (graph: Graph, id: number) => {
+    const index = graph.links.findIndex((elem) => elem.id === id);
+    if (index === -1) {
+      const nothing = new QiImp(-1, "nothing"); //TODO: A better way of handling?
+      return new QiLinkImp(-1, nothing, nothing); //TODO: A better way of handling?
+    } else {
+      return graph.links[id];
+    }
   },
   createNeighbour: (graph: Graph, from: Qi, info: Information) => {
     const qiId = graph.nodes.length;
@@ -265,10 +282,12 @@ export const GraphOpsImp: GraphOperations = {
   },
   changeQiLink: (graph: Graph, tong: QiZhi, order: Order, qiLink: QiLink) => {
     const index = graph.links.findIndex((elem) => elem === qiLink);
-    if (index === -1) {
+    if (index === -1) { // need a better way to deal with bad cases
       return graph;
     } else {
-      const newQiLink = new QiLinkImp(index, qiLink.from, qiLink.to);
+      let newQiLink = new QiLinkImp(index, qiLink.from, qiLink.to);
+      newQiLink.tong = tong;
+      newQiLink.ordering = order;
       const newGraph: Graph = {
         nodes: graph.nodes,
         links: [
@@ -280,23 +299,6 @@ export const GraphOpsImp: GraphOperations = {
         pickedLinks: graph.pickedLinks,
       };
       return newGraph;
-    }
-  },
-  queryQi: (graph: Graph, id: number) => {
-    const index = graph.nodes.findIndex((elem) => elem.id === id);
-    if (index === -1) {
-      return new QiImp(-1, "nothing"); //TODO: A better way of handling?
-    } else {
-      return graph.nodes[id];
-    }
-  },
-  queryQiLink: (graph: Graph, id: number) => {
-    const index = graph.links.findIndex((elem) => elem.id === id);
-    if (index === -1) {
-      const nothing = new QiImp(-1, "nothing"); //TODO: A better way of handling?
-      return new QiLinkImp(-1, nothing, nothing); //TODO: A better way of handling?
-    } else {
-      return graph.links[id];
     }
   },
   delete: (graph: Graph, q: Q) => {
@@ -364,24 +366,24 @@ export const GraphOpsImp: GraphOperations = {
     // BFS based off CLRS page 595
     let neighbours: Qi[] = [];
     if ((q as QiImp).information !== undefined) {
-      let marked: { qi: Qi; done: EmotionalState; dist: number }[] = [];
-      marked = graph.nodes.map((qi: Qi) => {
-        return { qi: qi, done: Trust.Doubt, dist: Infinity };
-      });
+      let notDone: Qi[] = [];
+      for (let qi of graph.nodes) {
+        notDone.push(qi);
+      }
+      let toDo: Qi[] = [];
+      let done: Qi[] = [];
+      let dist = new Map<Qi, number>();
+      for (let qi of graph.nodes) {
+        dist.set(qi, graph.nodes.length);
+      }
       const source = q as Qi;
-      let markedQiInfo = marked.find((markedQiInfo) => {
-        return markedQiInfo.qi === source;
-      });
-      markedQiInfo!.dist = 0;
-      let toTraverse: Qi[] = [];
-      // Start
-      toTraverse.push(source);
-      while (toTraverse.length !== 0) {
-        const currQi = toTraverse.shift();
-        let markedQiInfo = marked.find((markedQiInfo) => {
-          return markedQiInfo.qi === currQi;
-        });
-        if (markedQiInfo!.dist > degree) break;
+      dist.set(source, 0);
+      toDo.push(source);
+      while (toDo.length !== 0) {
+        const currQi = toDo.shift();
+        if (dist.get(currQi!)! >= degree) {
+          break;
+        }
         const currentAdjacentLinks: QiLink[] = graph.links.filter(
           (ql: QiLink) => ql.from === currQi
         );
@@ -391,19 +393,13 @@ export const GraphOpsImp: GraphOperations = {
           }
         );
         for (let adjQi of currentAdjacentQi) {
-          let markedQiInfo = marked.find((markedQiInfo) => {
-            return markedQiInfo.qi === adjQi;
-          });
-          if (markedQiInfo!.done === Trust.Doubt) {
-            markedQiInfo!.done = Trust.Trust;
-            markedQiInfo!.dist += 1;
-            toTraverse.push(adjQi);
+          if (notDone.includes(adjQi)) {
+            toDo.push(adjQi); // colouring and todo queue might be different/
+            dist.set(adjQi, dist.get(currQi!)! + 1);
+            neighbours.push(adjQi);
           }
         }
-        markedQiInfo = marked.find((markedQiInfo) => {
-          return markedQiInfo.qi === currQi;
-        });
-        markedQiInfo!.done = Peace.Peace;
+        done.push(currQi!);
       }
     } else {
       // TODO: Some other day when needed
