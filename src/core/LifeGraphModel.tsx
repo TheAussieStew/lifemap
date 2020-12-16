@@ -1,9 +1,9 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
-import { GraphicEq, TrendingDownOutlined } from "@material-ui/icons";
 import { DateTime, Interval, Duration } from "luxon";
 import * as React from "react";
 
+// Maybe refactor to use types?
 export enum Cardinal {
   Left,
   Right,
@@ -63,6 +63,7 @@ enum Gratitude {
 
 enum Peace {
   Reverence = 800,
+  Eusebeia = 800,
   Peace = 700,
   Disrespect = 120,
 }
@@ -80,6 +81,7 @@ type ViewOperations = {
   createLens: (l: Lens) => Lens;
 };
 
+// still need this?
 type Portal = (Portal | View)[];
 
 type View = {
@@ -87,20 +89,53 @@ type View = {
   focus: Qi; // where is the centrepoint of the view?
   graph: Graph; // what is the whole picture?
 };
-type ViewTransformation = (
-  ls: LensStack
-) => (focus: Qi) => (g: Graph) => React.Component;
+export class ViewObj implements View {
+  lenses: LensStack; 
+  focus: Qi; 
+  graph: Graph; 
 
-// probs think about whether lens stack separation is necessary
+  constructor(lenses: LensStack, focus: Qi, graph: Graph) {
+    this.lenses = lenses;
+    this.focus = focus;
+    this.graph = graph;
+  }
+}
+
+type ViewTransformation = (v: View) => React.Component;
+
+// maybe could define lensstack like a list in haskell e.g. l : [] or just l
+// would eliminate lens + lenstack difference
+// Do need a Lens + View separation, lens is view, view has graph, which is the model
 type LensStack = {
   lenses: Lens[]; // what are the different lenses that compose this view?
   fov: FieldOfView; // how much can I perceive from a centre?
   // is aperture neccesary? same as field of view, just describes dof - could look nice
 };
+export class LensStackObj implements LensStack {
+  lenses: Lens[] = [];
+  fov: FieldOfView;
+
+  constructor(fov: number) {
+    this.fov = fov;
+  }
+}
+// or maybe React.Comp to React.Comp
 type LensStackTransformation = (g: Graph) => React.CSSProperties;
+// maybe this format is better than having both a type and implementation
+export const LensStackOperations = {
+  addLens: (ls: LensStack, l: Lens) => {
+    // TODO: check for lens compat here
+    const newLs = ls.lenses.push(l);
+    return newLs;
+  },
+  changeFov: (ls: LensStack, fov: FieldOfView) => {
+    const newLs = ls.fov = fov;
+    return newLs;
+  }
+}
 
 type FieldOfView = All | Degree | RelatedContent; // this related content is the same as the "group type"
-type All = number;
+type All = 10000000;
 type Degree = number;
 type RelatedContent = unknown;
 
@@ -114,19 +149,18 @@ type Lens =
   | RoseTinted
   | QiField
   | NonSymbolic; // e.g. Pictures? also, don't represent these as qi, for now
-type Clear = unknown;
-type Language = unknown; // Maybe not needed, implicit
-type Heading = (rc: React.Component) => React.Component;
+type Clear = {type: "Clear"};
+type Language = {type: "Language"}; // Maybe not needed, implicit
+type Heading = {type: "Heading"}
 type Symbolic = Emoji | Thumbnails;
-type Emoji = unknown;
-type Thumbnails = unknown;
-type RoseTinted = boolean;
+type Emoji = {type: "Emoji"};
+type Thumbnails = {type: "Thumbnails"};
+type RoseTinted = {type: "RoseTinted"};
 type QiField = Colour & Brightness & Size;
-type Luminance = QiField;
 type Colour = string;
 type Brightness = number;
 type Size = number;
-type NonSymbolic = unknown;
+type NonSymbolic = {type: "NonSymbolic"};
 
 // Transformations - something changing
 type Transformation = () => {};
@@ -211,7 +245,6 @@ type GraphOperations = {
   delete: (graph: Graph, q: Q) => Graph;
   pick: (graph: Graph, q: Q) => Graph;
   popPicks: (graph: Graph, q: Q, nOfPicks: number) => Q[];
-  // neighbour: (graph: Graph, q: Q) => Qi[];
   neighbours: (graph: Graph, q: Q, degree: number) => Qi[];
 };
 
