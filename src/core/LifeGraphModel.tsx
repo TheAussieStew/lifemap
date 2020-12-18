@@ -1,5 +1,6 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
+import { Card } from "@material-ui/core";
 import { DateTime, Interval, Duration } from "luxon";
 import * as React from "react";
 
@@ -269,12 +270,28 @@ export const TreeOps = {
     for (let miniTree of t.children) {
       TreeOps.preOrderTraversal(miniTree, fn, acc);
     }
+    return acc;
   },
   postOrderTraversal: (t: Tree, fn: (t: Tree) => any, acc: any) => {
     for (let miniTree of t.children) {
       TreeOps.preOrderTraversal(miniTree, fn, acc);
     }
     fn(t);
+    return acc;
+  },
+  // how does this work?
+  JSXify: (t: Tree, acc: any) => {
+    let divElems = [];
+    for (let miniTree of t.children) {
+      divElems.push(TreeOps.JSXify(miniTree, acc));
+    }
+    let elem = <Card style={{}}>
+      <Card style={{textAlign: "left", marginLeft: t.rootDist * 15}}>
+        {"• " + t.qi.information}
+      </Card>
+      {divElems}
+    </Card>;
+    return elem;
   }
 };
 

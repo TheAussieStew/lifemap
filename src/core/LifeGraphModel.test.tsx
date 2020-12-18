@@ -142,3 +142,17 @@ test(TreeOps.parseGraph.name, () => {
   // testPrint(TreeOps.parseGraph, t);
 });
 
+test(TreeOps.JSXify.name, () => {
+  let g = new GraphObj();
+  g = go.createQi(g, "Rocks");
+  let fromRocks = go.queryQi(g, 0);
+  // note that these links are one directional
+  g = go.createNeighbour(g, fromRocks, "Soil");
+  g = go.createNeighbour(g, fromRocks, "Flowers");
+  let fromSoil = go.queryQi(g, 1);
+  g = go.createNeighbour(g, fromSoil, "Worms");
+  g = go.createNeighbour(g, fromSoil, "Minerals");
+  let t = TreeOps.parseGraph(g, fromRocks);
+  let divs = TreeOps.JSXify(t, {});
+  testPrint(TreeOps.JSXify, divs);
+});

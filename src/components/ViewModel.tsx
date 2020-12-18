@@ -45,17 +45,24 @@ import {
 //   />
 // );
 
-export const ListPointsObj: ListPoints = (t: Tree) => {
-  // problem: need to use dist from neighbours to calculate indents
-  // need a clean way to pass this info
-  
-  TreeOps.preOrderTraversal(t, fn);
-  let list = (
-    <ul>
-      {g.nodes.map((qi: Qi, index: number) => {
-        return <li key={index}>{qi.information}</li>;
-      })}
-    </ul>
-  );
-  return list;
+export const ListPointsObj = () => {
+  let g = new GraphObj();
+  g = GraphOps.createQi(g, "Mother Earth");
+  let fromRocks = GraphOps.queryQi(g, 0);
+  // note that these links are one directional
+  g = GraphOps.createNeighbour(g, fromRocks, "Soil");
+  g = GraphOps.createNeighbour(g, fromRocks, "Flowers");
+  let fromSoil = GraphOps.queryQi(g, 1);
+  g = GraphOps.createNeighbour(g, fromSoil, "Worms");
+  g = GraphOps.createNeighbour(g, fromSoil, "Minerals");
+  let realT = TreeOps.parseGraph(g, fromRocks);
+  return TreeOps.JSXify(realT, {});
+  // let list = (
+  //   <ul>
+  //     {g.nodes.map((qi: Qi, index: number) => {
+  //       return <li key={index}>{qi.information}</li>;
+  //     })}
+  //   </ul>
+  // );
+  // return list;
 };
