@@ -17,7 +17,7 @@ import { useEffect, useRef } from "react";
 import { MuuriComponent, useDrag } from "muuri-react";
 import { Box, Card } from "@material-ui/core";
 import { GraphObj, GraphOps, Qi } from "./core/LifeGraphModel";
-import { ListPointsView } from "./components/ViewModel";
+import { ListPointsObj } from "./components/ViewModel";
 import { initialisedGraph } from "./core/Initialiser";
 
 var firebaseConfig = {
@@ -328,7 +328,7 @@ const Main = () => {
             initialisedForceGraph3D
           ) : (
             <Card style={{ margin: 20 }}>
-              <ListPointsView />
+              <ListPointsObj/>
             </Card>
           )}
         </div>

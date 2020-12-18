@@ -1,5 +1,5 @@
 import { testPrint } from "../utils/Utils";
-import { GraphObj, GraphOps, Order } from "./LifeGraphModel";
+import { GraphObj, GraphOps, Order, Qi, QiObj, Tree, TreeObj, TreeOps } from "./LifeGraphModel";
 
 let go = GraphOps;
 
@@ -91,7 +91,8 @@ test(GraphOps.pick.name, () => {});
 
 test(GraphOps.popPicks.name, () => {});
 
-test(GraphOps.neighbours.name, () => {
+test(GraphOps.bfs.name, () => {
+  // test dpesm't work with SearchInfo
   let g = new GraphObj();
   g = go.createQi(g, "Rocks");
   let from = go.queryQi(g, 0);
@@ -102,10 +103,42 @@ test(GraphOps.neighbours.name, () => {
   g = go.createNeighbour(g, from, "Worms");
   g = go.createNeighbour(g, from, "Minerals");
   from = go.queryQi(g, 0);
-  let neighbours = go.neighbours(g, from, 2);
-  testPrint(GraphOps.neighbours, neighbours);
+  let neighbours = go.bfs(g, from, 2);
+  testPrint(GraphOps.bfs, neighbours);
   expect(neighbours).toHaveLength(4);
-  neighbours = go.neighbours(g, from, 1);
-  testPrint(GraphOps.neighbours, neighbours);
+  neighbours = go.bfs(g, from, 1);
+  testPrint(GraphOps.bfs, neighbours);
   expect(neighbours).toHaveLength(2);
 });
+
+test(TreeObj.name, () => {
+  let qi = new QiObj(0, "Soil");
+  let t = new TreeObj(qi);
+  testPrint(TreeObj, t);
+});
+
+test(TreeOps.addChild.name, () => {
+  let qi = new QiObj(0, "Soil");
+  let t = new TreeObj(qi);
+  let deepQi = new QiObj(0, "Roots");
+  let dt = TreeOps.addChild(t, deepQi);
+  testPrint(TreeObj, dt);
+});
+
+test(TreeOps.parseGraph.name, () => {
+  let g = new GraphObj();
+  g = go.createQi(g, "Rocks");
+  let fromRocks = go.queryQi(g, 0);
+  // note that these links are one directional
+  g = go.createNeighbour(g, fromRocks, "Soil");
+  g = go.createNeighbour(g, fromRocks, "Flowers");
+  let fromSoil = go.queryQi(g, 1);
+  g = go.createNeighbour(g, fromSoil, "Worms");
+  g = go.createNeighbour(g, fromSoil, "Minerals");
+  let t = TreeOps.parseGraph(g, fromRocks);
+  TreeOps.preOrderTraversal(t, (t: Tree) => {
+    console.log("*".repeat(t.rootDist + 1), t.qi.information);
+  }, {});
+  // testPrint(TreeOps.parseGraph, t);
+});
+
