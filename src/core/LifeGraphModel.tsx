@@ -134,7 +134,7 @@ export const LensStackOperations = {
   }
 }
 
-type FieldOfView = All | Degree | RelatedContent; // this related content is the same as the "group type"
+export type FieldOfView = All | Degree | RelatedContent; // this related content is the same as the "group type"
 type All = 10000000;
 type Degree = number;
 type RelatedContent = unknown;
@@ -169,27 +169,27 @@ type Pulsation = (qiQuality: QiZhi, qiField: QiField) => QiField;
 
 // Structure - configurations of information
 type Structure =
-  | List
-  | GraphStructure
-  | Table
-  | SpaceTime
-  | Grid
+  | Code // 1.5D
+  | List // 1.5D but 1D on phones
+  | Masonry // 2D
+  | GraphStructure // 2D or 3D
+  | Table // 2D
+  | SpaceTime // 2D or 3D?
   | Calendar
-  | Code
-  | Embed;
+  | Embed; 
+type Code = unknown;
 type List = ListNumber | ListPoints | ListChecks; // should be collapsable
-type ListNumber = (centre: Qi, g: Graph) => React.Component;
-export type ListPoints = (centre: Qi, g: Graph) => JSX.Element;
+type ListNumber = (centre: Qi, g: Graph, fov: FieldOfView) => JSX.Element;
+export type ListPoints = (t: Tree) => JSX.Element;
 type ListChecks = unknown;
+type Masonry = unknown; // either evenly sized or unevenly sized grid that's packed together
 type GraphStructure = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = unknown;
-type Table = Kanban;
-type Kanban = unknown;
-type SpaceTime = unknown; // what is this??? same/diff to timeline?
-type Grid = unknown;
-type Calendar = unknown;
-type Code = unknown;
+type Table = unknown;
+type Kanban = Table;
+type SpaceTime = unknown; // what is this? same/diff to timeline?
+type Calendar = unknown; // what is this even
 type Embed = unknown;
 
 // Ordering - how to differentiate and evaluate
@@ -220,6 +220,64 @@ type Information = Time | number | string | Image | EmotionalState | Person;
 type Image = string;
 type Person = string;
 
+export type Tree = {
+  qi: Qi,
+  rootDist: number;
+  children: Tree[];
+}
+export class TreeObj implements Tree {
+  qi: Qi;
+  rootDist: number;
+  children: Tree[];
+
+  constructor(qi: Qi) {
+    this.qi = qi;
+    this.rootDist = 0;
+    this.children = [];
+  }
+}
+
+export const TreeOps = {
+  addChild: (t: Tree, qi: Qi) => {
+    let miniTree = new TreeObj(qi);
+    miniTree.rootDist = t.rootDist + 1;
+    t.children.push(miniTree); // push because we're filling tree left to right
+    return t;
+  },
+  parseGraph: (g: Graph, root: Qi) => {
+    // bfs returns all pairs shortest paths for unweighted graph
+    const maxDegree = g.nodes.length;
+    let info = GraphOps.bfs(g, root, maxDegree);
+    const treeise = (
+      info: Map<Qi, SearchInfo>,
+      parent: Qi,
+      rootDist: number
+    ) => {
+      let t = new TreeObj(parent);
+      t.rootDist = rootDist;
+      info.forEach((searchInfo: SearchInfo, qi: Qi) => {
+        if (searchInfo.pred === parent) {
+          t.children.push(treeise(info, qi, t.rootDist + 1));
+        }
+      });
+      return t;
+    };
+    return treeise(info, root, 0);
+  },
+  preOrderTraversal: (t: Tree, fn: (t: Tree) => any, acc: any) => {
+    fn(t);
+    for (let miniTree of t.children) {
+      TreeOps.preOrderTraversal(miniTree, fn, acc);
+    }
+  },
+  postOrderTraversal: (t: Tree, fn: (t: Tree) => any, acc: any) => {
+    for (let miniTree of t.children) {
+      TreeOps.preOrderTraversal(miniTree, fn, acc);
+    }
+    fn(t);
+  }
+};
+
 // Graph Model and Operations
 // TODO: should we implement state history here?
 export type Graph = {
@@ -227,6 +285,12 @@ export type Graph = {
   links: QiLink[];
   pickedNodes: Qi[];
   pickedLinks: QiLink[];
+};
+
+type SearchInfo = {
+  rootDist: number;
+  status: "Unseen" | "ToSee" | "Seen";
+  pred: Qi | null;
 };
 
 type GraphOperations = {
@@ -245,7 +309,8 @@ type GraphOperations = {
   delete: (graph: Graph, q: Q) => Graph;
   pick: (graph: Graph, q: Q) => Graph;
   popPicks: (graph: Graph, q: Q, nOfPicks: number) => Q[];
-  neighbours: (graph: Graph, q: Q, degree: number) => Qi[];
+  adjacent: (g: Graph, qi: Qi) => Qi[];
+  bfs: (graph: Graph, q: Q, degree: number) => Map<Qi, SearchInfo>;
 };
 
 export class GraphObj implements Graph {
@@ -258,14 +323,14 @@ export class GraphObj implements Graph {
 export const GraphOps: GraphOperations = {
   createQi: (graph: Graph, info: Information) => {
     const id = graph.nodes.length;
-    const qi = new QiImp(id, info);
+    const qi = new QiObj(id, info);
     graph.nodes.push(qi);
     return graph;
   },
   queryQi: (graph: Graph, id: number) => {
     const index = graph.nodes.findIndex((elem) => elem.id === id);
     if (index === -1) {
-      return new QiImp(-1, "nothing"); //TODO: A better way of handling?
+      return new QiObj(-1, "nothing"); //TODO: A better way of handling?
     } else {
       return graph.nodes[id];
     }
@@ -279,7 +344,7 @@ export const GraphOps: GraphOperations = {
   queryQiLink: (graph: Graph, id: number) => {
     const index = graph.links.findIndex((elem) => elem.id === id);
     if (index === -1) {
-      const nothing = new QiImp(-1, "nothing"); //TODO: A better way of handling?
+      const nothing = new QiObj(-1, "nothing"); //TODO: A better way of handling?
       return new QiLinkImp(-1, nothing, nothing); //TODO: A better way of handling?
     } else {
       return graph.links[id];
@@ -287,7 +352,7 @@ export const GraphOps: GraphOperations = {
   },
   createNeighbour: (graph: Graph, from: Qi, info: Information) => {
     const qiId = graph.nodes.length;
-    const to = new QiImp(qiId, info);
+    const to = new QiObj(qiId, info);
     graph.nodes.push(to);
     const qiLinkId = graph.links.length;
     const qiLink = new QiLinkImp(qiLinkId, from, to);
@@ -299,7 +364,7 @@ export const GraphOps: GraphOperations = {
     if (index === -1) {
       return graph;
     } else {
-      const newQi = new QiImp(index, info);
+      const newQi = new QiObj(index, info);
       const newGraph: Graph = {
         nodes: [
           ...graph.nodes.slice(0, index),
@@ -335,7 +400,7 @@ export const GraphOps: GraphOperations = {
     }
   },
   delete: (graph: Graph, q: Q) => {
-    if ((q as QiImp).information !== undefined) {
+    if ((q as QiObj).information !== undefined) {
       const index = graph.nodes.findIndex((elem) => elem === (q as Qi));
       if (index === -1) {
         return graph;
@@ -370,8 +435,8 @@ export const GraphOps: GraphOperations = {
     }
   },
   pick: (graph: Graph, q: Q) => {
-    if ((q as QiImp).information !== undefined) {
-      graph.pickedNodes.push(q as QiImp);
+    if ((q as QiObj).information !== undefined) {
+      graph.pickedNodes.push(q as QiObj);
       return graph;
     } else {
       graph.pickedLinks.push(q as QiLinkImp);
@@ -379,7 +444,7 @@ export const GraphOps: GraphOperations = {
     }
   },
   popPicks: (graph: Graph, q: Q, nOfPicks: number) => {
-    if ((q as QiImp).information !== undefined) {
+    if ((q as QiObj).information !== undefined) {
       const length = graph.pickedNodes.length;
       const poppedPicks: Qi[] = [];
       for (var i = length - 1; i >= 0 && nOfPicks !== 0; i-- && nOfPicks--) {
@@ -395,49 +460,50 @@ export const GraphOps: GraphOperations = {
       return poppedPicks;
     }
   },
-  neighbours: (graph: Graph, q: Q, degree: number) => {
+  adjacent: (g: Graph, qi: Qi) => {
+    const adjLinks: QiLink[] = g.links.filter(
+      (ql: QiLink) => ql.from === qi
+    );
+    const adjQi: Qi[] = adjLinks.map((ql: QiLink) => ql.to);
+    return adjQi;
+  },
+  bfs: (g: Graph, q: Q, degree: number) => {
     // BFS based off CLRS page 595
-    let neighbours: Qi[] = [];
-    if ((q as QiImp).information !== undefined) {
-      let notDone: Qi[] = [];
-      for (let qi of graph.nodes) {
-        notDone.push(qi);
-      }
-      let toDo: Qi[] = [];
-      let done: Qi[] = [];
-      let dist = new Map<Qi, number>();
-      for (let qi of graph.nodes) {
-        dist.set(qi, graph.nodes.length);
+    let info = new Map<Qi, SearchInfo>();
+    if ((q as QiObj).information !== undefined) {
+      for (let qi of g.nodes) {
+        const inital: SearchInfo = {
+          rootDist: g.nodes.length,
+          status: "Unseen",
+          pred: null,
+        };
+        info.set(qi, inital);
       }
       const source = q as Qi;
-      dist.set(source, 0);
-      toDo.push(source);
-      while (toDo.length !== 0) {
-        const currQi = toDo.shift();
-        if (dist.get(currQi!)! >= degree) {
-          break;
-        }
-        const currentAdjacentLinks: QiLink[] = graph.links.filter(
-          (ql: QiLink) => ql.from === currQi
-        );
-        const currentAdjacentQi: Qi[] = currentAdjacentLinks.map(
-          (ql: QiLink) => {
-            return ql.to;
-          }
-        );
+      info.get(source)!.rootDist = 0;
+      info.get(source)!.status = "ToSee";
+      info.get(source)!.pred = null;
+      let queue: Qi[] = [];
+      queue.push(source);
+      console.log(info);
+      while (queue.length !== 0) {
+        let currQi = queue.shift()!;
+        if (info.get(currQi)!.rootDist >= degree) break;
+        const currentAdjacentQi: Qi[] = GraphOps.adjacent(g, currQi);
         for (let adjQi of currentAdjacentQi) {
-          if (notDone.includes(adjQi)) {
-            toDo.push(adjQi); // colouring and todo queue might be different/
-            dist.set(adjQi, dist.get(currQi!)! + 1);
-            neighbours.push(adjQi);
+          if (info.get(adjQi)!.status === "Unseen") {
+            info.get(adjQi)!.status = "ToSee";
+            info.get(adjQi)!.rootDist = info.get(currQi)!.rootDist + 1;
+            info.get(adjQi)!.pred = currQi;
+            queue.push(adjQi); 
           }
         }
-        done.push(currQi!);
+        info.get(currQi)!.status = "Seen";
       }
     } else {
       // TODO: Some other day when needed
     }
-    return neighbours;
+    return info;
   },
 };
 type Invariant = (something: unknown) => Boolean;
@@ -458,7 +524,7 @@ export type Qi = {
   timeHorizon?: QiLink;
 };
 
-class QiImp implements Qi {
+export class QiObj implements Qi {
   id: number; // number lookup is faster than string
   // Information
   information: Information;

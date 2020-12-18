@@ -2,7 +2,16 @@ import { Card } from "@material-ui/core";
 import React from "react";
 import { useRef } from "react";
 import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
-import { Qi, ListPoints, Graph, GraphObj, GraphOps } from "../core/LifeGraphModel";
+import {
+  Qi,
+  ListPoints,
+  Graph,
+  GraphObj,
+  GraphOps,
+  FieldOfView,
+  Tree,
+  TreeOps,
+} from "../core/LifeGraphModel";
 
 // const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
 
@@ -36,14 +45,14 @@ import { Qi, ListPoints, Graph, GraphObj, GraphOps } from "../core/LifeGraphMode
 //   />
 // );
 
-export const ListPointsView: ListPoints = (centre: Qi, g: Graph) => {
-  const exampleGraph = new GraphObj();
-  GraphOps.createQi(exampleGraph, "Hi, I am testing");
-  GraphOps.createQi(exampleGraph, "Hello, I am testing");
-  GraphOps.createQi(exampleGraph, "Ni hao, I am testing");
+export const ListPointsObj: ListPoints = (t: Tree) => {
+  // problem: need to use dist from neighbours to calculate indents
+  // need a clean way to pass this info
+  
+  TreeOps.preOrderTraversal(t, fn);
   let list = (
     <ul>
-      {exampleGraph.nodes.map((qi: Qi, index: number) => {
+      {g.nodes.map((qi: Qi, index: number) => {
         return <li key={index}>{qi.information}</li>;
       })}
     </ul>
