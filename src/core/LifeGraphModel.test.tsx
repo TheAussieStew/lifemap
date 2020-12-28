@@ -1,5 +1,6 @@
 import { testPrint } from "../utils/Utils";
-import { GraphObj, GraphOps, Order, Qi, QiObj, Tree, TreeObj, TreeOps } from "./LifeGraphModel";
+import { TreeObj, TreeOps, Tree } from "../view/ViewModel";
+import { GraphObj, GraphOps, Qi, QiObj, Relation } from "./LifeGraphModel";
 
 let go = GraphOps;
 
@@ -81,8 +82,8 @@ test(GraphOps.changeQiLink.name, () => {
   let to = go.queryQi(g, 1);
   go.createLink(g, from, to);
   let link = go.queryQiLink(g, 0);
-  let order: Order = undefined;
-  g = go.changeQiLink(g, 100, order, link);
+  let relation: Relation = "Unordered";
+  g = go.changeQiLink(g, 100, relation, link);
   testPrint(GraphOps.changeQiLink, g);
   expect(g.links[0].tong).toBe(100);
 });
@@ -105,6 +106,7 @@ test(GraphOps.bfs.name, () => {
   from = go.queryQi(g, 0);
   let neighbours = go.bfs(g, from, 2);
   testPrint(GraphOps.bfs, neighbours);
+  // Failing, test needs to be rewritten because bfs returns search info stuff
   expect(neighbours).toHaveLength(4);
   neighbours = go.bfs(g, from, 1);
   testPrint(GraphOps.bfs, neighbours);
@@ -137,22 +139,22 @@ test(TreeOps.parseGraph.name, () => {
   g = go.createNeighbour(g, fromSoil, "Minerals");
   let t = TreeOps.parseGraph(g, fromRocks);
   TreeOps.preOrderTraversal(t, (t: Tree) => {
-    console.log("*".repeat(t.rootDist + 1), t.qi.information);
+    console.log("*".repeat(t.rootDist + 1), t.qi.meaning);
   }, {});
   // testPrint(TreeOps.parseGraph, t);
 });
 
-test(TreeOps.JSXify.name, () => {
-  let g = new GraphObj();
-  g = go.createQi(g, "Rocks");
-  let fromRocks = go.queryQi(g, 0);
-  // note that these links are one directional
-  g = go.createNeighbour(g, fromRocks, "Soil");
-  g = go.createNeighbour(g, fromRocks, "Flowers");
-  let fromSoil = go.queryQi(g, 1);
-  g = go.createNeighbour(g, fromSoil, "Worms");
-  g = go.createNeighbour(g, fromSoil, "Minerals");
-  let t = TreeOps.parseGraph(g, fromRocks);
-  let divs = TreeOps.JSXify(t, {});
-  testPrint(TreeOps.JSXify, divs);
-});
+// test(TreeOps.JSXify.name, () => {
+//   let g = new GraphObj();
+//   g = go.createQi(g, "Rocks");
+//   let fromRocks = go.queryQi(g, 0);
+//   // note that these links are one directional
+//   g = go.createNeighbour(g, fromRocks, "Soil");
+//   g = go.createNeighbour(g, fromRocks, "Flowers");
+//   let fromSoil = go.queryQi(g, 1);
+//   g = go.createNeighbour(g, fromSoil, "Worms");
+//   g = go.createNeighbour(g, fromSoil, "Minerals");
+//   let t = TreeOps.parseGraph(g, fromRocks);
+//   let divs = TreeOps.JSXify(t, {});
+//   testPrint(TreeOps.JSXify, divs);
+// });
