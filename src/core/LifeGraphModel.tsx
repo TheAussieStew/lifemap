@@ -1,6 +1,7 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
 import { DateTime, Interval, Duration } from "luxon";
+import shades from "shades";
 
 // Maybe refactor to use types?
 export enum Cardinal {
@@ -12,432 +13,200 @@ export enum Cardinal {
   Out,
 }
 
-export enum Trust {
-  信心 = 250,
-  Trust = 250,
-  Acceptance = 200,
-  Distrust = 170,
-  Suspicion = 170,
-  Doubt = 125,
-  Negativity = 125,
-  Worry = 125,
-  Fear = 100,
-  Anxiety = 80,
-  Paranoia = 50,
-}
-
-enum Openness {
-  Openness = 350,
-  Optimism = 275,
-  Confidence = 275,
-  Funny = 250,
-  Arrogance = 175,
-  Stubbornness = 160,
-  Controlling = 120,
-  Insecurity = 120,
-  Isolation = 100,
-  Sadness = 75,
-  Regret = 75,
-  Despair = 50,
-  Hopeless = 50,
-  Shame = 40,
-}
-
-enum Love {
-  Love = 500,
-  Compassion = 450,
-  Hate = 400,
-  Prejudiced = 175,
-  Judgmental = 175,
-  Pride = 175,
-  Anger = 175,
-  Apathy = 50,
-  Indifference = 50,
-}
-
-enum Gratitude {
-  Gratitude = 600,
-  Resentment = 120,
-}
-
-enum Peace {
-  Reverence = 800,
-  Eusebeia = 800,
-  Peace = 700,
-  Disrespect = 120,
-}
-
-// Transformations - something changing
-// Clearly needs work
-type Transformation = () => {};
-type Recurring = (qi: Qi, graph: Graph) => { graph: Graph };
-// type Pulsation = (qiQuality: QiZhi, qiField: QiField) => QiField;
-
-// Relation - how to differentiate
+// Semantic = Relation = Meaning
 // Maybe model using GADT
-
-type Semantic =
-  | EmotionalState
-  | Image
-  | Person
+export type Semantic =
   | Language
+  | Symbolic //3D object? video? gif?
   | Location
-  | Temporal
-  | Symbolic; //3D object? video? gif?
-type Language = string;
-type Location = unknown;
-export type Relation = Temporal | EmotionalState | Layout | Unordered; // might take other things from semantic eg. verbs
-type Unordered = "Unordered";
-type Temporal = Past | Present | Future | TimePoint | TimeSpan;
-type Past = unknown; // have magnittude?
-type Present = unknown;
-type Future = unknown;
-type Symbolic = Emoji | Thumbnails;
+  | Imagery
+  | Person
+  | Time
+  | Group
+  | EmotionalState
+  | QiZhi
+  | Void;
+type Language = string; // char or word, but not code
+type Symbolic = Emoji | UnicodeSymbol;
 type Emoji = string;
-type Thumbnails = string;
-type Layout = Ratio | Direction;
-type Image = string;
+type UnicodeSymbol = string;
+type Location = number; 
+type Imagery = "Image" | "Video" | "Thumbnail"; // image includes gif
 type Person = string;
+type Group = Qi[]; // this needs to be a reference;
+export type EmotionalState = Qi;
+type Void = undefined; // sorta like any possibility, no meaning
 
-type EmotionalState = Peace | Gratitude | Love | Openness | Trust;
+type Layout = Ratio | Direction; // need to add this to semantic after proper consideration of natural ui
+type Ratio = number;
+type Direction = Cardinal.Left | Cardinal.Right | Cardinal.Up | Cardinal.Down;
+
+type Code = "Code"; // later this will represent an ast (so no need to parse text!)
+// how to handle multiple semantics, so an image of a person!
+
 type QiZhi = Colour & Brightness & Dispersion;
 type Colour = number;
 type Brightness = number;
 type Dispersion = number;
-type Ratio = number;
-type Direction = Cardinal.Left | Cardinal.Right | Cardinal.Up | Cardinal.Down;
 
 // Time related
 type Time = TimePoint | TimeDuration | TimeSpan;
-type TimePoint = DateTime;
-type TimeDuration = Duration;
+type TimePoint = DateTime; // Date time is really a "duration" from the original 1970 start time, can we omit? Or maybe just have a more recent beginning, like when you start using the app?
+type TimeDuration = Duration; // should support negative durations e.g. start using app in 2020, refer to 1000AD = minus 1000 years, then minus specific time. don't need to store everything in a super large time format
 type TimeSpan = TimePoint & TimeDuration & TimePoint;
 
 // Graph Model and Operations
 // TODO: should we implement state history here?
-export type Graph = {
-  nodes: Qi[];
-  links: QiLink[];
-  pickedNodes: Qi[];
-  pickedLinks: QiLink[];
-};
+// metanote, it would be amazing could you could have rich text formatting for comments
+// or if there was no distinction between comments and code, or at least a minimal distinction
+// why not use class, data and methods?
+// cause it looks like it causes mutation...does this matter?
+// is there a way we can emulate the data constructor and syntax of haskell?
+// so in haskell, it works like this
+// first, the typings of the init, and the operations of the entity
+// then, data invariants, it's like additional static type checking
+// like, correctness at rest, after transformations
+// later, an abstract, slow but correct implementation of the typings
+// after that, a concrete, faster implementation
+// after that, some kind of equality checker between the results of the transforms of the concrete and abstract
+// I don't really get the quickcheck example.
 
-export type SearchInfo = {
-  rootDist: number;
-  status: "Unseen" | "ToSee" | "Seen";
-  pred: Qi | null;
-};
-
-export type FieldOfView = All | Degree | RelatedContent; // this related content is the same as the "group type"
-type All = 10000000;
-type Degree = number;
-type RelatedContent = unknown;
-
-type GraphOperations = {
-  createQi: (graph: Graph, meaning: Semantic) => Graph;
-  queryQi: (graph: Graph, id: number | string) => Qi;
-  createLink: (graph: Graph, from: Qi, to: Qi) => Graph;
-  queryQiLink: (graph: Graph, id: number) => QiLink;
-  createNeighbour: (graph: Graph, from: Qi, meaning: Semantic) => Graph;
-  changeQi: (graph: Graph, meaning: Semantic, qi: Qi) => Graph;
-  changeQiLink: (
-    graph: Graph,
-    tong: QiZhi,
-    relation: Relation,
-    qiLink: QiLink
-  ) => Graph;
-  delete: (graph: Graph, q: Q) => Graph;
-  pick: (graph: Graph, q: Q) => Graph;
-  popPicks: (graph: Graph, q: Q, nOfPicks: number) => Q[];
-  adjacent: (g: Graph, qi: Qi) => Qi[];
-  bfs: (graph: Graph, q: Q, degree: Degree) => Map<Qi, SearchInfo>;
-  parse: (file: Object) => Graph;
-};
-
-export class GraphObj implements Graph {
-  nodes: Qi[] = [];
-  links: QiLink[] = [];
-  pickedNodes: Qi[] = [];
-  pickedLinks: QiLink[] = [];
+// should there even be a separate link? not just a specific node, with say, at least 2 nodes??
+type GraphLink = {
+  n1: GraphNode;
+  n2: GraphNode;
+  info: any; //e.g Semantic
 }
-
-export const GraphOps: GraphOperations = {
-  createQi: (graph: Graph, info: Semantic) => {
-    const id = graph.nodes.length;
-    const qi = new QiObj(id, info);
-    graph.nodes.push(qi);
-    return graph;
-  },
-  queryQi: (graph: Graph, id: number | string) => {
-    const index = graph.nodes.findIndex((elem) =>
-      typeof id === "number" ? elem.id === id : elem.meaning === id
-    );
-    if (index === -1) {
-      return new QiObj(-1, "nothing"); //TODO: A better way of handling?
-    } else {
-      return graph.nodes[index];
-    }
-  },
-  createLink: (graph: Graph, from: Qi, to: Qi) => {
-    const id = graph.links.length;
-    const qiLink = new QiLinkImp(id, from, to);
-    graph.links.push(qiLink);
-    return graph;
-  },
-  queryQiLink: (graph: Graph, id: number) => {
-    const index = graph.links.findIndex((elem) => elem.id === id);
-    if (index === -1) {
-      const nothing = new QiObj(-1, "nothing"); //TODO: A better way of handling?
-      return new QiLinkImp(-1, nothing, nothing); //TODO: A better way of handling?
-    } else {
-      return graph.links[id];
-    }
-  },
-  createNeighbour: (graph: Graph, from: Qi, info: Semantic) => {
-    const qiId = graph.nodes.length;
-    const to = new QiObj(qiId, info);
-    graph.nodes.push(to);
-    const qiLinkId = graph.links.length;
-    const qiLink = new QiLinkImp(qiLinkId, from, to);
-    graph.links.push(qiLink);
-    return graph;
-  },
-  changeQi: (graph: Graph, info: Semantic, qi: Qi) => {
-    const index = graph.nodes.findIndex((elem) => elem === qi);
-    if (index === -1) {
-      return graph;
-    } else {
-      const newQi = new QiObj(index, info);
-      const newGraph: Graph = {
-        nodes: [
-          ...graph.nodes.slice(0, index),
-          newQi,
-          ...graph.nodes.slice(index + 1),
-        ],
-        links: graph.links,
-        pickedNodes: graph.pickedNodes,
-        pickedLinks: graph.pickedLinks,
-      };
-      return newGraph;
-    }
-  },
-  changeQiLink: (
-    graph: Graph,
-    tong: QiZhi,
-    relation: Relation,
-    qiLink: QiLink
-  ) => {
-    const index = graph.links.findIndex((elem) => elem === qiLink);
-    if (index === -1) {
-      // need a better way to deal with bad cases
-      return graph;
-    } else {
-      let newQiLink = new QiLinkImp(index, qiLink.from, qiLink.to);
-      newQiLink.tong = tong;
-      newQiLink.relation = relation;
-      const newGraph: Graph = {
-        nodes: graph.nodes,
-        links: [
-          ...graph.links.slice(0, index),
-          newQiLink,
-          ...graph.links.slice(index + 1),
-        ],
-        pickedNodes: graph.pickedNodes,
-        pickedLinks: graph.pickedLinks,
-      };
-      return newGraph;
-    }
-  },
-  delete: (graph: Graph, q: Q) => {
-    if ((q as QiObj).meaning !== undefined) {
-      const index = graph.nodes.findIndex((elem) => elem === (q as Qi));
-      if (index === -1) {
-        return graph;
-      } else {
-        const newGraph: Graph = {
-          nodes: [
-            ...graph.nodes.slice(0, index),
-            ...graph.nodes.slice(index + 1),
-          ],
-          links: graph.links,
-          pickedNodes: graph.pickedNodes,
-          pickedLinks: graph.pickedLinks,
-        };
-        return newGraph;
-      }
-    } else {
-      const index = graph.nodes.findIndex((elem) => elem === (q as Qi));
-      if (index === -1) {
-        return graph;
-      } else {
-        const newGraph: Graph = {
-          nodes: graph.nodes,
-          links: [
-            ...graph.links.slice(0, index),
-            ...graph.links.slice(index + 1),
-          ],
-          pickedNodes: graph.pickedNodes,
-          pickedLinks: graph.pickedLinks,
-        };
-        return newGraph;
-      }
-    }
-  },
-  pick: (graph: Graph, q: Q) => {
-    if ((q as QiObj).meaning !== undefined) {
-      graph.pickedNodes.push(q as QiObj);
-      return graph;
-    } else {
-      graph.pickedLinks.push(q as QiLinkImp);
-      return graph;
-    }
-  },
-  popPicks: (graph: Graph, q: Q, nOfPicks: number) => {
-    if ((q as QiObj).meaning !== undefined) {
-      const length = graph.pickedNodes.length;
-      const poppedPicks: Qi[] = [];
-      for (var i = length - 1; i >= 0 && nOfPicks !== 0; i-- && nOfPicks--) {
-        poppedPicks.push(graph.pickedNodes[i]);
-      }
-      return poppedPicks;
-    } else {
-      const length = graph.pickedLinks.length;
-      const poppedPicks: QiLink[] = [];
-      for (var i = length - 1; i >= 0 && nOfPicks !== 0; i-- && nOfPicks--) {
-        poppedPicks.push(graph.pickedLinks[i]);
-      }
-      return poppedPicks;
-    }
-  },
-  adjacent: (g: Graph, qi: Qi) => {
-    const adjLinks: QiLink[] = g.links.filter((ql: QiLink) => ql.from === qi);
-    const adjQi: Qi[] = adjLinks.map((ql: QiLink) => ql.to);
-    return adjQi;
-  },
-  bfs: (g: Graph, q: Q, degree: Degree) => {
-    // BFS based off CLRS page 595
-    let info = new Map<Qi, SearchInfo>();
-    if ((q as QiObj).meaning !== undefined) {
-      for (let qi of g.nodes) {
-        const inital: SearchInfo = {
-          rootDist: g.nodes.length,
-          status: "Unseen",
-          pred: null,
-        };
-        info.set(qi, inital);
-      }
-      const source = q as Qi;
-      info.get(source)!.rootDist = 0;
-      info.get(source)!.status = "ToSee";
-      info.get(source)!.pred = null;
-      let queue: Qi[] = [];
-      queue.push(source);
-      console.log(info);
-      while (queue.length !== 0) {
-        let currQi = queue.shift()!;
-        if (info.get(currQi)!.rootDist >= degree) break;
-        const currentAdjacentQi: Qi[] = GraphOps.adjacent(g, currQi);
-        for (let adjQi of currentAdjacentQi) {
-          if (info.get(adjQi)!.status === "Unseen") {
-            info.get(adjQi)!.status = "ToSee";
-            info.get(adjQi)!.rootDist = info.get(currQi)!.rootDist + 1;
-            info.get(adjQi)!.pred = currQi;
-            queue.push(adjQi);
-          }
-        }
-        info.get(currQi)!.status = "Seen";
-      }
-    } else {
-      // TODO: Some other day when needed
-    }
-    return info;
-  },
-  // TODO: use this to load my own data to display in the graph views...
-  parse: (file: Object) => {
-    type Node = {
-      id: string;
-      group: number;
+type GraphLinkOps = {
+  createGraphLink: (id: number, n1: GraphNode, n2: GraphNode) => GraphLink; // what about floating relations? e.g. just love, not between two particular things
+  adjacent: (l: GraphLink) => {n1: GraphNode, n2: GraphNode};
+}
+const GraphLinkCorrect: GraphLinkOps = {
+  createGraphLink: (id: number, n1: GraphNode, n2: GraphNode) => {
+    return {
+      n1: n1,
+      n2: n2,
+      info: undefined, //e.g Semantic
     };
-    type Link = {
-      source: string;
-      target: string;
-      value: number;
-      curvature: number;
-    };
-    type VastGraph = {
-      nodes: Node[];
-      links: Link[];
-    };
-    let g = new GraphObj();
-    for (let node of (file as VastGraph).nodes) {
-      GraphOps.createQi(g, node.id);
-    }
-    for (let link of (file as VastGraph).links) {
-      let from = GraphOps.queryQi(g, link.source);
-      let to = GraphOps.queryQi(g, link.target);
-      GraphOps.createLink(g, from, to);
-    }
-    return g;
+  },
+  adjacent: (l: GraphLink) => {
+    return { n1: l.n1, n2: l.n2 };
   },
 };
-type Invariant = (something: unknown) => Boolean;
+
+// graph is same as GraphNode? nope
+type GraphNode = {
+  readonly id: number; // how about no id? it's generated automatically when inserted into the graph?
+  meaning: Semantic;
+  quality: QiZhi;
+  links: GraphLink[];
+  siblings: GraphNode[];
+};
+type GraphNodeOps = {
+  createGraphNode: (id: number) => GraphNode;
+  siblings: (node: GraphNode) => GraphNode[];
+  numOfSiblings: (node: GraphNode) => number;
+  siblingLinks: (node: GraphNode) => GraphLink[];
+  numOfSiblingLinks: (node: GraphNode) => number;
+  // set: (node: GraphNode, field: unknown) => GraphNode; // how do you make this, some field of the GraphNode?
+  // getId: (node: GraphNode) => number;
+  // getV: (node: GraphNode) => unknown;
+  // getReference: (node: GraphNode) => unknown; // how get ref in js? wait why do I need reference?
+  // containingGraph: (node: GraphNode) => Graph; // Really important, it links this to the containing graph structure // do i really need this?
+}
+export const GraphNodeCorrect: GraphNodeOps = {
+  createGraphNode: (id: number) => {
+    return { id: id, meaning: undefined, quality: undefined, links: [], siblings: []};
+  },
+  siblings: (node: GraphNode) => node.siblings,
+  numOfSiblings: (node: GraphNode) => GraphNodeCorrect.siblings(node).length,
+  siblingLinks: (node: GraphNode) => node.links,
+  numOfSiblingLinks: (node: GraphNode) => GraphNodeCorrect.siblingLinks(node).length,
+};
+
+// T is the type of the node, TL is the type of the link
+// Is there a way to avoid generics? Looks messy, could use sum types
+type Graph3 = AdjacencyList | EdgeList | Matrix;
+type AdjacencyList = {graphType: "AdjacencyList", hypernodes: GraphNode[]};
+type EdgeList = {graphType: "EdgeList", hypernodes: GraphNode[], edges: GraphLink[]};
+type Matrix = {graphType: "Matrix", hypernodes: [], matrix: GraphLink[][]};
+type GraphOps<T extends GraphNode> = {
+  createGraph: (graphType: string) => (Graph3 | undefined);
+  createNode: (g: Graph3) => {n: GraphNode, g: Graph3}; // gives you back the created GraphNode, so you can add information and stuff
+  queryNode: (g: Graph3, query: (n: GraphNode) => boolean) => (GraphNode[] | undefined);
+  createEdge: (g: Graph3, n1: GraphNode, n2: GraphNode) => {e: GraphLink, g: Graph3};
+  queryEdge: (g: Graph3, query: (e: GraphLink) => boolean) => (GraphLink | undefined);
+  createSibling: (g: Graph, n: GraphNode, info: any) => {sibling: GraphNode, g: Graph3};
+  numNodes: (g: Graph3) => number;
+  numEdges: (g: Graph3) => number;
+  // delete? but what about the edges? and what about the consistency of the temporal graph? maybe could mark as deleted?
+  // pick or lens? add a new node that selects other nodes?
+}
+// I am confused about to separate the performance structures and the very detailed structures...
+const GraphCorrect: GraphOps<GraphNode> = {
+  createGraph: (graphType: string) => {
+    if (graphType == "AdjacencyList") {
+      return {graphType: graphType, hypernodes: []}
+    } else if (graphType == "EdgeList") {
+      return {graphType: graphType, hypernodes: [], edges: []}
+    } else if (graphType == "Matrix") {
+      return {graphType: graphType, hypernodes: [], matrix: [][0]} // syntax for matrix?
+    } else {
+      return undefined;
+    }
+  },
+  createNode: (g: Graph3) => {
+    let n: GraphNode;
+    switch (g.graphType) {
+      case "AdjacencyList":
+        n = GraphNodeCorrect.createGraphNode(g.hypernodes.length);
+        g.hypernodes.push(n);
+        break;
+      case "EdgeList":
+        n = GraphNodeCorrect.createGraphNode(g.hypernodes.length);
+        g.hypernodes.push(n);
+        break;
+      case "Matrix":
+        n = GraphNodeCorrect.createGraphNode(g.matrix.length);
+        // Implement matrix when needed
+        break;
+    }
+    return {n: n, g: g}
+  },
+  // hm should querying affect qi? it should, so should it be in this function or separate?
+  // if it affects qi, how do you distinguish betwen query qi and something like emotionalstate qi?
+  // how do you implement reducers here? should you? e.g. hypernodes.maxOf("EmotionalState")
+  // how to filter by depth? could dynamically generate the args for the .get fn
+  // need to avoid cycles...could definitely integrate that using conditions
+  // how to add depth information? don't, not here, just generate the tree, you can add depth later.
+  // or maybe just add the depth here, cause it saves computational time? premature optimisation
+  // queries is also equal to depth of search, since queries can just equal true or use the fn shades.all
+
+  // will now query both nodes and links!
+  queryNode: (g: Graph3, filters: ((nodeInfo: any) => boolean)[]) => {
+    let searchDepth = filters.length;
+    // just use and in order to check for seenness
+    let seenNodesIds: number[] = [];
+    // my own custom traversal implementation
+    // so you have a graph, and you have an entry point or points...
+    // if you have multiple entry points, they work concurrency
+    // e.g to produce shades.get('hypernodes', all, 'siblings', all, 'siblings', all))(g);
+    let getFnArgs: any[] = [];
+    for (let i = 0; i++; i < searchDepth) {
+      getFnArgs.push((i == 0) ? "hypernodes" : "siblings");
+      getFnArgs.push(shades.and(filters[i], (nodeInfo: GraphNode) => seenNodesIds.includes(nodeInfo.id)));
+    }
+    return shades.get(...getFnArgs)(g); // maybe upgrade typescript vscode version? https://stackoverflow.com/questions/45225128/typescript-error-when-using-the-spread-operator
+  },
+}
 // TODO: Invariants +  Refinement relations
 
 // Qi Definitions
-
-type Q = Qi | QiLink;
-export type Qi = {
+type Qi = GraphNode & {
   readonly id: number;
-  meaning: Semantic;
-  tong: QiZhi;
-  transformations: Transformation[]; // describes how this qi transforms itself and the graph
-};
-
-type Qi2 = {
-  readonly id: number;
-  meaning: Semantic; // meaning of information
-  tong: QiZhi; // flow with siblings and itself
-  relations: Relation[]; // relations with all siblings
-  siblings: Qi2[];
+  meaning: Semantic; // relation with itself
+  quality: QiZhi; // flow with siblings and itself
   transformations?: Transformation[]; // describes how this qi transforms itself and the graph, almost like haskell functions
+  relations: Semantic[]; // relations with all siblings
+  siblings: Qi[];
 };
-
-export class QiObj implements Qi {
-  id: number; // number lookup is faster than string
-  // Semantic
-  meaning: Semantic;
-  tong: QiZhi;
-  // Energy
-  transformations: Transformation[]; // describes how this qi transforms itself and the graph
-
-  constructor(id: number, meaning: Semantic) {
-    this.id = id;
-    this.meaning = meaning;
-    this.tong = 0;
-    this.transformations = [];
-  }
-}
-
-type QiLink = {
-  readonly id: number;
-  readonly from: Qi;
-  readonly to: Qi;
-  tong: QiZhi;
-  relation: Relation;
-};
-
-class QiLinkImp implements QiLink {
-  readonly id: number;
-  readonly from: Qi;
-  readonly to: Qi;
-  tong: QiZhi;
-  relation: Relation;
-
-  constructor(id: number, from: Qi, to: Qi) {
-    this.id = id;
-    this.from = from;
-    this.to = to;
-    this.tong = 0;
-    this.relation = "Unordered";
-  }
-}
