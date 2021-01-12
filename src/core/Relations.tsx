@@ -1,13 +1,13 @@
-import { EmotionalState, GraphNodeCorrect } from "./LifeGraphModel";
+import { EmotiveState, GraphNodeCorrect, QiZhi } from "./LifeGraphModel";
 
-const Love: EmotionalState = (name: string, quality: QiZhi) => {
+const createEmotion: EmotiveState = (name: string, quality: QiZhi) => {
     var emotionName = GraphNodeCorrect.createGraphNode(-1);
     var emotionalState = GraphNodeCorrect.createGraphNode(-1);
     emotionName.meaning = name;
 }
     
 
-const Love: EmotionalState = {
+const Love: EmotiveState = {
   Love = 500,
   Compassion = 450,
   Hate = 400,

@@ -13,59 +13,65 @@ export enum Cardinal {
   Out,
 }
 
-// Semantic = Relation = Meaning
+// Semantic = Relation = Meaning = Tangible
 // Maybe model using GADT
 export type Semantic =
   | Language
   | Symbolic //3D object? video? gif?
   | Location
+  | Material
   | Imagery
   | Person
   | Time
   | Group
-  | EmotionalState
-  | QiZhi
+  | EmotiveState
   | Void;
-type Language = string; // char or word, but not code
-type Symbolic = Emoji | UnicodeSymbol;
+type Symbolic = Emoji | UnicodeSymbol | Language;
 type Emoji = string;
 type UnicodeSymbol = string;
+type Language = string; // char or word, but not code
+type Code = "Code"; // later this will represent an ast (so no need to parse text!)
+type Math = "Math"
+type Material = Vapour | Liquid | Acrylic | Glass | Paper | Wood | Metal; // why can't I do "= Qi"
+export type EmotiveState = Qi;
+type Time = TimePoint | TimeDuration | TimeSpan;
+type TimePoint = DateTime; // Date time is really a "duration" from the original 1970 start time, can we omit? Or maybe just have a more recent beginning, like when you start using the app?
+type TimeDuration = Duration; // should support negative durations e.g. start using app in 2020, refer to 1000AD = minus 1000 years, then minus specific time. don't need to store everything in a super large time format
+type TimeSpan = TimePoint & TimeDuration & TimePoint;
+type Vapour = Qi;
+type Liquid = Qi;
+type Acrylic = Qi;
+type Glass = Qi;
+type Paper = Qi;
+type Wood = Qi;
+type Metal = Qi;
 type Location = number; 
 type Imagery = "Image" | "Video" | "Thumbnail"; // image includes gif
-type Person = string;
-type Group = Qi[]; // this needs to be a reference;
-export type EmotionalState = Qi;
+type Person = {name: string};
+type Group = Qi; 
+type Arbitrary = Qi;
 type Void = undefined; // sorta like any possibility, no meaning
 
 type Layout = Ratio | Direction; // need to add this to semantic after proper consideration of natural ui
 type Ratio = number;
 type Direction = Cardinal.Left | Cardinal.Right | Cardinal.Up | Cardinal.Down;
-
-type Code = "Code"; // later this will represent an ast (so no need to parse text!)
 // how to handle multiple semantics, so an image of a person!
 
-type QiZhi = Colour & Brightness & Dispersion;
+// Non-tangible, ethereal
+export type QiZhi = Colour & Brightness & Dispersion;
 type Colour = number;
 type Brightness = number;
 type Dispersion = number;
 
-// Time related
-type Time = TimePoint | TimeDuration | TimeSpan;
-type TimePoint = DateTime; // Date time is really a "duration" from the original 1970 start time, can we omit? Or maybe just have a more recent beginning, like when you start using the app?
-type TimeDuration = Duration; // should support negative durations e.g. start using app in 2020, refer to 1000AD = minus 1000 years, then minus specific time. don't need to store everything in a super large time format
-type TimeSpan = TimePoint & TimeDuration & TimePoint;
+type Transform = (q: Qi) => Qi;
+type Pattern = (q: Qi) => Transform; // match not a single pattern, but many, unlike haskell
 
 // Graph Model and Operations
 // TODO: should we implement state history here?
-// metanote, it would be amazing could you could have rich text formatting for comments
-// or if there was no distinction between comments and code, or at least a minimal distinction
-// why not use class, data and methods?
-// cause it looks like it causes mutation...does this matter?
 // is there a way we can emulate the data constructor and syntax of haskell?
 // so in haskell, it works like this
 // first, the typings of the init, and the operations of the entity
 // then, data invariants, it's like additional static type checking
-// like, correctness at rest, after transformations
 // later, an abstract, slow but correct implementation of the typings
 // after that, a concrete, faster implementation
 // after that, some kind of equality checker between the results of the transforms of the concrete and abstract
@@ -116,7 +122,7 @@ type GraphNodeOps = {
 }
 export const GraphNodeCorrect: GraphNodeOps = {
   createGraphNode: (id: number) => {
-    return { id: id, meaning: undefined, quality: undefined, links: [], siblings: []};
+    return { id: id, meaning: undefined, quality: 0, links: [], siblings: []};
   },
   siblings: (node: GraphNode) => node.siblings,
   numOfSiblings: (node: GraphNode) => GraphNodeCorrect.siblings(node).length,
@@ -124,25 +130,23 @@ export const GraphNodeCorrect: GraphNodeOps = {
   numOfSiblingLinks: (node: GraphNode) => GraphNodeCorrect.siblingLinks(node).length,
 };
 
-// T is the type of the node, TL is the type of the link
-// Is there a way to avoid generics? Looks messy, could use sum types
-type Graph3 = AdjacencyList | EdgeList | Matrix;
+type Graph = AdjacencyList | EdgeList | Matrix;
 type AdjacencyList = {graphType: "AdjacencyList", hypernodes: GraphNode[]};
 type EdgeList = {graphType: "EdgeList", hypernodes: GraphNode[], edges: GraphLink[]};
 type Matrix = {graphType: "Matrix", hypernodes: [], matrix: GraphLink[][]};
 type GraphOps<T extends GraphNode> = {
-  createGraph: (graphType: string) => (Graph3 | undefined);
-  createNode: (g: Graph3) => {n: GraphNode, g: Graph3}; // gives you back the created GraphNode, so you can add information and stuff
-  queryNode: (g: Graph3, query: (n: GraphNode) => boolean) => (GraphNode[] | undefined);
-  createEdge: (g: Graph3, n1: GraphNode, n2: GraphNode) => {e: GraphLink, g: Graph3};
-  queryEdge: (g: Graph3, query: (e: GraphLink) => boolean) => (GraphLink | undefined);
-  createSibling: (g: Graph, n: GraphNode, info: any) => {sibling: GraphNode, g: Graph3};
-  numNodes: (g: Graph3) => number;
-  numEdges: (g: Graph3) => number;
+  createGraph: (graphType: string) => (Graph | undefined);
+  createNode: (g: Graph) => {n: GraphNode, g: Graph}; // gives you back the created GraphNode, so you can add information and stuff
+  queryNode: (g: Graph, query: (n: GraphNode) => boolean) => (GraphNode[] | undefined);
+  createEdge: (g: Graph, n1: GraphNode, n2: GraphNode) => {e: GraphLink, g: Graph};
+  queryEdge: (g: Graph, query: (e: GraphLink) => boolean) => (GraphLink | undefined);
+  createSibling: (g: Graph, n: GraphNode, info: any) => {sibling: GraphNode, g: Graph};
+  numNodes: (g: Graph) => number;
+  numEdges: (g: Graph) => number;
+  quest: (g: Graph, bag: Qi, patterns: Pattern[], transforms: Transform[]) => Graph; // or could not return Graph and just mutate?
   // delete? but what about the edges? and what about the consistency of the temporal graph? maybe could mark as deleted?
   // pick or lens? add a new node that selects other nodes?
 }
-// I am confused about to separate the performance structures and the very detailed structures...
 const GraphCorrect: GraphOps<GraphNode> = {
   createGraph: (graphType: string) => {
     if (graphType == "AdjacencyList") {
@@ -155,7 +159,7 @@ const GraphCorrect: GraphOps<GraphNode> = {
       return undefined;
     }
   },
-  createNode: (g: Graph3) => {
+  createNode: (g: Graph) => {
     let n: GraphNode;
     switch (g.graphType) {
       case "AdjacencyList":
@@ -173,7 +177,6 @@ const GraphCorrect: GraphOps<GraphNode> = {
     }
     return {n: n, g: g}
   },
-  // hm should querying affect qi? it should, so should it be in this function or separate?
   // if it affects qi, how do you distinguish betwen query qi and something like emotionalstate qi?
   // how do you implement reducers here? should you? e.g. hypernodes.maxOf("EmotionalState")
   // how to filter by depth? could dynamically generate the args for the .get fn
@@ -183,7 +186,7 @@ const GraphCorrect: GraphOps<GraphNode> = {
   // queries is also equal to depth of search, since queries can just equal true or use the fn shades.all
 
   // will now query both nodes and links!
-  queryNode: (g: Graph3, filters: ((nodeInfo: any) => boolean)[]) => {
+  queryNode: (g: Graph, filters: ((nodeInfo: any) => boolean)[]) => {
     let searchDepth = filters.length;
     // just use and in order to check for seenness
     let seenNodesIds: number[] = [];
@@ -199,14 +202,14 @@ const GraphCorrect: GraphOps<GraphNode> = {
     return shades.get(...getFnArgs)(g); // maybe upgrade typescript vscode version? https://stackoverflow.com/questions/45225128/typescript-error-when-using-the-spread-operator
   },
 }
-// TODO: Invariants +  Refinement relations
+const GraphFast: GraphOps<GraphNode> = {};
 
 // Qi Definitions
 type Qi = GraphNode & {
-  readonly id: number;
+  readonly id: number; // might be a hash?
   meaning: Semantic; // relation with itself
   quality: QiZhi; // flow with siblings and itself
-  transformations?: Transformation[]; // describes how this qi transforms itself and the graph, almost like haskell functions
+  transforms?: Transform[]; // describes how this qi transforms itself and the graph, almost like haskell functions
   relations: Semantic[]; // relations with all siblings
   siblings: Qi[];
 };
