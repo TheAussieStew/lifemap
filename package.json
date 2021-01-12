@@ -22,6 +22,7 @@
     "react-dom": "16.13.0",
     "react-force-graph": "1.37.1",
     "react-scripts": "4.0.0",
+    "shades": "2.1.0",
     "three": "0.122.0",
     "three-spritetext": "1.5.2",
     "typescript": "4.0.3",
