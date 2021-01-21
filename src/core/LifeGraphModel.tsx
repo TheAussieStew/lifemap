@@ -31,27 +31,27 @@ type Emoji = string;
 type UnicodeSymbol = string;
 type Language = string; // char or word, but not code
 type Code = "Code"; // later this will represent an ast (so no need to parse text!)
-type Math = "Math"
+type Math = "Math";
 type Material = Vapour | Liquid | Acrylic | Glass | Paper | Wood | Metal; // why can't I do "= Qi"
-export type EmotiveState = GraphNode;
+export type EmotiveState = Qi;
 type Time = TimePoint | TimeDuration | TimeSpan;
 type TimePoint = DateTime; // Date time is really a "duration" from the original 1970 start time, can we omit? Or maybe just have a more recent beginning, like when you start using the app?
 type TimeDuration = Duration; // should support negative durations e.g. start using app in 2020, refer to 1000AD = minus 1000 years, then minus specific time. don't need to store everything in a super large time format
 type TimeSpan = TimePoint & TimeDuration & TimePoint;
-type Vapour = GraphNode;
-type Liquid = GraphNode;
-type Acrylic = GraphNode;
-type Glass = GraphNode;
-type Paper = GraphNode;
-type Wood = GraphNode;
-type Metal = GraphNode;
-type Location = number; 
+type Vapour = Qi;
+type Liquid = Qi;
+type Acrylic = Qi;
+type Glass = Qi;
+type Paper = Qi;
+type Wood = Qi;
+type Metal = Qi;
+type Location = number;
 type Imagery = "Image" | "Video" | "Thumbnail"; // image includes gif
-type Person = {name: string};
-type Group = GraphNode; 
-type Arbitrary = GraphNode;
+type Person = { name: string };
+type Group = Qi;
+type Arbitrary = Qi;
 type Void = undefined; // sorta like any possibility, no meaning
-type Transform = (n: GraphNode) => GraphNode;
+type Transform = (n: Qi) => Qi;
 
 type Layout = Ratio | Direction; // need to add this to semantic after proper consideration of natural ui
 type Ratio = number;
@@ -65,104 +65,186 @@ type Brightness = number;
 type Dispersion = number;
 
 // matching is very simple. just imitate the json structure exactly, with everything as values.
-type Pattern = (n: GraphNode) => boolean; // match not a single pattern, but many, unlike haskell how bout ref vs val
+type Pattern = (pattern: Qi) => boolean; // match not a single pattern, but many, unlike haskell how bout ref vs val
 // can do switch fall through like computation, could do or style haskell pattern matching - these both check sequentially though
 // or somehow some simultaneous parallell computation.
 
-type GraphNode = {
+export type Qi = {
   readonly id: number; // how about no id? it's generated automatically when inserted into the graph?
   meaning: Semantic;
   quality: QiZhi;
-  siblings: GraphNode[]; // this is implicitly a relation, but doesn't have to be
+  siblings: Qi[]; // this is implicitly a relation, but doesn't have to be
 };
-type GraphNodeTransforms = {
-  createGraphNode: (id: number) => GraphNode;
-  siblings: (node: GraphNode) => GraphNode[]; 
-  walk: (node: GraphNode, patterns: Pattern[], transforms: Transform[], bag: GraphNode) => {bag: GraphNode}; // number of patterns determine no traversals 
+type QiTransforms = {
+  createQi: (id: number) => Qi;
+  siblings: (node: Qi) => Qi[];
+  journey: (
+    qi: Qi,
+    patterns: Pattern[],
+    transforms: Transform[],
+    conversions: Conversion[],
+    bag: Qi
+  ) => { bag: Qi }; // number of patterns determine no traversals
   // n patts == n transforms data invariant -> e.g. pattern = true or transform == pass, or continue or do nothing, or identity fn
   // containingGraph: (node: GraphNode) => Graph; // Really important, it links this to the containing graph structure // do i really need this?
-}
-export const GraphNodeCorrect: GraphNodeTransforms = {
-  createGraphNode: (id: number) => {
+};
+export const QiCorrect: QiTransforms = {
+  createQi: (id: number) => {
     return { id: id, meaning: undefined, quality: 0, siblings: [] };
   },
-  siblings: (node: GraphNode) => node.siblings,
+  siblings: (q: Qi) => q.siblings,
   // bag has to be empty initially
-  walk: (node: GraphNode, patterns: Pattern[], transforms: Transform[], bag: GraphNode) => { // walk is a quest but from one node, quest is from all nodes, simutaneously
-    // this doesn't handle cycles
-    if (patterns[bag.siblings.length](node) === true) {
-      let transformedNode = transforms[bag.siblings.length](node);
-      bag.siblings.push(transformedNode);
-      for (let sibling of node.siblings) {
-        GraphNodeCorrect.walk(sibling, patterns, transforms, bag);
+  // analogy: a single person setting out on a journey by themselves
+  // maybe can write this so that quest is a group of these, run concurrently
+  journey: (
+    qi: Qi,
+    patterns: Pattern[],
+    transforms: Transform[],
+    conversions: Conversion[],
+    bag: Qi
+  ) => {
+    let exploring = new Set<Qi>();
+    let explored = new Set<Qi>();
+    const transfer = (
+      elem: Qi,
+      prev: Set<Qi>,
+      curr: Set<Qi>
+    ) => {
+      prev.delete(elem);
+      curr.add(elem);
+    };
+    const randomInt = (min: number, max: number) => {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    let current = qi;
+    exploring.add(current);
+    while (exploring.size >= 0) {
+      let index = 0;
+      let randomQiIndex = randomInt(0, exploring.size);
+      for (let popped of exploring.values()) {
+        if (index == randomQiIndex) {
+          current = popped;
+          break;
+        }
+        index += 1;
       }
-    } else {
-      bag.siblings.push(node);
+      if (patterns[bag.siblings.length](current) == true) {
+        const transformedNode = transforms[bag.siblings.length](current);
+        const convertedNode = conversions[bag.siblings.length](transformedNode);
+        bag.siblings.unshift(transformedNode);
+      }
+      for (let sibling of current.siblings) {
+        exploring.add(sibling);
+      }
+      transfer(current, exploring, explored);
     }
-    return {bag: bag};
-  } 
+    return { bag: bag };
+  },
 };
 
+type Conversion = (q: Qi) => any;
+
 type Graph = AdjacencyList | EdgeList | Matrix;
-type AdjacencyList = {hypernodes: GraphNode[]};
-type EdgeList = {hypernodes: GraphNode[], edges: GraphNode[]};
-type Matrix = {hypernodes: GraphNode[], matrix: GraphNode[][]};
+type AdjacencyList = { hyperqi: Qi[] };
+type EdgeList = { hyperqi: Qi[]; edges: Qi[] };
+type Matrix = { hyperqi: Qi[]; matrix: Qi[][] };
 type GraphOps = {
   createGraph: () => Graph;
-  createNode: (g: Graph) => {n: GraphNode, g1: Graph}; // can you create during quest, how>?
-  createSibling: (g: Graph, n: GraphNode) => {sibling: GraphNode, g1: Graph};
-  createRelation: (g: Graph, n1: GraphNode, n2: GraphNode) => {relation: GraphNode, g1: Graph};
-  quest: (g: Graph, patterns: Pattern[], transforms: Transform[], bag: GraphNode) => {g1: Graph, bag: GraphNode}; // or could not return Graph and just mutate?
+  createNode: (g: Graph) => { q: Qi; g1: Graph }; // can you create during quest, how>?
+  createSibling: (g: Graph, q: Qi) => { sibling: Qi; g1: Graph };
+  createRelation: (
+    g: Graph,
+    q1: Qi,
+    q2: Qi
+  ) => { relation: Qi; g1: Graph };
+  quest: (
+    g: Graph,
+    patterns: Pattern[],
+    transforms: Transform[],
+    conversions: Conversion[],
+    bag: Qi
+  ) => { g1: Graph; bag: Qi }; // or could not return Graph and just mutate?
   // delete? but what about the edges? and what about the consistency of the temporal graph? maybe could mark as deleted?
   // pick or lens? add a new node that selects other nodes?
-}
+};
 const GraphCorrect: GraphOps = {
   createGraph: () => {
-    let g: AdjacencyList = {hypernodes: []};
-    return g; 
+    let g: AdjacencyList = { hyperqi: [] };
+    return g;
   },
   createNode: (g: Graph) => {
-    let n: GraphNode;
-    n = GraphNodeCorrect.createGraphNode(g.hypernodes.length);
-    g.hypernodes.push(n);
-    return {n: n, g1: g}
+    let q: Qi;
+    q = QiCorrect.createQi(g.hyperqi.length);
+    g.hyperqi.push(q);
+    return { q: q, g1: g };
   },
-  createSibling: (g: Graph, n: GraphNode) => {
-    let tuple: {n: GraphNode, g1: Graph} = GraphCorrect.createNode(g);
-    let sibling = tuple.n;
-    n.siblings.push(sibling);
-    sibling.siblings.push(n);
-    return {sibling: sibling, g1: tuple.g1};
+  createSibling: (g: Graph, q: Qi) => {
+    let tuple: { q: Qi; g1: Graph } = GraphCorrect.createNode(g);
+    let sibling = tuple.q;
+    q.siblings.push(sibling);
+    sibling.siblings.push(q);
+    return { sibling: sibling, g1: tuple.g1 };
   },
-  createRelation: (g: Graph, n1: GraphNode, n2: GraphNode) => {
-    let tuple: {n: GraphNode, g1: Graph} = GraphCorrect.createNode(g);
-    let relation = tuple.n;
-    n1.siblings.push(relation);
-    relation.siblings.push(n1);
-    relation.siblings.push(n2);
-    n2.siblings.push(relation);
+  createRelation: (g: Graph, q1: Qi, q2: Qi) => {
+    let tuple: { q: Qi; g1: Graph } = GraphCorrect.createNode(g);
+    let relation = tuple.q;
+    q1.siblings.push(relation);
+    relation.siblings.push(q1);
+    relation.siblings.push(q2);
+    q2.siblings.push(relation);
     return { relation: relation, g1: tuple.g1 };
   },
-  quest: (g: Graph, patterns: Pattern[], transforms: Transform[], bag: GraphNode) => {
-    for (let node of g.hypernodes) {
-      let new
-      bag.siblings.push(GraphNodeCorrect.walk(node, patterns, transforms, ))
-    }
-    if (patterns[bag.siblings.length](node) === true) {
-      let transformedNode = transforms[bag.siblings.length](node);
-      bag.siblings.push(transformedNode);
-      for (let sibling of node.siblings) {
-        GraphNodeCorrect.walk(sibling, patterns, transforms, bag);
+  // analogy is kind of like, king arthur sending all of his knights out to find the holy grail
+  quest: (
+    // does not mutate, just chooses things from environment, transforms, and then places in bag
+    // maybe need to somehow get distance from somewhere? origin?
+    // quest needs to somehow not cycle, but also link to cycles???
+    g: Graph,
+    patterns: Pattern[], // not sure if this is one patt per node, or all patterns, etc
+    transforms: Transform[], // same as above, also not sure about correspondence between transforms and patts
+    conversions: Conversion[],
+    bag: Qi
+  ) => {
+    let exploring = new Set<Qi>();
+    let explored = new Set<Qi>();
+    const transfer = (
+      elem: Qi,
+      prev: Set<Qi>,
+      curr: Set<Qi>
+    ) => {
+      prev.delete(elem);
+      curr.add(elem);
+    };
+    const randomInt = (min: number, max: number) => {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    let current = g.hyperqi[0];
+    exploring.add(current);
+    while (exploring.size >= 0) {
+      let index = 0;
+      let randomQiIndex = randomInt(0, exploring.size);
+      for (let popped of exploring.values()) {
+        if (index == randomQiIndex) {
+          current = popped;
+          break;
+        }
+        index += 1;
       }
-    } else {
-      bag.siblings.push(node);
+      if (patterns[bag.siblings.length](current) == true) {
+        const transformedNode = transforms[bag.siblings.length](current);
+        const convertedNode = conversions[bag.siblings.length](transformedNode);
+        bag.siblings.unshift(transformedNode);
+      }
+      for (let sibling of current.siblings) {
+        exploring.add(sibling);
+      }
+      transfer(current, exploring, explored);
     }
-    return {bag: bag};
-
-    return {g1: Graph, bag: GraphNode};
+    return { g1: g, bag: bag };
   },
   // if it affects qi, how do you distinguish betwen query qi and something like emotionalstate qi?
-  // need to avoid cycles...could definitely integrate that using conditions
-}
-const GraphFast: GraphOps = {};
-const GraphChecker: (graphCorrect: GraphOps, graphFast: GraphOps) => boolean;
+};
+// const GraphFast: GraphOps = {};
+type GraphChecker = (graphCorrect: GraphOps, graphFast: GraphOps) => boolean;
+const GraphCheckerCorrect: GraphChecker = (graphCorrect: GraphOps, graphFast: GraphOps) => true;
+
