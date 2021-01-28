@@ -1,35 +1,25 @@
 import React from "react";
-import "./App.css";
-import { Header, Demo } from "./view/Muuri";
-import "./style.css";
-import localGraph from "./assets/kongweilifemap.json";
-import { useEffect, useRef } from "react";
-import { MuuriComponent } from "muuri-react";
-import { Graph, GraphObj, GraphOps, Qi } from "./core/LifeGraphModel";
-import { initialisedGraph } from "./core/Initialiser";
-import { RenderedListPoints } from "./view/View";
-import { db } from "./backend/database";
+import { ShenT, GraphCorrect } from "./core/LifeGraphModel";
+import { GraphTest } from "./utils/Testing";
 
+// const Main = () => {
+//   const [graph, setGraph] = React.useState<Graph>(GraphCorrect.createGraph);
+//   let result = GraphCorrect.createNode(graph);
+//   setGraph(result.g1);
+//   let {g1, bag} = GraphCorrect.beginQuest(graph);
+//   setGraph(g1);
+//   return (
+//     <div>
+//       NestedList(bag);
+//     </div>
+//   )
+// };
+
+// Visual and interactive testing
 const Main = () => {
-  const [graphData, setGraphData] = React.useState<Graph>();
-
-  // load graph from local
-  setGraphData(GraphOps.parse(localGraph));
-
-
-
-  // Item component.
-  const TextViewQi: Qi = { id: 0, information: "Text View" };
-  const GraphViewQi: Qi = { id: 1, information: "Graph View" };
-  const panes = [GraphViewQi, TextViewQi];
-  const [items, setItems] = React.useState(panes);
-  const children = items.map((props) => <Item key={props.id} {...props} />);
-
-  return (
-    <div>
-      <MuuriComponent dragEnabled>{children}</MuuriComponent>
-    </div>
-  );
-};
+  // const component = <Testing/>;
+  console.log({nested: "lol", sdsd: "sds"})
+  return <div>{GraphTest.createGraph()}</div>;
+}
 
 export default Main;
