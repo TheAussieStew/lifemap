@@ -1,61 +1,20 @@
-import { Box, Card } from "@material-ui/core";
-import { MuuriComponent, useDrag } from "muuri-react";
-import React from "react";
-// These imports shouldnt be here in this file, just for testing
-import { Graph, Qi, GraphObj, GraphOps } from "../core/LifeGraphModel";
-
-export const Muuri = (t: Tree) => {
-   const isDragging = useDrag();
-   const shadowHeight = isDragging ? 20 : 1;
-   return (
-      <MuuriComponent dragEnabled>{children}</MuuriComponent>
-   );
- };
-
-export const MuuriItem = (qi: Qi) => {
-   const isDragging = useDrag();
-   const shadowHeight = isDragging ? 20 : 1;
-   const cardTitle = isDragging ? "Release me!" : qi.information;
-
-   return (
-     // Outer Grid Element, used by Muuri for positioning
-     <Box
-       style={{
-         transition: "box-shadow 0.2s",
-         width: "40vw",
-         height: "90vh",
-         margin: "10px",
-         cursor: "grab",
-         position: "absolute",
-         zIndex: 1,
-       }}
-       boxShadow={shadowHeight}
-       className={"item"}
-     >
-       {/* Inner Grid Element, used by Muuri for animation */}
-       <div className="item-content">
-         {/* Custom content here */}
-         {cardTitle}
-         {qi.information === "Graph View" ? (
-           initialisedForceGraph3D
-         ) : (
-           <Card style={{ margin: 20 }}>
-             <RenderedListPoints />
-           </Card>
-         )}
-       </div>
-     </Box>
-   );
- };
+import { Card } from "@material-ui/core";
+import React, { useState } from "react";
+import InputBase from "@material-ui/core/InputBase";
+import { AlwaysMatch, Journal, QiCorrect, QiT } from "../core/LifeGraphModel";
+import { type } from "os";
 
 // Lens Grid - how different lenses are arranged
 type LensGrid = unknown;
 
-// Lens - a composition of all optical elements
-type Lens = Style[] & Filter[] & Optic;
+// Loupe - switching between different lenses
+type Loupe = { lenses: Lens[]; selectedLens: Lens };
 
-// Style - visualise saliency and entropy
-type Style = unknown;
+// Lens - a composition of all optical elements
+type Lens = Distortion[] & Filter[] & Optic;
+
+// Distortion - visualise saliency (font styling) and entropy
+type Distortion = unknown;
 
 // Filter - an overlay of information
 type Filter = Clear | Censored | RoseTinted | QiField;
@@ -66,27 +25,71 @@ type QiField = { type: "QiField" };
 
 // Optic - viewing information as a certain structure
 // it should be like: JSX[GraphNode] a wrapper around graph node, leave for future
-type Optical = (q: Qi) => JSX.Element;
-const NestedList: Optical = (q: Qi) => {
-  return (<div></div>);
-}
 type Optic =
-  | List // 1.5D but 1D on phones
+  | Tree // 1.5D but 1D on phones
   | Code // 1.5D
   | Masonry // 2D
-  | GraphStructure // 2D or 3D
+  | GraphOptic // 2D or 3D
   | Table // 2D
   | SpaceTime // 2D or 3D or even 4D?
   | LightCone
   | Calendar
-  | Embed; 
+  | Embed;
 type Code = unknown;
-type List = ListNumber | ListPoints | ListChecks; // should be collapsable
-type ListNumber = unknown;
-type ListPoints = unknown;
-type ListChecks = unknown;
+export type Tree = (
+  bag: QiT,
+  journal: Journal,
+  type: TreeType
+) => JSX.Element[]; // should be collapsable
+export type TreeType =
+  | "Empty"
+  | "Triangles"
+  | "Points"
+  | "Numbers"
+  | "Points"
+  | "Checkboxes";
+export const TreeCorrect: Tree = (
+  bag: QiT,
+  journal: Journal,
+  type: TreeType
+) => {
+  const [bagState, setBagState] = useState<QiT>(bag);
+  const [bagItems, setBagItems] = useState<QiT[]>([bag]);
+  for (let sibling of bag.siblings) {
+    bagItems.push(sibling)
+    setBagItems(bagItems);
+  }
+  let decorator: string = "";
+  if (type === "Points") {
+    decorator = "•";
+  } else {
+    decorator = "-";
+  }
+  return bagItems.map((item: QiT) => {
+    const depth = journal.get(item)!.distToPrev;
+    const onEnterPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+      if (ev.key === "Enter") {
+        let {q1, sibling} = QiCorrect.createSibling(item);
+        journal.set(item, {distToPrev: depth + 1});
+        ev.preventDefault();
+        bagItems.slice(0, bagItems.indexOf(item))
+        + sibling + bagItems.slice(bagItems.indexOf(item), bagItems.lastIndexOf)
+        setBagItems()
+      }
+    };
+    <div style={{ marginLeft: depth * 15 }}>
+      {decorator + " "}
+      <InputBase
+        onKeyPress={onEnterPress}
+        defaultValue={item.meaning}
+        inputProps={{ "aria-label": "naked" }}
+      />
+    </div>;
+  });
+};
+
 type Masonry = unknown; // either evenly sized or unevenly sized grid that's packed together
-type GraphStructure = Graph2D | Graph3D;
+type GraphOptic = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = unknown;
 type Table = unknown;
@@ -96,12 +99,3 @@ type LightCone = unknown; // evolution of timeline
 type Calendar = unknown; // what is this even
 type Embed = unknown;
 type Math = unknown; // should this be at Qi level?
-
-type Visualise = (q: Qi) => JSX.Element;
-const Cardify: Visualise = (q: Qi) => {
-  return (
-      <Card style={{ textAlign: "left", marginLeft: 3 * 15 }}>
-        {"• " + q.meaning}
-      </Card>
-  );
-};
