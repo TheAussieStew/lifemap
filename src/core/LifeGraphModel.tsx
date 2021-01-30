@@ -1,5 +1,7 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
+import { action, makeAutoObservable, observable } from "mobx";
+import { observer } from "mobx-react-lite"
 import { DateTime, Interval, Duration } from "luxon";
 import shades, { all } from "shades";
 
@@ -51,7 +53,7 @@ type Imagery = "Image" | "Video" | "Thumbnail"; // image includes gif
 type Person = { name: string };
 type Group = QiT;
 type Arbitrary = QiT;
-type Void = undefined; // sorta like any possibility, no meaning
+type Void = "Undefined"; // sorta like any possibility, no meaning
 
 type Layout = Ratio | Direction; // need to add this to semantic after proper consideration of natural ui
 type Ratio = number;
@@ -89,8 +91,43 @@ export const IsElemMatch: PatternMatch = (toCheck: QiT, patternToMatch: any) => 
 export type Transform = (n: QiT) => QiT;
 export const IdentityTransform = (n: QiT) => n;
 
-export type Journal = Map<QiT, JournalEntry>;
-export type JournalEntry = { distToPrev: number; timesSeen: number };
+export type Map2D<KeyT, ValueT> = Map<KeyT, Map<KeyT, ValueT>>;
+export type JournalT = Map2D<QiT, JournalEntry>;
+export type JournalEntry = { timesSeen: number; dist: number; next: QiT };
+export type Journal = {
+  createJournal: () => JournalT;
+  set: (
+    j: JournalT
+  ) => (
+    outerKey: QiT
+  ) => (
+    innerKey: QiT
+  ) => (timesSeen?: number, dist?: number, next?: QiT) => JournalT;
+  get: (j: JournalT) => (outerKey: QiT) => (innerKey: QiT) => JournalEntry;
+};
+export const JournalCorrect: Journal = {
+  createJournal: () => {
+    return new Map<QiT, Map<QiT, JournalEntry>>();
+  },
+  set: (j: JournalT) => (outerKey: QiT) => (innerKey: QiT) => (
+    timesSeen?: number,
+    dist?: number,
+    next?: QiT
+  ) => {
+    if (j.has(outerKey) && j.has(innerKey)) {
+      let journalEntry = j.get(outerKey)!.get(innerKey)!;
+      if (timesSeen) journalEntry.timesSeen = timesSeen; // you can simplify this using a for loop, somehow...
+      if (dist) journalEntry.dist = dist;
+      if (next) journalEntry.next = next;
+      let innerMap = j.get(innerKey)!;
+      innerMap.set(innerKey, journalEntry);
+      j.set(outerKey, innerMap);
+    }
+    return j;
+  },
+  get: (j: JournalT) => (outerKey: QiT) => (innerKey: QiT) =>
+    j.get(outerKey)!.get(innerKey)!,
+};
 
 export type QiT = {
   shen: ShenT;
@@ -101,64 +138,64 @@ export type QiT = {
 };
 type Qi = {
   createQi: (shen: ShenT) => QiT;
+  changeQi: (q: QiT, meaning: Semantic) => QiT;
   siblings: (q: QiT) => QiT[];
   createSibling: (q: QiT) => {q1: QiT, sibling: QiT};
   journey: (
     start: QiT,
     patterns: PatternMatch[],
     transforms: Transform[],
-  ) => {bag: QiT, journal: Journal} // number of patterns determine no traversals
+  ) => {bag: QiT, journal: JournalT} // number of patterns determine no traversals
   // n patts == n transforms data invariant -> e.g. pattern = true or transform == pass, or continue or do nothing, or identity fn
 };
 export const QiCorrect: Qi = {
   createQi: (shen: ShenT) => {
-    return {
+    return makeAutoObservable({
       shen: shen,
       id: Date.now(),
-      meaning: undefined,
+      meaning: "_",
       quality: 0,
       siblings: [],
-    };
+    });
   },
+  changeQi: action((q: QiT, meaning: Semantic) => {
+    q.meaning = meaning;
+    return q;
+  }),
   siblings: (q: QiT) => q.siblings,
   // journey seems to check limitlessly, it doesn't look at no. patts
-  createSibling: (q: QiT) => {
+  createSibling: action((q: QiT) => {
     let sibling = QiCorrect.createQi(q.shen);
     q.siblings.push(sibling);
     return {q1: q, sibling: sibling};
-  },
+  }),
   journey: (
     start: QiT,
-    patterns: PatternMatch[],
+    patterns: PatternMatch[], // problem: no limit on distance
     transforms: Transform[],
   ) => {
-    let bag = QiCorrect.createSibling(start);
-    let journal = new Map<QiT, JournalEntry>();
-    let exploring: QiT[] = []; // need O(1) unshifts or pops
+    let {q1, sibling} = QiCorrect.createSibling(start);
+    let bag = sibling;
+    let journal = JournalCorrect.createJournal();
+    let exploring: QiT[] = [start]; // need O(1) unshifts or pops
     let explored = new Set<QiT>(); // need O(1) membership checking
-    let current = start;
-    exploring.push(current);
-    bag.meaning
-    journal.set(current, {distToPrev: 0});
-    while (exploring.length > 0) {
-      current = exploring.shift()!;
-      const journalEntry = journal.get(current);
-      const currentDistance = journalEntry!.distToPrev;
-      if (patterns[bag.siblings.length](current, current)) { // always match, for now
-        const transformedNode = transforms[bag.siblings.length](current);
-        bag.siblings.push(transformedNode);
-      }
-      for (let sibling of current.siblings) {
-        if (!explored.has(sibling)) {
-          exploring.push(sibling);
-          journal.set(current, { distToPrev: currentDistance + 1 });
-        }
-      }
+    let previous = start;
+    for (let current of exploring) {
+      // finished step, you're at a new place
+      JournalCorrect.set(journal)(previous)(current)(undefined, 1, undefined);
+      // pattern matching, transformation and gathering from current node
+      bag.siblings.push(current);
       explored.add(current);
+      // queue up new places you want to explore
+      for (let sibling of current.siblings) {
+        if (!explored.has(sibling)) exploring.push(sibling);
+      }
+      previous = current; // step forward
     }
     return {bag: bag, journal: journal};
   },
 };
+// maybe add recursive implementation, or a "focal" to emphasise continual updating
 
 export type ShenT = AdjacencyList;
 type AdjacencyList = Omit<QiT, "shen">;
@@ -176,7 +213,7 @@ export type Shen = {
     s: ShenT,
     patterns: PatternMatch[],
     transforms: Transform[],
-  ) => { s1: ShenT, bag: QiT, journal: Journal }; // or could not return Graph and just mutate?
+  ) => { s1: ShenT, bag: QiT, journal: JournalT }; // or could not return Graph and just mutate?
   // delete? but what about the edges? and what about the consistency of the temporal graph? maybe could mark as deleted?
   // pick or lens? add a new node that selects other nodes?
   beginQuest: (s: ShenT) => {s1: ShenT, bag: QiT}
@@ -185,11 +222,11 @@ export const GraphCorrect: Shen = {
   createShen: () => {
     let s: AdjacencyList = {
       id: 0,
-      meaning: undefined,
+      meaning: "Undefined",
       quality: 0,
       siblings: [],
     };
-    return s;
+    return makeAutoObservable(s);
   },
   createQi: (s: ShenT) => {
     let q: QiT;
@@ -214,6 +251,7 @@ export const GraphCorrect: Shen = {
     return { relation: relation, s1: tuple.s1 };
   },
   // analogy is kind of like, king arthur sending all of his knights out to find the holy grail
+  // maybe shen is organised in a very optimised fashion, like a b-tree for "quests"
   quest: (
     // does not mutate, just chooses things from environment, transforms, and then places in bag
     // maybe need to somehow get distance from somewhere? origin?

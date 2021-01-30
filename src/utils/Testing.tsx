@@ -1,5 +1,6 @@
-import React from "react";
-import { Shen, GraphCorrect, ShenT, Journal, JournalEntry, PatternMatch, QiT, Transform } from "../core/LifeGraphModel";
+import { observer } from "mobx-react-lite";
+import React, { createContext, useContext } from "react";
+import { Shen, GraphCorrect, ShenT, Journal, JournalEntry, PatternMatch, QiT, Transform, QiCorrect } from "../core/LifeGraphModel";
 import { TreeCorrect } from "../view/View";
 
 // I want to test in a stateful manner. 
@@ -9,23 +10,31 @@ import { TreeCorrect } from "../view/View";
 
 // code adjacent platform, not no code, neither no code or code
 // need a relationship like, type of Graph but weaker...
+
+export const GraphContext = createContext<ShenT>(GraphCorrect.createShen());
+
 export const GraphTest = {
     createGraph: () => {
-        const data = GraphCorrect.createShen();
-        data.meaning = "Hi World";
-        let journal: Journal = new Map<QiT, JournalEntry>();
-        journal.set(data, {distToPrev: 0})
-        return TreeCorrect(data, journal, "Points") ;
+        const shen = GraphCorrect.createShen(); 
+        shen.meaning = "The Void";
+        let {q, s1} = GraphCorrect.createQi(shen);
+        q.meaning = "Hello universe!";
+        let result = QiCorrect.createSibling(q);
+        return (
+          <GraphContext.Provider value={shen}>
+            <TreeCorrect/>
+          </GraphContext.Provider>
+        );
     },
     createNode: (g: ShenT) => {
-        const data = GraphCorrect.createQi(g);
-        let journal: Journal = new Map<QiT, JournalEntry>();
-        journal.set(data.g1, {distToPrev: 0});
-        journal.set(data.q, {distToPrev: 1});
-        return [
-          TreeCorrect(data.g1, journal, "Points"),
-          TreeCorrect(data.q, journal, "Points"),
-        ];
+        // const data = GraphCorrect.createQi(g);
+        // let journal: Journal = new Map<QiT, JournalEntry>();
+        // journal.set(data.g1, {distToPrev: 0});
+        // journal.set(data.q, {distToPrev: 1});
+        // return [
+        //   TreeCorrect(data.g1, journal, "Points"),
+        //   TreeCorrect(data.q, journal, "Points"),
+        // ];
     },
     createSibling: (g: ShenT, q: QiT) => { 
         const data = GraphCorrect.createSibling(g, q);
