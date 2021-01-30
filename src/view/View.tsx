@@ -1,8 +1,11 @@
 import { Card } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import InputBase from "@material-ui/core/InputBase";
-import { AlwaysMatch, Journal, QiCorrect, QiT } from "../core/LifeGraphModel";
+import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/LifeGraphModel";
 import { type } from "os";
+import { observer, useObserver } from "mobx-react-lite";
+import { action } from "mobx";
+import { GraphContext } from "../utils/Testing";
 
 // Lens Grid - how different lenses are arranged
 type LensGrid = unknown;
@@ -37,9 +40,9 @@ type Optic =
   | Embed;
 type Code = unknown;
 export type Tree = (
-  bag: QiT,
-  journal: Journal,
-  type: TreeType
+  q: QiT,
+  journal?: JournalT,
+  type?: TreeType
 ) => JSX.Element[]; // should be collapsable
 export type TreeType =
   | "Empty"
@@ -48,45 +51,52 @@ export type TreeType =
   | "Numbers"
   | "Points"
   | "Checkboxes";
-export const TreeCorrect: Tree = (
-  bag: QiT,
-  journal: Journal,
-  type: TreeType
+//@ts-ignore
+export const TreeCorrect = observer((
 ) => {
-  const [bagState, setBagState] = useState<QiT>(bag);
-  const [bagItems, setBagItems] = useState<QiT[]>([bag]);
-  for (let sibling of bag.siblings) {
-    bagItems.push(sibling)
-    setBagItems(bagItems);
-  }
   let decorator: string = "";
-  if (type === "Points") {
-    decorator = "•";
-  } else {
-    decorator = "-";
-  }
-  return bagItems.map((item: QiT) => {
-    const depth = journal.get(item)!.distToPrev;
-    const onEnterPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+  decorator = "•";
+  const divs: JSX.Element[] = [];
+  let seen = new Set<QiT>();
+  const result = useContext(GraphContext); // See the Timer definition above.
+  let q = result.siblings[0];
+  const recurse = (
+    divs: JSX.Element[],
+    q1: QiT,
+    depth: number,
+    seen: Set<QiT>
+  ) => {
+    const onEnterPress = action((ev: React.KeyboardEvent<HTMLDivElement>) => {
       if (ev.key === "Enter") {
-        let {q1, sibling} = QiCorrect.createSibling(item);
-        journal.set(item, {distToPrev: depth + 1});
+        console.log("Enter Pressed");
+        QiCorrect.createSibling(q1);
         ev.preventDefault();
-        bagItems.slice(0, bagItems.indexOf(item))
-        + sibling + bagItems.slice(bagItems.indexOf(item), bagItems.lastIndexOf)
-        setBagItems()
       }
-    };
-    <div style={{ marginLeft: depth * 15 }}>
-      {decorator + " "}
-      <InputBase
-        onKeyPress={onEnterPress}
-        defaultValue={item.meaning}
-        inputProps={{ "aria-label": "naked" }}
-      />
-    </div>;
-  });
-};
+    });
+    const onTextChange = action(
+      (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        QiCorrect.changeQi(q1, event.target.value);
+      }
+    );
+    divs.push(
+      <div style={{ marginLeft: 10 + (depth * 15), marginBottom: -10}}>
+        {decorator + " "}
+        <InputBase
+          onKeyPress={onEnterPress}
+          onChange={onTextChange}
+          defaultValue={q1.meaning}
+          inputProps={{ "aria-label": "naked" }}
+        />
+      </div>
+    );
+    seen.add(q1);
+    for (let sibling of q1.siblings) {
+      if (!seen.has(sibling)) recurse(divs, sibling, depth + 1, seen);
+    }
+  };
+  result.siblings.map((q: QiT) => recurse(divs, q, 0, seen));
+  return divs;
+});
 
 type Masonry = unknown; // either evenly sized or unevenly sized grid that's packed together
 type GraphOptic = Graph2D | Graph3D;

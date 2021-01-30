@@ -17,8 +17,6 @@ import { GraphTest } from "./utils/Testing";
 
 // Visual and interactive testing
 const Main = () => {
-  // const component = <Testing/>;
-  console.log({nested: "lol", sdsd: "sds"})
   return <div>{GraphTest.createGraph()}</div>;
 }
 
