@@ -1,9 +1,7 @@
 // Enforce ES6 arrow syntax. Enforce return arguments in fn defs
 // TODO: prettier, eslint
 import { action, makeAutoObservable, observable } from "mobx";
-import { observer } from "mobx-react-lite"
 import { DateTime, Interval, Duration } from "luxon";
-import shades, { all } from "shades";
 
 // Maybe refactor to use types?
 export enum Cardinal {
@@ -153,7 +151,7 @@ export const QiCorrect: Qi = {
     return makeAutoObservable({
       shen: shen,
       id: Date.now(),
-      meaning: "_",
+      meaning: "",
       quality: 0,
       siblings: [],
     });

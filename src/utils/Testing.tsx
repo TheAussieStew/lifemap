@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { createContext, useContext } from "react";
 import { Shen, GraphCorrect, ShenT, Journal, JournalEntry, PatternMatch, QiT, Transform, QiCorrect } from "../core/LifeGraphModel";
-import { TreeCorrect } from "../view/View";
+import { completeOptic, Graph3DCorrect, Logging, Optic, TreeCorrect } from "../view/View";
 
 // I want to test in a stateful manner. 
 // I don't want everything to be tested in an isolated manner.
@@ -19,10 +19,10 @@ export const GraphTest = {
         shen.meaning = "The Void";
         let {q, s1} = GraphCorrect.createQi(shen);
         q.meaning = "Hello universe!";
-        let result = QiCorrect.createSibling(q);
         return (
           <GraphContext.Provider value={shen}>
             <TreeCorrect/>
+            <Graph3DCorrect/>
           </GraphContext.Provider>
         );
     },
