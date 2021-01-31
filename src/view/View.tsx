@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
 import { Vector2 } from "three";
+import Rand from 'rand-seed';
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
@@ -173,7 +174,12 @@ export const Graph3DCorrect = observer(() => {
       links: Link[]
     ) => {
       seen.add(q1);
-      const node: Node = { id: q1.meaning as string, group: depth };
+      const rand = new Rand(q1.meaning as string);
+      let randomNo = rand.next();
+      randomNo = Math.floor(randomNo * 10) + 1  ;
+      console.log("random", randomNo);
+      let group = (depth === 1) ? randomNo : depth;
+      const node: Node = { id: q1.meaning as string, group: group };
       nodes.push(node);
       for (let sibling of q1.siblings) {
         if (!seen.has(sibling)) {
