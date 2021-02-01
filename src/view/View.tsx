@@ -179,13 +179,13 @@ export const Graph3DCorrect = observer(() => {
       randomNo = Math.floor(randomNo * 10) + 1  ;
       console.log("random", randomNo);
       let group = (depth === 1) ? randomNo : depth;
-      const node: Node = { id: q1.meaning as string, group: group };
+      const node: Node = { id: q1.id.toString(), group: group };
       nodes.push(node);
       for (let sibling of q1.siblings) {
         if (!seen.has(sibling)) {
           const link: Link = {
-            source: q1.meaning as string,
-            target: sibling.meaning as string,
+            source: q1.id.toString(),
+            target: sibling.id.toString(),
             value: 1,
             curvature: 0.6,
           };
