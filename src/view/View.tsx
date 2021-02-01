@@ -174,7 +174,7 @@ export const Graph3DCorrect = observer(() => {
       links: Link[]
     ) => {
       seen.add(q1);
-      const rand = new Rand(q1.meaning as string);
+      const rand = new Rand(q1.id.toString());
       let randomNo = rand.next();
       randomNo = Math.floor(randomNo * 10) + 1  ;
       console.log("random", randomNo);
