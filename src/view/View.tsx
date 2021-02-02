@@ -10,6 +10,7 @@ import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/L
 import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
 import { GraphContext } from "../utils/Testing";
+import { ShenToReactForceGraphCorrect } from "../core/Adaptors";
 
 // Lens Grid - how different lenses are arranged
 type LensGrid = unknown;
@@ -72,6 +73,15 @@ export const LoggingCorrect: Logging = observer((q: QiT | ShenT) => {
   return loggingDivs;
 })
 
+export type Text = (text: string) => JSX.Element[];
+//@ts-ignore
+export const TextCorrect = observer((s: string) => {
+  let [text, setText] = useState<string>(s);
+  let elems = (
+    <Stack/>
+  ) 
+});
+
 export type Tree = (q: QiT | ShenT) => JSX.Element[];
 // Had to sacrifice the functional, no use of side effects
 // nature of this component...can figure out another way 
@@ -113,7 +123,7 @@ export const TreeCorrect = observer((
       >
         {decorator + " "}
         <InputBase
-          style={{ marginTop: -3, marginBottom: -3 }}
+          style={{ marginTop: -3, marginBottom: -3, width: "max-content" }}
           onKeyPress={onEnterPress(q1)}
           onChange={onTextChange(q1)}
           defaultValue={q1.meaning}
@@ -135,8 +145,6 @@ type GraphOptic = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = Optic;
 //@ts-ignore
-
-
 export const Graph3DCorrect = observer(() => {
   const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
   const [bloomInitialised, initialiseBloom] = useState<boolean>(false);
@@ -155,51 +163,7 @@ export const Graph3DCorrect = observer(() => {
     }
   });
   const shen = useContext(GraphContext);
-  const transformShenToGraphFormat = (s: ShenT) => {
-    type Node = { id: string, group: number };
-    type Link = {
-      source: Node["id"];
-      target: Node["id"];
-      value: 1;
-      curvature: 0.6;
-    };
-    let seen = new Set<QiT>();
-    let nodes: Node[] = [];
-    let links: Link[] = [];
-    const recurse = (
-      q1: QiT,
-      depth: number,
-      seen: Set<QiT>,
-      nodes: Node[],
-      links: Link[]
-    ) => {
-      seen.add(q1);
-      const rand = new Rand(q1.id.toString());
-      let randomNo = rand.next();
-      randomNo = Math.floor(randomNo * 10) + 1  ;
-      console.log("random", randomNo);
-      let group = (depth === 1) ? randomNo : depth;
-      const node: Node = { id: q1.id.toString(), group: group };
-      nodes.push(node);
-      for (let sibling of q1.siblings) {
-        if (!seen.has(sibling)) {
-          const link: Link = {
-            source: q1.id.toString(),
-            target: sibling.id.toString(),
-            value: 1,
-            curvature: 0.6,
-          };
-          links.push(link);
-          recurse(sibling, depth + 1, seen, nodes, links);
-        }
-      }
-    };
-    shen.siblings.map((q2: QiT) => {
-      recurse(q2, 0, seen, nodes, links);
-    });
-    return { nodes: nodes, links: links };
-  };
-  let graphData = transformShenToGraphFormat(shen);
+  let graphData = ShenToReactForceGraphCorrect(shen);
   return (
     <div style={{ marginTop: 10 }}>
       <ForceGraph3D
