@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
 import { Vector2 } from "three";
-import Rand from 'rand-seed';
+import { Frame, Stack } from "framer"
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
@@ -75,11 +75,31 @@ export const LoggingCorrect: Logging = observer((q: QiT | ShenT) => {
 
 export type Text = (text: string) => JSX.Element[];
 //@ts-ignore
-export const TextCorrect = observer((s: string) => {
-  let [text, setText] = useState<string>(s);
+export const TextCorrect = observer(() => {
+  let [text, setText] = useState<string>("Hello world!");
+  let frames: JSX.Element[] = [];
+  for (let i = 0; i < text.length; i++) {
+    frames.push(
+      <Frame
+        width={10}
+        height={15}
+        backgroundColor="#EFEFEF"
+        drag={true}
+        dragConstraints={{ left: 0, right: 50, top: 0, bottom: 50 }}
+        dragElastic={0.2}
+        // initial={{ scale: 0 }}
+        // animate={{ scale: 1 }}
+      >
+        {text.charAt(i)}
+      </Frame>
+    );
+  }
   let elems = (
-    <Stack/>
-  ) 
+    <div style={{}}>
+        {frames}
+    </div>
+  ); 
+  return elems;
 });
 
 export type Tree = (q: QiT | ShenT) => JSX.Element[];
@@ -122,13 +142,14 @@ export const TreeCorrect = observer((
         }}
       >
         {decorator + " "}
-        <InputBase
-          style={{ marginTop: -3, marginBottom: -3, width: "max-content" }}
+        <TextCorrect/>
+        {/* <InputBase
+          style={{ marginTop: -3, marginBottom: -3}}
           onKeyPress={onEnterPress(q1)}
           onChange={onTextChange(q1)}
           defaultValue={q1.meaning}
           inputProps={{ "aria-label": "naked" }}
-        />
+        /> */}
       </Card>
     );
     seen.add(q1);

@@ -22,7 +22,7 @@ export const GraphTest = {
         return (
           <GraphContext.Provider value={shen}>
             <TreeCorrect/>
-            <Graph3DCorrect/>
+            {/* <Graph3DCorrect/> */}
           </GraphContext.Provider>
         );
     },
