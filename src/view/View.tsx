@@ -81,21 +81,26 @@ export const TextCorrect = observer(() => {
   for (let i = 0; i < text.length; i++) {
     frames.push(
       <Frame
-        width={10}
-        height={15}
-        backgroundColor="#EFEFEF"
+        style={{ marginLeft: 11.5 * i }}
+        width={13}
+        height={19}
+        radius={3}
+        opacity={0.9}
+        backgroundColor="#FFFFFF"
         drag={true}
-        dragConstraints={{ left: 0, right: 50, top: 0, bottom: 50 }}
-        dragElastic={0.2}
-        // initial={{ scale: 0 }}
-        // animate={{ scale: 1 }}
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragElastic={0.05}
+        whileHover={{ scale: 0.9, backgroundColor: "#DDDDDD" }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1.0 }}
+        transition={{ delay: i * 0.01 }}
       >
         {text.charAt(i)}
       </Frame>
     );
   }
   let elems = (
-    <div style={{}}>
+    <div>
         {frames}
     </div>
   ); 
