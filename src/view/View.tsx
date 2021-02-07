@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
 import { Vector2 } from "three";
-import { Frame, Stack } from "framer"
+import { Frame, Stack, useMotionValue } from "framer";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
@@ -11,6 +11,8 @@ import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
 import { GraphContext } from "../utils/Testing";
 import { ShenToReactForceGraphCorrect } from "../core/Adaptors";
+import { map } from "shades";
+import { useHotkeys } from "react-hotkeys-hook";
 
 // Lens Grid - how different lenses are arranged
 type LensGrid = unknown;
@@ -51,7 +53,12 @@ export type Logging = (q: QiT | ShenT) => JSX.Element[];
 export const LoggingCorrect: Logging = observer((q: QiT | ShenT) => {
   let loggingDivs: JSX.Element[] = [];
   let seen = new Set<any>();
-  const recurse = (q1: QiT | ShenT, divs: JSX.Element[], depth: number, seen: Set<any>) => {
+  const recurse = (
+    q1: QiT | ShenT,
+    divs: JSX.Element[],
+    depth: number,
+    seen: Set<any>
+  ) => {
     const propertyNames = Object.keys(q1);
     for (let propertyName of propertyNames) {
       divs.push(
@@ -64,31 +71,32 @@ export const LoggingCorrect: Logging = observer((q: QiT | ShenT) => {
           }}
         >
           {/* @ts-ignore */}
-          {"{" + propertyName + ":" + q1[propertyName] }
+          {"{" + propertyName + ":" + q1[propertyName]}
         </Card>
       );
     }
-  }
+  };
   recurse(q, loggingDivs, 0, seen);
   return loggingDivs;
-})
+});
 
 export type Text = (text: string) => JSX.Element[];
 //@ts-ignore
-export const TextCorrect = observer(() => {
-  let [text, setText] = useState<string>("Hello world!");
+export const TextCorrect = (inputText: string) => {
+  let decorator = "•";
+  let [text, setText] = useState<string>(decorator + " " + inputText);
+  let [x, setX] = useState<number>(0);
   let frames: JSX.Element[] = [];
   for (let i = 0; i < text.length; i++) {
     frames.push(
       <Frame
-        style={{ marginLeft: 11.5 * i }}
         width={13}
         height={19}
         radius={3}
         opacity={0.9}
-        backgroundColor="#FFFFFF"
+        backgroundColor="#EFEFEF"
         drag={true}
-        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragConstraints={{ left: -1, right: 1, top: 0, bottom: 0 }}
         dragElastic={0.05}
         whileHover={{ scale: 0.9, backgroundColor: "#DDDDDD" }}
         initial={{ scale: 0 }}
@@ -99,13 +107,53 @@ export const TextCorrect = observer(() => {
       </Frame>
     );
   }
-  let elems = (
-    <div>
-        {frames}
-    </div>
-  ); 
-  return elems;
-});
+  let position = useMotionValue(0);
+  let cursor = (
+    <Frame
+      width={2.5}
+      //@ts-ignore
+      x={position}
+      height={19}
+      radius={3}
+      opacity={0.8}
+      backgroundColor="#000000"
+      drag={true}
+      dragConstraints={{ left: -100, right: 110, top: 0, bottom: 0 }}
+      dragElastic={0.05}
+      whileHover={{ scale: 0.9, backgroundColor: "#DDDDDD" }}
+      initial={{ scale: 0 }}
+      animate={{ scale: 1.0 }}
+    >
+    </Frame>
+  );
+  useHotkeys("l", () => {
+    console.log("x pos", position);
+    position.set(position.get() + 10);
+  });
+  useHotkeys("h", () => {
+    console.log("x pos", position);
+    position.set(position.get() - 10);
+  });
+  frames.push(cursor);
+  return (
+    <Stack
+      direction="horizontal"
+      gap={0.5}
+      drag={true}
+      dragConstraints={{ left: -1, right: 1, top: 0, bottom: 0 }}
+      style={{
+        alignItems: "flex-start",
+        alignContent: "flex-start",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        width: "100%",
+        height: "fit-content",
+      }}
+    >
+      {frames}
+    </Stack>
+  );
+};
 
 export type Tree = (q: QiT | ShenT) => JSX.Element[];
 // Had to sacrifice the functional, no use of side effects
@@ -137,26 +185,7 @@ export const TreeCorrect = observer((
     depth: number,
     seen: Set<QiT>
   ) => {
-    divs.push(
-      <Card
-        style={{
-          marginLeft: 10 + depth * 15,
-          marginRight: 10,
-          marginBottom: -9,
-          marginTop: 10,
-        }}
-      >
-        {decorator + " "}
-        <TextCorrect/>
-        {/* <InputBase
-          style={{ marginTop: -3, marginBottom: -3}}
-          onKeyPress={onEnterPress(q1)}
-          onChange={onTextChange(q1)}
-          defaultValue={q1.meaning}
-          inputProps={{ "aria-label": "naked" }}
-        /> */}
-      </Card>
-    );
+    divs.push(TextCorrect(q1.meaning.toString()));
     seen.add(q1);
     for (let sibling of q1.siblings) {
       if (!seen.has(sibling)) recurse(divs, sibling, depth + 1, seen);
