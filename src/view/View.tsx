@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
 import { Vector2 } from "three";
-import { Frame, Stack, useMotionValue } from "framer";
+import { Frame, MotionValue, Stack, useMotionValue } from "framer";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
@@ -85,11 +85,30 @@ export type Text = (text: string) => JSX.Element[];
 export const TextCorrect = (inputText: string) => {
   let decorator = "•";
   let [text, setText] = useState<string>(decorator + " " + inputText);
-  let [x, setX] = useState<number>(0);
   let frames: JSX.Element[] = [];
+  // create a multidimen array that holds motionvalues, then give to frame 
+  // can reference this later
+  type IndraWeb<KeyT, ValueT> = { into: Map<KeyT, ValueT> };
+  const createIndraWeb<> = ( )
+  type MotionPosition<Type> = {x: MotionValue<Type>, y: MotionValue<Type>};
+  const createMotionPosition = () => {
+    return {
+      x: useMotionValue(0),
+      y: useMotionValue(0),
+    };
+  };
+  let motionValues = new Map<string, MotionPosition<number>>();
   for (let i = 0; i < text.length; i++) {
+    let id = text.charAt(i) + i.toString();
+    let motionPosition = createMotionPosition();
+    motionValues.set(id, motionPosition);
     frames.push(
       <Frame
+        name={id}
+        //@ts-ignore
+        x={motionPosition.x}
+        //@ts-ignore
+        y={motionPosition.y}
         width={13}
         height={19}
         radius={3}
@@ -99,23 +118,27 @@ export const TextCorrect = (inputText: string) => {
         dragConstraints={{ left: -1, right: 1, top: 0, bottom: 0 }}
         dragElastic={0.05}
         whileHover={{ scale: 0.9, backgroundColor: "#DDDDDD" }}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1.0 }}
+        initial={{ opacity: 0, scale: 2.5 }}
+        animate={{ opacity: 0.9, scale: 1.0 }}
         transition={{ delay: i * 0.01 }}
       >
         {text.charAt(i)}
       </Frame>
     );
   }
-  let position = useMotionValue(0);
+  const [cursorIndex, setCursorIndex] = useState<number>(frames.length - 1);
+  let cursorMotionPosition = createMotionPosition();
+  motionValues.set(" -1", cursorMotionPosition);
   let cursor = (
     <Frame
       width={2.5}
       //@ts-ignore
-      x={position}
+      x={cursorMotionPosition.x}
+      //@ts-ignore
+      y={cursorMotionPosition.y}
       height={19}
-      radius={3}
-      opacity={0.8}
+      radius={2}
+      opacity={0.4}
       backgroundColor="#000000"
       drag={true}
       dragConstraints={{ left: -100, right: 110, top: 0, bottom: 0 }}
@@ -128,6 +151,7 @@ export const TextCorrect = (inputText: string) => {
   );
   useHotkeys("l", () => {
     console.log("x pos", position);
+    frames[cursorIndex]
     position.set(position.get() + 10);
   });
   useHotkeys("h", () => {
