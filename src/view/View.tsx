@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
 import { Vector2 } from "three";
-import { Frame, Stack, useMotionValue } from "framer";
+import { Frame, Stack } from "framer";
+import { useMotionValue } from "framer-motion";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
@@ -83,6 +86,10 @@ export const LoggingCorrect: Logging = observer((q: QiT | ShenT) => {
 export type Text = (text: string) => JSX.Element[];
 //@ts-ignore
 export const TextCorrect = (inputText: string) => {
+  const [value, setValue] = useState(inputText);
+  return <ReactQuill theme="bubble" value={value} onChange={setValue} />;
+};
+export const TextAnimated = (inputText: string) => {
   let decorator = "•";
   let [text, setText] = useState<string>(decorator + " " + inputText);
   let [x, setX] = useState<number>(0);
