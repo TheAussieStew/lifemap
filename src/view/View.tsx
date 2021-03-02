@@ -87,7 +87,31 @@ export type Text = (text: string) => JSX.Element[];
 //@ts-ignore
 export const TextCorrect = (inputText: string) => {
   const [value, setValue] = useState(inputText);
-  return <ReactQuill theme="bubble" value={value} onChange={setValue} />;
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline','strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
+  }
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+  ]
+  return (
+    <ReactQuill
+      theme="bubble"
+      value={value}
+      onChange={setValue}
+      modules={modules}
+      formats={formats}
+    />
+  );
 };
 export const TextAnimated = (inputText: string) => {
   let decorator = "•";
