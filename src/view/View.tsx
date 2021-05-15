@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import ReactDOM from 'react-dom';
+import G6, { Graph } from '@antv/g6';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
 import { ForceGraph3D } from "react-force-graph";
@@ -218,6 +220,67 @@ type GraphOptic = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = Optic;
 //@ts-ignore
+export const Graph2DCorrect = observer(() => {
+  const data = {
+    // The array of nodes
+    nodes: [
+      {
+        id: 'node1', // String, unique and required
+        x: 100, // Number, the x coordinate
+        y: 200, // Number, the y coordinate
+      },
+      {
+        id: 'node2', // String, unique and required
+        x: 300, // Number, the x coordinate
+        y: 200, // Number, the y coordinate
+      },
+    ],
+    // The array of edges
+    edges: [
+      {
+        source: 'node1', // String, required, the id of the source node
+        target: 'node2', // String, required, the id of the target node
+      },
+    ],
+  };
+  const ref = React.useRef(null);
+  let graph: Graph | null = null;
+  useEffect(() => {
+    if (!graph) {
+      graph = new G6.Graph({
+        container: ReactDOM.findDOMNode(ref.current) as HTMLElement,
+        modes: {
+          default: ['drag-canvas'],
+        },
+        layout: {
+          type: 'dagre',
+          direction: 'LR',
+        },
+        defaultNode: {
+          type: 'node',
+          labelCfg: {
+            style: {
+              fill: '#000000A6',
+              fontSize: 10,
+            },
+          },
+          style: {
+            stroke: '#72CC4A',
+            width: 150,
+          },
+        },
+        defaultEdge: {
+          type: 'polyline',
+        },
+      });
+    }
+    graph.data(data);
+    graph.render();
+  }, []);
+
+  return <div ref={ref}></div>;
+})
+//@ts-ignore
 export const Graph3DCorrect = observer(() => {
   const fgRef = useRef<any | undefined>(undefined);
   const [bloomInitialised, initialiseBloom] = useState<boolean>(false);
@@ -238,14 +301,14 @@ export const Graph3DCorrect = observer(() => {
   const shen = useContext(GraphContext);
   let graphData = ShenToReactForceGraphCorrect(shen);
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ width: 300 }}>
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
         nodeLabel="id"
         nodeResolution={7}
-        width={600}
-        height={600}
+        width={300}
+        height={300}
         linkCurvature="curvature"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
