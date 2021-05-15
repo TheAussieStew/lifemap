@@ -11,19 +11,10 @@ import { completeOptic, Graph3DCorrect, Logging, Optic, TreeCorrect } from "../v
 // code adjacent platform, not no code, neither no code or code
 // need a relationship like, type of Graph but weaker...
 
-export const GraphContext = createContext<ShenT>(GraphCorrect.createShen());
-
 export const GraphTest = {
     createGraph: () => {
-        const shen = GraphCorrect.createShen(); 
-        shen.meaning = "The Void";
-        let {q, s1} = GraphCorrect.createQi(shen);
-        q.meaning = "Hello universe!";
         return (
-          <GraphContext.Provider value={shen}>
-            <TreeCorrect/>
-            {/* <Graph3DCorrect/> */}
-          </GraphContext.Provider>
+            <Graph3DCorrect/>
         );
     },
     createNode: (g: ShenT) => {

@@ -1,23 +1,28 @@
 import React from "react";
 import { ShenT, GraphCorrect } from "./core/LifeGraphModel";
 import { GraphTest } from "./utils/Testing";
+import { TreeCorrect, Graph3DCorrect } from "./view/View";
 
-// const Main = () => {
-//   const [graph, setGraph] = React.useState<Graph>(GraphCorrect.createGraph);
-//   let result = GraphCorrect.createNode(graph);
-//   setGraph(result.g1);
-//   let {g1, bag} = GraphCorrect.beginQuest(graph);
-//   setGraph(g1);
-//   return (
-//     <div>
-//       NestedList(bag);
-//     </div>
-//   )
-// };
+export const GraphContext = React.createContext<ShenT>(GraphCorrect.createShen());
 
-// Visual and interactive testing
 const Main = () => {
-  return <div>{GraphTest.createGraph()}</div>;
-}
+  const shen = GraphCorrect.createShen();
+  shen.meaning = "The Void";
+  let { q, s1 } = GraphCorrect.createQi(shen);
+  q.meaning = "Hello universe!";
+  return (
+    <GraphContext.Provider value={shen}>
+      <div
+        style={{
+          display: "grid",
+          gridAutoColumns: `repeat(auto-fill(250px, 1fr))`,
+        }}
+      >
+        <Graph3DCorrect />
+        <Graph3DCorrect />
+      </div>
+    </GraphContext.Provider>
+  );
+};
 
 export default Main;

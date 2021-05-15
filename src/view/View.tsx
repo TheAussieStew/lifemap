@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
-import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
+import { ForceGraph3D } from "react-force-graph";
 import { Vector2 } from "three";
 import { Frame, Stack } from "framer";
 import { useMotionValue } from "framer-motion";
@@ -12,7 +12,7 @@ import InputBase from "@material-ui/core/InputBase";
 import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/LifeGraphModel";
 import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
-import { GraphContext } from "../utils/Testing";
+import { GraphContext } from "../Main";
 import { ShenToReactForceGraphCorrect } from "../core/Adaptors";
 import { map } from "shades";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -197,19 +197,6 @@ export const TreeCorrect = observer((
   let decorator = "•";
   const divs: JSX.Element[] = [];
   let seen = new Set<QiT>();
-  const onEnterPress = (q: QiT) => action((ev: React.KeyboardEvent<HTMLDivElement>) => {
-    if (ev.key === "Enter") {
-      console.log("Enter Pressed");
-      QiCorrect.createSibling(q);
-      ev.preventDefault();
-    }
-  });
-  const onTextChange = (q: QiT) =>
-    action(
-      (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        QiCorrect.changeQi(q, event.target.value);
-      }
-    );
   const recurse = (
     divs: JSX.Element[],
     q1: QiT,
@@ -232,7 +219,7 @@ type Graph2D = unknown;
 type Graph3D = Optic;
 //@ts-ignore
 export const Graph3DCorrect = observer(() => {
-  const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
+  const fgRef = useRef<any | undefined>(undefined);
   const [bloomInitialised, initialiseBloom] = useState<boolean>(false);
   useEffect(() => {
     if (null !== fgRef.current && undefined !== fgRef.current) {
@@ -251,7 +238,7 @@ export const Graph3DCorrect = observer(() => {
   const shen = useContext(GraphContext);
   let graphData = ShenToReactForceGraphCorrect(shen);
   return (
-    <div style={{ marginTop: 10 }}>
+    <div style={{ position: "relative" }}>
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
