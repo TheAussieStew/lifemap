@@ -12,6 +12,15 @@ type ReactForceGraphLink = {
   value: 1;
   curvature: 0.6;
 };
+
+type ShenToG6Graph = (s: ShenT) => ReactForceGraph;
+export const ShenToG6GraphCorrect: ShenToG6Graph = (s: ShenT) => {
+  let seen = new Set<QiT>();
+  let nodes: ReactForceGraphNode[] = [];
+  let links: ReactForceGraphLink[] = [];
+  return { nodes: nodes, links: links };
+}
+
 type ShenToReactForceGraph = (s: ShenT) => ReactForceGraph;
 export const ShenToReactForceGraphCorrect: ShenToReactForceGraph = (
   s: ShenT
