@@ -15,7 +15,7 @@ import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/L
 import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
 import { GraphContext } from "../Main";
-import { ShenToReactForceGraphCorrect } from "../core/Adaptors";
+import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect } from "../core/Adaptors";
 import { map } from "shades";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -221,61 +221,64 @@ type Graph2D = unknown;
 type Graph3D = Optic;
 //@ts-ignore
 export const Graph2DCorrect = observer(() => {
-  const data = {
-    // The array of nodes
-    nodes: [
-      {
-        id: 'node1', // String, unique and required
-        x: 100, // Number, the x coordinate
-        y: 200, // Number, the y coordinate
-      },
-      {
-        id: 'node2', // String, unique and required
-        x: 300, // Number, the x coordinate
-        y: 200, // Number, the y coordinate
-      },
-    ],
-    // The array of edges
-    edges: [
-      {
-        source: 'node1', // String, required, the id of the source node
-        target: 'node2', // String, required, the id of the target node
-      },
-    ],
-  };
   const ref = React.useRef(null);
   let graph: Graph | null = null;
+  const shen = useContext(GraphContext);
+  let graphData = ShenToG6GraphCorrect(shen);
+  function refreshDragedNodePosition(e: any) {
+    const model = e.item.get('model');
+    model.fx = e.x;
+    model.fy = e.y;
+  }
+  const width = 400;
+  const height = 300;
   useEffect(() => {
     if (!graph) {
       graph = new G6.Graph({
         container: ReactDOM.findDOMNode(ref.current) as HTMLElement,
-        modes: {
-          default: ['drag-canvas'],
-        },
+        width,
+        height,
         layout: {
-          type: 'dagre',
-          direction: 'LR',
+          type: "force",
         },
         defaultNode: {
-          type: 'node',
+          type: "node",
           labelCfg: {
             style: {
-              fill: '#000000A6',
+              fill: "#000000A6",
               fontSize: 10,
             },
           },
           style: {
-            stroke: '#72CC4A',
+            stroke: "#72CC4A",
             width: 150,
           },
         },
-        defaultEdge: {
-          type: 'polyline',
-        },
       });
     }
-    graph.data(data);
+    graph.data(graphData);
     graph.render();
+    graph.on("node:dragstart", function (e) {
+      graph!.layout();
+      refreshDragedNodePosition(e);
+    });
+    graph.on("node:drag", function (e) {
+      const forceLayout = graph!.get("layoutController").layoutMethods[0];
+      forceLayout.execute();
+      refreshDragedNodePosition(e);
+    });
+    graph.on("node:dragend", function (e) {
+      e.item!.get("model").fx = null;
+      e.item!.get("model").fy = null;
+    });
+
+    if (typeof window !== "undefined")
+      window.onresize = () => {
+        if (!graph || graph.get("destroyed")) return;
+        // if (!container || !container.scrollWidth || !container.scrollHeight)
+        //   return;
+        // graph.changeSize(container.scrollWidth, container.scrollHeight);
+      };
   }, []);
 
   return <div ref={ref}></div>;
@@ -307,7 +310,7 @@ export const Graph3DCorrect = observer(() => {
         graphData={graphData}
         nodeLabel="id"
         nodeResolution={7}
-        width={300}
+        width={400}
         height={300}
         linkCurvature="curvature"
         nodeAutoColorBy="group"
