@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import G6, { Graph } from '@antv/g6';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
-import { ForceGraph3D } from "react-force-graph";
+import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import { Vector2 } from "three";
 import { Frame, Stack } from "framer";
 import { useMotionValue } from "framer-motion";
@@ -220,13 +220,45 @@ type GraphOptic = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = Optic;
 //@ts-ignore
+export const Graph2DReactForce = observer(() => {
+  const fgRef = useRef<any | undefined>(undefined);
+  const shen = useContext(GraphContext);
+  let graphData = ShenToReactForceGraphCorrect(shen);
+  return (
+    <div style={{ width: 300 }}>
+      <ForceGraph2D
+        ref={fgRef}
+        width={400}
+        height={400}
+        graphData={graphData}
+        nodeAutoColorBy="group"
+        nodeCanvasObject={(node, ctx, globalScale) => {
+          const label = node.id;
+          const fontSize = 12 / globalScale;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          const textWidth = ctx.measureText(label as string).width;
+          const bckgDimensions = [textWidth, fontSize].map(
+            (n) => n + fontSize * 0.2
+          ); // some padding
+          ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          // @ts-ignore
+          ctx.fillStyle = node.color;
+          // @ts-ignore
+          ctx.fillText(label as string, node.x, node.y);
+        }}
+      />
+    </div>
+  );
+});
 export const Graph2DCorrect = observer(() => {
   const ref = React.useRef(null);
   let graph: Graph | null = null;
   const shen = useContext(GraphContext);
   let graphData = ShenToG6GraphCorrect(shen);
   function refreshDragedNodePosition(e: any) {
-    const model = e.item.get('model');
+    const model = e.item.get("model");
     model.fx = e.x;
     model.fy = e.y;
   }
@@ -282,7 +314,7 @@ export const Graph2DCorrect = observer(() => {
   }, []);
 
   return <div ref={ref}></div>;
-})
+});
 //@ts-ignore
 export const Graph3DCorrect = observer(() => {
   const fgRef = useRef<any | undefined>(undefined);
