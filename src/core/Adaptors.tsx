@@ -5,7 +5,7 @@ type ReactForceGraph = {
   nodes: ReactForceGraphNode[];
   links: ReactForceGraphLink[];
 };
-type ReactForceGraphNode = { id: string; group: number };
+type ReactForceGraphNode = { id: string; group: number; label: string };
 type ReactForceGraphLink = {
   source: ReactForceGraphNode["id"];
   target: ReactForceGraphNode["id"];
@@ -80,7 +80,7 @@ export const ShenToReactForceGraphCorrect: ShenToReactForceGraph = (
     let randomNo = rand.next();
     randomNo = Math.floor(randomNo * 10) + 1;
     let group = depth === 1 ? randomNo : depth;
-    const node: ReactForceGraphNode = { id: q1.id.toString(), group: group };
+    const node: ReactForceGraphNode = { id: q1.id.toString(), group: group, label: q1.meaning as string };
     nodes.push(node);
     for (let sibling of q1.siblings) {
       if (!seen.has(sibling)) {

@@ -8375,6 +8375,11 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
+jsonata@1.8.4:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/jsonata/-/jsonata-1.8.4.tgz#de96dec822053b83064d1b5ed616ee2fcb26fcab"
+  integrity sha512-OqzmM5IICtm/687zckG5BROZzInGCEuKojpYs48H8RnkII8Np+o912ryvhnYwsRrSI24TQRG/qqrSwBuaneDbg==
+
 jsonfile@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
@@ -9238,19 +9243,6 @@ multicast-dns@^6.0.1:
   dependencies:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
-
-muuri-react@3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/muuri-react/-/muuri-react-3.1.6.tgz#e42222a48cb60b87489fa272ad532994e9111aac"
-  integrity sha512-r3EoHD2LL0m6tB6ymgDXIvbiou9r7cJSCFKLW8WcprzKWuWQxtKLRYfW+YOvkqzW73MfHHVf9/jNei3txFaIRw==
-  dependencies:
-    "@babel/runtime" "^7.9.2"
-    prop-types "^15.7.2"
-
-muuri@0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/muuri/-/muuri-0.9.3.tgz#34c2bb785cca2dfaba39f5826b271edfb22477a8"
-  integrity sha512-GZGTaHxYALCCH04mmxkZ6nVr5nq2Ur8dQfbxFtyejP4U8kjae/6ZE2A9bugRBWMUIuyGRQ9btROj0gV6jQqFpQ==
 
 nan@^2.12.1:
   version "2.14.2"

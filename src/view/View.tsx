@@ -16,7 +16,7 @@ import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
 import { GraphContext } from "../Main";
 import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect } from "../core/Adaptors";
-import { map } from "shades";
+import { get, findBy } from "shades";
 import { useHotkeys } from "react-hotkeys-hook";
 
 // Lens Grid - how different lenses are arranged
@@ -352,7 +352,12 @@ export const Graph3DCorrect = observer(() => {
         linkWidth={0.5}
         onNodeClick={() => {}}
         nodeThreeObject={(node) => {
-          const sprite = new SpriteText(node.id ? node.id.toString() : "");
+          const nodeText = get(
+            "siblings",
+            findBy((q: QiT) => q.id === node.id),
+            "meaning"
+          )(shen);
+          const sprite = new SpriteText(nodeText as string);
           // sprite.color = node.color;
           sprite.textHeight = 2;
           sprite.position.set(0, -8, 0);
