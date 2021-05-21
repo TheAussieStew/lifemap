@@ -3,7 +3,9 @@ import Main from './Main';
 
 const App = () => {
   return (
-    <Main/>
+    <React.StrictMode>
+      <Main/>
+    </React.StrictMode>
   );
 };
 
