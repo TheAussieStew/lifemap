@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { ForceGraph3D, ForceGraphMethods$2 } from "react-force-graph";
+import ReactDOM from 'react-dom';
+import G6, { Graph } from '@antv/g6';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
+import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import { Vector2 } from "three";
-import { Frame, MotionValue, Stack, useMotionValue } from "framer";
+import { Frame, Stack } from "framer";
+import { useMotionValue } from "framer-motion";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
@@ -9,9 +14,9 @@ import InputBase from "@material-ui/core/InputBase";
 import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/LifeGraphModel";
 import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
-import { GraphContext } from "../utils/Testing";
-import { ShenToReactForceGraphCorrect } from "../core/Adaptors";
-import { map } from "shades";
+import { GraphContext } from "../Main";
+import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect } from "../core/Adaptors";
+import { get, findBy } from "shades";
 import { useHotkeys } from "react-hotkeys-hook";
 
 // Lens Grid - how different lenses are arranged
@@ -83,100 +88,35 @@ export const LoggingCorrect: Logging = observer((q: QiT | ShenT) => {
 export type Text = (text: string) => JSX.Element[];
 //@ts-ignore
 export const TextCorrect = (inputText: string) => {
-  let decorator = "•";
-  let [text, setText] = useState<string>(decorator + " " + inputText);
-  let frames: JSX.Element[] = [];
-  // create a multidimen array that holds motionvalues, then give to frame 
-  // can reference this later
-  type IndraWeb<KeyT, ValueT> = { into: Map<KeyT, ValueT> };
-  const createIndraWeb<> = ( )
-  type MotionPosition<Type> = {x: MotionValue<Type>, y: MotionValue<Type>};
-  const createMotionPosition = () => {
-    return {
-      x: useMotionValue(0),
-      y: useMotionValue(0),
-    };
-  };
-  let motionValues = new Map<string, MotionPosition<number>>();
-  for (let i = 0; i < text.length; i++) {
-    let id = text.charAt(i) + i.toString();
-    let motionPosition = createMotionPosition();
-    motionValues.set(id, motionPosition);
-    frames.push(
-      <Frame
-        name={id}
-        //@ts-ignore
-        x={motionPosition.x}
-        //@ts-ignore
-        y={motionPosition.y}
-        width={13}
-        height={19}
-        radius={3}
-        opacity={0.9}
-        backgroundColor="#EFEFEF"
-        drag={true}
-        dragConstraints={{ left: -1, right: 1, top: 0, bottom: 0 }}
-        dragElastic={0.05}
-        whileHover={{ scale: 0.9, backgroundColor: "#DDDDDD" }}
-        initial={{ opacity: 0, scale: 2.5 }}
-        animate={{ opacity: 0.9, scale: 1.0 }}
-        transition={{ delay: i * 0.01 }}
-      >
-        {text.charAt(i)}
-      </Frame>
-    );
+  const [value, setValue] = useState(inputText);
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline','strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
   }
-  const [cursorIndex, setCursorIndex] = useState<number>(frames.length - 1);
-  let cursorMotionPosition = createMotionPosition();
-  motionValues.set(" -1", cursorMotionPosition);
-  let cursor = (
-    <Frame
-      width={2.5}
-      //@ts-ignore
-      x={cursorMotionPosition.x}
-      //@ts-ignore
-      y={cursorMotionPosition.y}
-      height={19}
-      radius={2}
-      opacity={0.4}
-      backgroundColor="#000000"
-      drag={true}
-      dragConstraints={{ left: -100, right: 110, top: 0, bottom: 0 }}
-      dragElastic={0.05}
-      whileHover={{ scale: 0.9, backgroundColor: "#DDDDDD" }}
-      initial={{ scale: 0 }}
-      animate={{ scale: 1.0 }}
-    >
-    </Frame>
-  );
-  useHotkeys("l", () => {
-    console.log("x pos", position);
-    frames[cursorIndex]
-    position.set(position.get() + 10);
-  });
-  useHotkeys("h", () => {
-    console.log("x pos", position);
-    position.set(position.get() - 10);
-  });
-  frames.push(cursor);
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+  ]
   return (
-    <Stack
-      direction="horizontal"
-      gap={0.5}
-      drag={true}
-      dragConstraints={{ left: -1, right: 1, top: 0, bottom: 0 }}
-      style={{
-        alignItems: "flex-start",
-        alignContent: "flex-start",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        width: "100%",
-        height: "fit-content",
-      }}
-    >
-      {frames}
-    </Stack>
+    <ReactQuill
+      theme="bubble"
+      value={value}
+      onChange={setValue}
+      modules={modules}
+      formats={formats}
+    />
   );
+};
+
+export const TextAnimated = (inputText: string) => {
 };
 
 export type Tree = (q: QiT | ShenT) => JSX.Element[];
@@ -190,19 +130,6 @@ export const TreeCorrect = observer((
   let decorator = "•";
   const divs: JSX.Element[] = [];
   let seen = new Set<QiT>();
-  const onEnterPress = (q: QiT) => action((ev: React.KeyboardEvent<HTMLDivElement>) => {
-    if (ev.key === "Enter") {
-      console.log("Enter Pressed");
-      QiCorrect.createSibling(q);
-      ev.preventDefault();
-    }
-  });
-  const onTextChange = (q: QiT) =>
-    action(
-      (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        QiCorrect.changeQi(q, event.target.value);
-      }
-    );
   const recurse = (
     divs: JSX.Element[],
     q1: QiT,
@@ -224,8 +151,104 @@ type GraphOptic = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = Optic;
 //@ts-ignore
+export const Graph2DReactForce = observer(() => {
+  const fgRef = useRef<any | undefined>(undefined);
+  const shen = useContext(GraphContext);
+  let graphData = ShenToReactForceGraphCorrect(shen);
+  return (
+    <div style={{ width: 300 }}>
+      <ForceGraph2D
+        ref={fgRef}
+        width={400}
+        height={400}
+        graphData={graphData}
+        nodeAutoColorBy="group"
+        nodeCanvasObject={(node, ctx, globalScale) => {
+          const label = node.id;
+          const fontSize = 12 / globalScale;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          const textWidth = ctx.measureText(label as string).width;
+          const bckgDimensions = [textWidth, fontSize].map(
+            (n) => n + fontSize * 0.2
+          ); // some padding
+          ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          // @ts-ignore
+          ctx.fillStyle = node.color;
+          // @ts-ignore
+          ctx.fillText(label as string, node.x, node.y);
+        }}
+      />
+    </div>
+  );
+});
+export const Graph2DCorrect = observer(() => {
+  const ref = React.useRef(null);
+  let graph: Graph | null = null;
+  const shen = useContext(GraphContext);
+  let graphData = ShenToG6GraphCorrect(shen);
+  function refreshDragedNodePosition(e: any) {
+    const model = e.item.get("model");
+    model.fx = e.x;
+    model.fy = e.y;
+  }
+  const width = 400;
+  const height = 300;
+  useEffect(() => {
+    if (!graph) {
+      graph = new G6.Graph({
+        container: ReactDOM.findDOMNode(ref.current) as HTMLElement,
+        width,
+        height,
+        layout: {
+          type: "force",
+        },
+        defaultNode: {
+          type: "node",
+          labelCfg: {
+            style: {
+              fill: "#000000A6",
+              fontSize: 10,
+            },
+          },
+          style: {
+            stroke: "#72CC4A",
+            width: 150,
+          },
+        },
+      });
+    }
+    graph.data(graphData);
+    graph.render();
+    graph.on("node:dragstart", function (e) {
+      graph!.layout();
+      refreshDragedNodePosition(e);
+    });
+    graph.on("node:drag", function (e) {
+      const forceLayout = graph!.get("layoutController").layoutMethods[0];
+      forceLayout.execute();
+      refreshDragedNodePosition(e);
+    });
+    graph.on("node:dragend", function (e) {
+      e.item!.get("model").fx = null;
+      e.item!.get("model").fy = null;
+    });
+
+    if (typeof window !== "undefined")
+      window.onresize = () => {
+        if (!graph || graph.get("destroyed")) return;
+        // if (!container || !container.scrollWidth || !container.scrollHeight)
+        //   return;
+        // graph.changeSize(container.scrollWidth, container.scrollHeight);
+      };
+  }, []);
+
+  return <div ref={ref}></div>;
+});
+//@ts-ignore
 export const Graph3DCorrect = observer(() => {
-  const fgRef = useRef<ForceGraphMethods$2 | undefined>(undefined);
+  const fgRef = useRef<any | undefined>(undefined);
   const [bloomInitialised, initialiseBloom] = useState<boolean>(false);
   useEffect(() => {
     if (null !== fgRef.current && undefined !== fgRef.current) {
@@ -244,14 +267,14 @@ export const Graph3DCorrect = observer(() => {
   const shen = useContext(GraphContext);
   let graphData = ShenToReactForceGraphCorrect(shen);
   return (
-    <div style={{ marginTop: 10 }}>
+    <div style={{ width: 300 }}>
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
         nodeLabel="id"
         nodeResolution={7}
-        width={600}
-        height={600}
+        width={400}
+        height={300}
         linkCurvature="curvature"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
@@ -260,7 +283,12 @@ export const Graph3DCorrect = observer(() => {
         linkWidth={0.5}
         onNodeClick={() => {}}
         nodeThreeObject={(node) => {
-          const sprite = new SpriteText(node.id ? node.id.toString() : "");
+          const nodeText = get(
+            "siblings",
+            findBy((q: QiT) => q.id === node.id),
+            "meaning"
+          )(shen);
+          const sprite = new SpriteText(nodeText as string);
           // sprite.color = node.color;
           sprite.textHeight = 2;
           sprite.position.set(0, -8, 0);
