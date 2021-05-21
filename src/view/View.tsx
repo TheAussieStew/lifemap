@@ -4,20 +4,22 @@ import G6, { Graph } from '@antv/g6';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
+import { parse, stringify } from "flatted";
 import { Vector2 } from "three";
-import { Frame, Stack } from "framer";
-import { useMotionValue } from "framer-motion";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
-import InputBase from "@material-ui/core/InputBase";
 import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/LifeGraphModel";
 import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
 import { GraphContext } from "../Main";
 import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect } from "../core/Adaptors";
 import { get, findBy } from "shades";
-import { useHotkeys } from "react-hotkeys-hook";
+import { Controlled as CodeMirror } from "react-codemirror2";
+import 'codemirror/theme/material.css';
+require('codemirror/mode/javascript/javascript');
+
+
 
 // Lens Grid - how different lenses are arranged
 type LensGrid = unknown;
@@ -55,34 +57,22 @@ export type Optic = (q: QiT | ShenT) => JSX.Element[];
 type Code = unknown;
 export type Logging = (q: QiT | ShenT) => JSX.Element[];
 // @ts-ignore
-export const LoggingCorrect: Logging = observer((q: QiT | ShenT) => {
-  let loggingDivs: JSX.Element[] = [];
-  let seen = new Set<any>();
-  const recurse = (
-    q1: QiT | ShenT,
-    divs: JSX.Element[],
-    depth: number,
-    seen: Set<any>
-  ) => {
-    const propertyNames = Object.keys(q1);
-    for (let propertyName of propertyNames) {
-      divs.push(
-        <Card
-          style={{
-            marginLeft: 10 + depth * 15,
-            marginRight: 10,
-            marginBottom: -9,
-            marginTop: 10,
-          }}
-        >
-          {/* @ts-ignore */}
-          {"{" + propertyName + ":" + q1[propertyName]}
-        </Card>
-      );
-    }
-  };
-  recurse(q, loggingDivs, 0, seen);
-  return loggingDivs;
+export const LoggingCorrect = observer(() => {
+  const shen = useContext(GraphContext); 
+  const [value, setValue] = React.useState<ShenT>(shen);
+  return (
+    <CodeMirror
+      value={stringify(value, null, 4)}
+      options={{
+        mode: 'javascript',
+        theme: 'material',
+        lineNumbers: false
+      }}
+      onBeforeChange={(editor, data, value) => {
+      }}
+      onChange={(editor, data, value) => {}}
+    />
+  );
 });
 
 export type Text = (text: string) => JSX.Element[];

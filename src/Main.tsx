@@ -1,7 +1,7 @@
 import React from "react";
 import { ShenT, GraphCorrect } from "./core/LifeGraphModel";
 import { GraphTest } from "./utils/Testing";
-import { TreeCorrect, Graph3DCorrect, Graph2DCorrect, Graph2DReactForce } from "./view/View";
+import { TreeCorrect, Graph3DCorrect, Graph2DCorrect, Graph2DReactForce, LoggingCorrect } from "./view/View";
 
 export const GraphContext = React.createContext<ShenT>(GraphCorrect.createShen());
 
@@ -20,7 +20,8 @@ const Main = () => {
       >
         <Graph3DCorrect />
         <Graph2DCorrect />
-        <Graph2DReactForce />
+        <LoggingCorrect />
+        {/* <Graph2DReactForce /> */}
       </div>
     </GraphContext.Provider>
   );
