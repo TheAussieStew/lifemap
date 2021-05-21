@@ -164,10 +164,15 @@ export const Graph2DReactForce = observer(() => {
         graphData={graphData}
         nodeAutoColorBy="group"
         nodeCanvasObject={(node, ctx, globalScale) => {
-          const label = node.id;
+          const nodeText = get(
+            "siblings",
+            findBy((q: QiT) => q.id === node.id),
+            "meaning"
+          )(shen);
+          const label = nodeText as string;
           const fontSize = 12 / globalScale;
           ctx.font = `${fontSize}px Sans-Serif`;
-          const textWidth = ctx.measureText(label as string).width;
+          const textWidth = ctx.measureText(label).width;
           const bckgDimensions = [textWidth, fontSize].map(
             (n) => n + fontSize * 0.2
           ); // some padding
