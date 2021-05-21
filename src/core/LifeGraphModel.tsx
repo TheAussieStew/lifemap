@@ -214,6 +214,7 @@ export type Shen = {
   ) => { s1: ShenT, bag: QiT, journal: JournalT }; // or could not return Graph and just mutate?
   // delete? but what about the edges? and what about the consistency of the temporal graph? maybe could mark as deleted?
   // pick or lens? add a new node that selects other nodes?
+  // This begin quest doesn't seem to be necessary
   beginQuest: (s: ShenT) => {s1: ShenT, bag: QiT}
 };
 export const GraphCorrect: Shen = {
