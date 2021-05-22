@@ -1,6 +1,5 @@
 import React from "react";
 import { ShenT, GraphCorrect } from "./core/LifeGraphModel";
-import Tiptap from "./core/Tiptap";
 import { GraphTest } from "./utils/Testing";
 import { TreeCorrect, Graph3DCorrect, Graph2DCorrect, Graph2DReactForce, LoggingCorrect } from "./view/View";
 
@@ -22,7 +21,6 @@ const Main = () => {
         <Graph3DCorrect />
         <Graph2DCorrect />
         <LoggingCorrect />
-        <Tiptap/>
         {/* <Graph2DReactForce /> */}
       </div>
     </GraphContext.Provider>
