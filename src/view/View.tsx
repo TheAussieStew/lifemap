@@ -62,6 +62,7 @@ export const LoggingCorrect = observer(() => {
   const [value, setValue] = React.useState<ShenT>(shen);
   return (
     <CodeMirror
+    //TODO: Figure out how to manage circular data structures, on edit too
       value={stringify(value, null, 4)}
       options={{
         mode: 'javascript',
@@ -268,8 +269,8 @@ export const Graph3DCorrect = observer(() => {
         graphData={graphData}
         nodeLabel="id"
         nodeResolution={7}
-        width={400}
-        height={300}
+        width={500}
+        height={500}
         linkCurvature="curvature"
         nodeAutoColorBy="group"
         linkDirectionalParticles="value"
