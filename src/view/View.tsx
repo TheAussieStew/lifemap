@@ -17,6 +17,8 @@ import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect } from "../core/Adap
 import { get, findBy } from "shades";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import 'codemirror/theme/material.css';
+import { motion } from "framer-motion";
+import Tiptap from "../core/Tiptap";
 require('codemirror/mode/javascript/javascript');
 
 
@@ -262,6 +264,10 @@ export const Graph3DCorrect = observer(() => {
   });
   const shen = useContext(GraphContext);
   let graphData = ShenToReactForceGraphCorrect(shen);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const toggleOpen = () => {
+    setOpen(!open);
+  }
   return (
     <div style={{ width: 300 }}>
       <ForceGraph3D
@@ -277,7 +283,10 @@ export const Graph3DCorrect = observer(() => {
         linkDirectionalParticleSpeed={0.005}
         linkDirectionalParticleWidth={2}
         linkWidth={0.5}
-        onNodeClick={() => {}}
+        onNodeClick={(event) => {
+          toggleOpen();
+          console.log("ev", event);
+        }}
         nodeThreeObject={(node) => {
           const nodeText = get(
             "siblings",
@@ -296,6 +305,22 @@ export const Graph3DCorrect = observer(() => {
         }}
         nodeThreeObjectExtend={true}
       />
+      <motion.div
+        animate={open ? "opened" : "closed"}
+        variants={{
+          opened: {
+            opacity: 1,
+            x: 250,
+            y: -250,
+            backgroundColor: "white"
+          },
+          closed: {
+            opacity: 0,
+          },
+        }}
+      >
+        <Tiptap />
+      </motion.div>
     </div>
   );
 });
