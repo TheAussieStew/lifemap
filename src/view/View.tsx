@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
 import G6, { Graph } from '@antv/g6';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.bubble.css';
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import { parse, stringify } from "flatted";
 import { Vector2 } from "three";
@@ -19,6 +18,7 @@ import { Controlled as CodeMirror } from "react-codemirror2";
 import 'codemirror/theme/material.css';
 import { motion } from "framer-motion";
 import Tiptap from "../core/Tiptap";
+import { NodeObject } from "react-force-graph-3d";
 require('codemirror/mode/javascript/javascript');
 
 
@@ -248,6 +248,9 @@ export const Graph2DCorrect = observer(() => {
 export const Graph3DCorrect = observer(() => {
   const fgRef = useRef<any | undefined>(undefined);
   const [bloomInitialised, initialiseBloom] = useState<boolean>(false);
+  const [selectedCoords, setSelectedCoord] = useState<{ x: number; y: number }>(
+    { x: 0, y: 0 }
+  );
   useEffect(() => {
     if (null !== fgRef.current && undefined !== fgRef.current) {
       const bloomPass = new UnrealBloomPass(
@@ -283,9 +286,13 @@ export const Graph3DCorrect = observer(() => {
         linkDirectionalParticleSpeed={0.005}
         linkDirectionalParticleWidth={2}
         linkWidth={0.5}
-        onNodeClick={(event) => {
+        onNodeClick={(node, event) => {
           toggleOpen();
+          console.log("nd", node);
+          console.log("co", fgRef.current.graph2ScreenCoords(node.x, node.y));
+          setSelectedCoord({x: fgRef.current.graph2ScreenCoords(node.x, node.y).x, y: fgRef.current.graph2ScreenCoords(node.x, node.y).y})
           console.log("ev", event);
+          console.log("se", selectedCoords);
         }}
         nodeThreeObject={(node) => {
           const nodeText = get(
@@ -305,23 +312,26 @@ export const Graph3DCorrect = observer(() => {
         }}
         nodeThreeObjectExtend={true}
       />
+
       <motion.div
         animate={open ? "opened" : "closed"}
+      style={{position: "absolute", zIndex: 1, marginTop: -500, backgroundColor: "transparent"}}
         variants={{
           opened: {
             opacity: 1,
-            x: 250,
-            y: -250,
+            x: selectedCoords.x,
+            y: selectedCoords.y,
             backgroundColor: "white"
           },
           closed: {
             opacity: 0,
+            display: "hidden"
           },
         }}
       >
         <Tiptap />
       </motion.div>
-    </div>
+      </div>
   );
 });
 type Table = unknown;
