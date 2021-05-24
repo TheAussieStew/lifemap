@@ -291,7 +291,7 @@ export const Graph3DCorrect = observer(() => {
           toggleOpen();
           console.log("nd", node);
           console.log("co", fgRef.current.graph2ScreenCoords(node.x, node.y));
-          setSelectedNode(node)
+          setSelectedNode(node);
           setSelectedCoord({
             x: fgRef.current.graph2ScreenCoords(node.x, node.y).x,
             y: fgRef.current.graph2ScreenCoords(node.x, node.y).y,
@@ -339,11 +339,15 @@ export const Graph3DCorrect = observer(() => {
           },
         }}
       >
-        <Tiptap content={get(
-            "siblings",
-            findBy((q: QiT) => q.id === selectedNode!.id),
-            "meaning"
-          )(shen) as string} />
+        <Tiptap
+          content={
+            get(
+              "siblings",
+              findBy((q: QiT) => q.id === selectedNode!.id),
+              "meaning"
+            )(shen) as string
+          }
+        />
       </motion.div>
     </div>
   );
