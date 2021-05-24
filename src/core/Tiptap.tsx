@@ -2,12 +2,12 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
 
-const Tiptap = () => {
+const Tiptap: React.FC<{content: string}> = ({content}) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
     ],
-    content: 'Hello World! 🌎️',
+    content: content,
   })
 
   return (
