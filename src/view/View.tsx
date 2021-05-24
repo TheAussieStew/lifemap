@@ -248,6 +248,7 @@ export const Graph2DCorrect = observer(() => {
 export const Graph3DCorrect = observer(() => {
   const fgRef = useRef<any | undefined>(undefined);
   const [bloomInitialised, initialiseBloom] = useState<boolean>(false);
+  const [selectedNode, setSelectedNode] = useState<any>(undefined)
   const [selectedCoords, setSelectedCoord] = useState<{ x: number; y: number }>(
     { x: 0, y: 0 }
   );
@@ -290,7 +291,11 @@ export const Graph3DCorrect = observer(() => {
           toggleOpen();
           console.log("nd", node);
           console.log("co", fgRef.current.graph2ScreenCoords(node.x, node.y));
-          setSelectedCoord({x: fgRef.current.graph2ScreenCoords(node.x, node.y).x, y: fgRef.current.graph2ScreenCoords(node.x, node.y).y})
+          setSelectedNode(node)
+          setSelectedCoord({
+            x: fgRef.current.graph2ScreenCoords(node.x, node.y).x,
+            y: fgRef.current.graph2ScreenCoords(node.x, node.y).y,
+          });
           console.log("ev", event);
           console.log("se", selectedCoords);
         }}
@@ -315,23 +320,32 @@ export const Graph3DCorrect = observer(() => {
 
       <motion.div
         animate={open ? "opened" : "closed"}
-      style={{position: "absolute", zIndex: 1, marginTop: -500, backgroundColor: "transparent"}}
+        style={{
+          position: "absolute",
+          zIndex: 1,
+          marginTop: -500,
+          backgroundColor: "transparent",
+        }}
         variants={{
           opened: {
             opacity: 1,
             x: selectedCoords.x,
             y: selectedCoords.y,
-            backgroundColor: "white"
+            backgroundColor: "white",
           },
           closed: {
             opacity: 0,
-            display: "hidden"
+            display: "hidden",
           },
         }}
       >
-        <Tiptap />
+        <Tiptap content={get(
+            "siblings",
+            findBy((q: QiT) => q.id === selectedNode!.id),
+            "meaning"
+          )(shen) as string} />
       </motion.div>
-      </div>
+    </div>
   );
 });
 type Table = unknown;
