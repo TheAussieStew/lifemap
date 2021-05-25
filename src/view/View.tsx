@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { memo, useContext, useEffect, useRef, useState } from "react";
+import { Handle } from 'react-flow-renderer';
 import ReactDOM from 'react-dom';
 import G6, { Graph } from '@antv/g6';
-import ReactQuill from 'react-quill';
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import { parse, stringify } from "flatted";
 import { Vector2 } from "three";
@@ -19,6 +19,7 @@ import 'codemirror/theme/material.css';
 import { motion } from "framer-motion";
 import Tiptap from "../core/Tiptap";
 import { NodeObject } from "react-force-graph-3d";
+import ReactFlow from "react-flow-renderer";
 require('codemirror/mode/javascript/javascript');
 
 
@@ -99,13 +100,9 @@ export const TextCorrect = (inputText: string) => {
     'link', 'image'
   ]
   return (
-    <ReactQuill
-      theme="bubble"
-      value={value}
-      onChange={setValue}
-      modules={modules}
-      formats={formats}
-    />
+    <div>
+
+    </div>
   );
 };
 
@@ -186,63 +183,69 @@ export const Graph2DCorrect = observer(() => {
   let graph: Graph | null = null;
   const shen = useContext(GraphContext);
   let graphData = ShenToG6GraphCorrect(shen);
-  function refreshDragedNodePosition(e: any) {
-    const model = e.item.get("model");
-    model.fx = e.x;
-    model.fy = e.y;
-  }
-  const width = 400;
-  const height = 300;
-  useEffect(() => {
-    if (!graph) {
-      graph = new G6.Graph({
-        container: ReactDOM.findDOMNode(ref.current) as HTMLElement,
-        width,
-        height,
-        layout: {
-          type: "force",
-        },
-        defaultNode: {
-          type: "node",
-          labelCfg: {
-            style: {
-              fill: "#000000A6",
-              fontSize: 10,
-            },
-          },
-          style: {
-            stroke: "#72CC4A",
-            width: 150,
-          },
-        },
-      });
-    }
-    graph.data(graphData);
-    graph.render();
-    graph.on("node:dragstart", function (e) {
-      graph!.layout();
-      refreshDragedNodePosition(e);
-    });
-    graph.on("node:drag", function (e) {
-      const forceLayout = graph!.get("layoutController").layoutMethods[0];
-      forceLayout.execute();
-      refreshDragedNodePosition(e);
-    });
-    graph.on("node:dragend", function (e) {
-      e.item!.get("model").fx = null;
-      e.item!.get("model").fy = null;
-    });
 
-    if (typeof window !== "undefined")
-      window.onresize = () => {
-        if (!graph || graph.get("destroyed")) return;
-        // if (!container || !container.scrollWidth || !container.scrollHeight)
-        //   return;
-        // graph.changeSize(container.scrollWidth, container.scrollHeight);
-      };
-  }, []);
+const ColorSelectorNode: React.FC<{ data: any }> = memo(({ data }) => {
+  return (
+    <>
+      <Handle
+        type="target"
+        // @ts-ignore
+        position="left"
+        style={{ background: "#555" }}
+        onConnect={(params) => console.log("handle onConnect", params)}
+      />
+      <div style={{padding: 5}}>
+      <Tiptap
+        content={
+          // get(
+          //   "siblings",
+          //   findBy((q: QiT) => q.id === selectedNode!.id),
+          //   "meaning"
+          // )(shen) as string
+          "hello flow!"
+        }
+      />
 
-  return <div ref={ref}></div>;
+      </div>
+      <Handle
+        type="source"
+        // @ts-ignore
+        position="right"
+        id="a"
+        style={{ top: 10, background: "#555" }}
+      />
+      <Handle
+        type="source"
+        // @ts-ignore
+        position="right"
+        id="b"
+        style={{ bottom: 10, top: "auto", background: "#555" }}
+      />
+    </>
+  );
+
+
+});
+  const nodeTypes = {
+    selectorNode: ColorSelectorNode,
+  };
+  const elements = [
+    {
+      id: "1",
+      data: { label: "Node 1" },
+      type: "selectorNode",
+      position: { x: 250, y: 5 },
+    },
+    // you can also pass a React component as a label
+    {
+      id: "2",
+      data: { label: <div>Node 2</div> },
+      position: { x: 100, y: 100 },
+    },
+    { id: "e1-2", source: "1", target: "2", animated: true },
+  ];
+
+  return <ReactFlow nodeTypes={nodeTypes} elements={elements} />;
 });
 //@ts-ignore
 export const Graph3DCorrect = observer(() => {

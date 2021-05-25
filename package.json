@@ -31,6 +31,7 @@
     "react": "16.13.0",
     "react-codemirror2": "7.2.1",
     "react-dom": "16.13.0",
+    "react-flow-renderer": "9.5.4",
     "react-force-graph": "1.37.1",
     "react-force-graph-3d": "1.18.8",
     "react-hotkeys-hook": "3.0.3",
