@@ -8,16 +8,16 @@ import { Vector2 } from "three";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
 import { Card } from "@material-ui/core";
-import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/LifeGraphModel";
 import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
 import { GraphContext } from "../Main";
-import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect } from "../core/Adaptors";
+import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect, ShenToTiptapGraphCorrect } from "../core/Adaptors";
 import { get, findBy } from "shades";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import 'codemirror/theme/material.css';
 import { motion } from "framer-motion";
-import Tiptap from "../core/Tiptap";
+import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/LifeGraphModel";
+import { Tiptap } from "../core/Tiptap";
 import { NodeObject } from "react-force-graph-3d";
 import ReactFlow from "react-flow-renderer";
 require('codemirror/mode/javascript/javascript');
@@ -83,22 +83,6 @@ export type Text = (text: string) => JSX.Element[];
 //@ts-ignore
 export const TextCorrect = (inputText: string) => {
   const [value, setValue] = useState(inputText);
-  const modules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline','strike', 'blockquote'],
-      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-      ['link', 'image'],
-      ['clean']
-    ],
-  }
-
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ]
   return (
     <div>
 
@@ -140,7 +124,6 @@ type Masonry = unknown; // either evenly sized or unevenly sized grid that's pac
 type GraphOptic = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = Optic;
-//@ts-ignore
 export const Graph2DReactForce = observer(() => {
   const fgRef = useRef<any | undefined>(undefined);
   const shen = useContext(GraphContext);
@@ -178,74 +161,47 @@ export const Graph2DReactForce = observer(() => {
     </div>
   );
 });
-export const Graph2DCorrect = observer(() => {
+export const Graph2DTipTap = observer(() => {
   const ref = React.useRef(null);
   let graph: Graph | null = null;
   const shen = useContext(GraphContext);
-  let graphData = ShenToG6GraphCorrect(shen);
+  let graphData = ShenToTiptapGraphCorrect(shen);
 
-const ColorSelectorNode: React.FC<{ data: any }> = memo(({ data }) => {
-  return (
-    <>
-      <Handle
-        type="target"
-        // @ts-ignore
-        position="left"
-        style={{ background: "#555" }}
-        onConnect={(params) => console.log("handle onConnect", params)}
-      />
-      <div style={{padding: 5}}>
-      <Tiptap
-        content={
-          // get(
-          //   "siblings",
-          //   findBy((q: QiT) => q.id === selectedNode!.id),
-          //   "meaning"
-          // )(shen) as string
-          "hello flow!"
-        }
-      />
-
-      </div>
-      <Handle
-        type="source"
-        // @ts-ignore
-        position="right"
-        id="a"
-        style={{ top: 10, background: "#555" }}
-      />
-      <Handle
-        type="source"
-        // @ts-ignore
-        position="right"
-        id="b"
-        style={{ bottom: 10, top: "auto", background: "#555" }}
-      />
-    </>
-  );
-
-
-});
+  const ColorSelectorNode = memo((props: { data: { id: string } }) => {
+    return (
+      <>
+        <Handle
+          type="source"
+          // @ts-ignore
+          position="left"
+          style={{ background: "#555" }}
+          onConnect={(params) => console.log("handle onConnect", params)}
+        />
+        <div style={{ padding: 15 }}>
+          <Tiptap
+            content={
+              get(
+                "siblings",
+                findBy((q: QiT) => q.id === props.data.id as unknown as number),
+                "meaning"
+              )(shen) as string
+            }
+          />
+        </div>
+        <Handle
+          // @ts-ignore
+          position="right"
+          id="a"
+          style={{ background: "#555" }}
+        />
+      </>
+    );
+  });
   const nodeTypes = {
     selectorNode: ColorSelectorNode,
   };
-  const elements = [
-    {
-      id: "1",
-      data: { label: "Node 1" },
-      type: "selectorNode",
-      position: { x: 250, y: 5 },
-    },
-    // you can also pass a React component as a label
-    {
-      id: "2",
-      data: { label: <div>Node 2</div> },
-      position: { x: 100, y: 100 },
-    },
-    { id: "e1-2", source: "1", target: "2", animated: true },
-  ];
 
-  return <ReactFlow nodeTypes={nodeTypes} elements={elements} />;
+  return <ReactFlow nodeTypes={nodeTypes} elements={graphData.elements} />;
 });
 //@ts-ignore
 export const Graph3DCorrect = observer(() => {
