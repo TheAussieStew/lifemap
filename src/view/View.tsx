@@ -1,24 +1,21 @@
 import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { Handle } from 'react-flow-renderer';
-import ReactDOM from 'react-dom';
 import G6, { Graph } from '@antv/g6';
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import { parse, stringify } from "flatted";
 import { Vector2 } from "three";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
-import { Card } from "@material-ui/core";
 import { observer, useObserver } from "mobx-react-lite";
 import { action } from "mobx";
 import { GraphContext } from "../Main";
-import { ShenToG6GraphCorrect, ShenToReactForceGraphCorrect, ShenToTiptapGraphCorrect } from "../core/Adaptors";
-import { get, findBy } from "shades";
+import { ShenToReactForceGraphCorrect, ShenToTiptapGraphCorrect } from "../core/Adaptors";
+import { mod, get, findBy } from "shades";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import 'codemirror/theme/material.css';
 import { motion } from "framer-motion";
-import { AlwaysMatch, Journal, JournalT, QiCorrect, QiT, ShenT } from "../core/LifeGraphModel";
+import { QiCorrect, QiT, Semantic, ShenT } from "../core/LifeGraphModel";
 import { Tiptap } from "../core/Tiptap";
-import { NodeObject } from "react-force-graph-3d";
 import ReactFlow from "react-flow-renderer";
 require('codemirror/mode/javascript/javascript');
 
@@ -182,10 +179,24 @@ export const Graph2DTipTap = observer(() => {
             content={
               get(
                 "siblings",
-                findBy((q: QiT) => q.id === props.data.id as unknown as number),
+                findBy(
+                  (q: QiT) => q.id === (props.data.id as unknown as number)
+                ),
                 "meaning"
               )(shen) as string
             }
+            modShen={action((text: string) => {
+              const qi = get(
+                "siblings",
+                findBy(
+                  (q: QiT) => q.id === (props.data.id as unknown as number)
+                )
+              )(shen);
+              QiCorrect.changeQi(qi, text);
+              console.log("s",shen)
+            })
+          
+          }
           />
         </div>
         <Handle
@@ -203,6 +214,7 @@ export const Graph2DTipTap = observer(() => {
 
   return <ReactFlow nodeTypes={nodeTypes} elements={graphData.elements} />;
 });
+
 //@ts-ignore
 export const Graph3DCorrect = observer(() => {
   const fgRef = useRef<any | undefined>(undefined);
@@ -306,6 +318,15 @@ export const Graph3DCorrect = observer(() => {
               "meaning"
             )(shen) as string
           }
+            modShen={(text: string) => {
+              mod(
+                "siblings",
+                findBy(
+                  (q: QiT) => q.id === (selectedNode.data.id as unknown as number)
+                ),
+                "meaning"
+              )((meaning: Semantic) => text)(shen);
+            }}
         />
       </motion.div>
     </div>
