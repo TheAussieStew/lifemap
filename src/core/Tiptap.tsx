@@ -2,10 +2,23 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
 
+const CustomStarterKit = StarterKit.extend({
+  addKeyboardShortcuts() {
+    return {
+      // ↓ your new keyboard shortcut
+      "Shift-Enter": () => this.editor.commands.toggleBulletList(),
+      "Mod-a": () => {
+        console.log("pressed");
+        return true;
+      },
+    };
+  },
+});
+
 export const Tiptap = (props: {content: string, modShen: (text: string) => void}) => {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      CustomStarterKit,
     ],
     content: props.content,
     onUpdate: ({editor}) => {
