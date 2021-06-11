@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import { QiCorrect, QiT, Semantic, ShenT } from "../core/LifeGraphModel";
 import { Tiptap } from "../core/Tiptap";
 import ReactFlow from "react-flow-renderer";
+import { Button } from "@material-ui/core";
 require('codemirror/mode/javascript/javascript');
 
 
@@ -164,6 +165,14 @@ export const Graph2DTipTap = observer(() => {
   const shen = useContext(GraphContext);
   let graphData = ShenToTiptapGraphCorrect(shen);
 
+  const addNeighbour = (nodeId: string) => {
+    const qi = get(
+      "siblings",
+      findBy((q: QiT) => q.id === (nodeId as unknown as number))
+    )(shen)
+    QiCorrect.createSibling(qi);
+  };
+
   const ColorSelectorNode = memo((props: { data: { id: string } }) => {
     return (
       <>
@@ -174,7 +183,7 @@ export const Graph2DTipTap = observer(() => {
           style={{ background: "#555" }}
           onConnect={(params) => console.log("handle onConnect", params)}
         />
-        <div style={{ padding: 15 }}>
+        <div style={{ padding: 15, display: "grid", placeItems: "center" }}>
           <Tiptap
             content={
               get(
@@ -193,11 +202,16 @@ export const Graph2DTipTap = observer(() => {
                 )
               )(shen);
               QiCorrect.changeQi(qi, text);
-              console.log("s",shen)
-            })
-          
-          }
+              console.log("s", shen);
+            })}
           />
+          <Button
+            onClick={() => {
+              addNeighbour(props.data.id);
+            }}
+          >
+            +
+          </Button>
         </div>
         <Handle
           // @ts-ignore
@@ -318,15 +332,16 @@ export const Graph3DCorrect = observer(() => {
               "meaning"
             )(shen) as string
           }
-            modShen={(text: string) => {
-              mod(
+            modShen={action((text: string) => {
+              const qi = get(
                 "siblings",
                 findBy(
-                  (q: QiT) => q.id === (selectedNode.data.id as unknown as number)
-                ),
-                "meaning"
-              )((meaning: Semantic) => text)(shen);
-            }}
+                  (q: QiT) => q.id === (selectedNode.id as unknown as number)
+                )
+              )(shen);
+              QiCorrect.changeQi(qi, text);
+              console.log("s", shen);
+            })}
         />
       </motion.div>
     </div>
