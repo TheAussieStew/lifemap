@@ -110,6 +110,7 @@ type TiptapGraphNode = {
   data: { id: TiptapGraphNode["id"] };
   type: "selectorNode";
   position: { x: number; y: number };
+  style: any;
 };
 type TiptapGraphLink = {
   id: string,
@@ -119,6 +120,7 @@ type TiptapGraphLink = {
 };
 type ShenToTiptapGraph = (s: ShenT) => TiptapGraph;
 export const ShenToTiptapGraphCorrect: ShenToTiptapGraph = (s: ShenT) => {
+  console.log("S2TT", s)
   let seen = new Set<QiT>();
   let elements: (TiptapGraphNode | TiptapGraphLink)[] = [];
   const recurse = (
@@ -136,6 +138,7 @@ export const ShenToTiptapGraphCorrect: ShenToTiptapGraph = (s: ShenT) => {
       data: { id: q1.id.toString() },
       type: "selectorNode",
       position: { x: 250, y: 150 },
+      style: { border: "1px solid #222138", borderRadius: 5 },
     };
     elements.push(node);
     for (let sibling of q1.siblings) {
@@ -153,5 +156,6 @@ export const ShenToTiptapGraphCorrect: ShenToTiptapGraph = (s: ShenT) => {
   };
   s.siblings.map((q2: QiT) => {
     recurse(q2, 0, seen, elements);})
+    console.log("TT", elements)
   return { elements: elements };
 }
