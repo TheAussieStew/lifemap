@@ -2,7 +2,7 @@ import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { Handle } from 'react-flow-renderer';
 import G6, { Graph } from '@antv/g6';
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
-import { parse, stringify } from "flatted";
+import { stringify } from "flatted";
 import { Vector2 } from "three";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import SpriteText from 'three-spritetext';
@@ -11,14 +11,11 @@ import { action } from "mobx";
 import { GraphContext } from "../Main";
 import { ShenToReactForceGraphCorrect, ShenToTiptapGraphCorrect } from "../core/Adaptors";
 import { mod, get, findBy } from "shades";
-import { Controlled as CodeMirror } from "react-codemirror2";
-import 'codemirror/theme/material.css';
 import { motion } from "framer-motion";
-import { QiCorrect, QiT, Semantic, ShenT } from "../core/LifeGraphModel";
+import { GraphCorrect, QiCorrect, QiT, Semantic, ShenT } from "../core/LifeGraphModel";
 import { Tiptap } from "../core/Tiptap";
 import ReactFlow from "react-flow-renderer";
 import { Button } from "@material-ui/core";
-require('codemirror/mode/javascript/javascript');
 
 
 
@@ -59,21 +56,18 @@ type Code = unknown;
 export type Logging = (q: QiT | ShenT) => JSX.Element[];
 // @ts-ignore
 export const LoggingCorrect = observer(() => {
-  const shen = useContext(GraphContext); 
-  const [value, setValue] = React.useState<ShenT>(shen);
-  return (
-    <CodeMirror
+  const [shen, setShen] = React.useState<ShenT>(useContext(GraphContext));
     //TODO: Figure out how to manage circular data structures, on edit too
-      value={stringify(value, null, 4)}
-      options={{
-        mode: 'javascript',
-        theme: 'material',
-        lineNumbers: false
-      }}
-      onBeforeChange={(editor, data, value) => {
-      }}
-      onChange={(editor, data, value) => {}}
-    />
+  return (
+    <>
+      <Tiptap
+        content={`<pre><code class="language-javascript">${stringify(
+          shen,
+          null,
+          4
+        )}</code></pre>`}
+      />
+    </>
   );
 });
 
@@ -163,17 +157,20 @@ export const Graph2DTipTap = observer(() => {
   const ref = React.useRef(null);
   let graph: Graph | null = null;
   const shen = useContext(GraphContext);
-  let graphData = ShenToTiptapGraphCorrect(shen);
 
   const addNeighbour = (nodeId: string) => {
-    const qi = get(
+    var qi = get(
       "siblings",
       findBy((q: QiT) => q.id === (nodeId as unknown as number))
     )(shen)
-    QiCorrect.createSibling(qi);
+    const {q1: q1, sibling: neighbour, s1: shen2} = GraphCorrect.createSibling(shen, qi);
+    // TODO: Probably problem is that shen is not updated. Current node approach is to only 
+    // add sibling to the node, not the shen as well
+    // Figure out how to update shen with new one that is returned...
+    QiCorrect.changeQi(neighbour, "hello neighbour");
   };
 
-  const ColorSelectorNode = memo((props: { data: { id: string } }) => {
+  const Node = memo((props: { data: { id: string } }) => {
     return (
       <>
         <Handle
@@ -184,6 +181,20 @@ export const Graph2DTipTap = observer(() => {
           onConnect={(params) => console.log("handle onConnect", params)}
         />
         <div style={{ padding: 15, display: "grid", placeItems: "center" }}>
+          {console.log(
+            "TTNode",
+            get(
+              "siblings",
+              findBy((q: QiT) => (q.id === (props.data.id as unknown as number))),
+              "meaning"
+            )(shen) as string,
+            props.data.id,
+            props.data.id as unknown as number,
+            get(
+              "siblings",
+              findBy((q: QiT) => q.id === props.data.id as unknown as number),
+            )(shen)
+          )}
           <Tiptap
             content={
               get(
@@ -223,10 +234,15 @@ export const Graph2DTipTap = observer(() => {
     );
   });
   const nodeTypes = {
-    selectorNode: ColorSelectorNode,
+    selectorNode: Node,
   };
 
-  return <ReactFlow nodeTypes={nodeTypes} elements={graphData.elements} />;
+  return (
+    <ReactFlow
+      nodeTypes={nodeTypes}
+      elements={ShenToTiptapGraphCorrect(shen).elements}
+    />
+  );
 });
 
 //@ts-ignore
