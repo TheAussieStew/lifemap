@@ -1,6 +1,5 @@
 import React from "react";
 import { ShenT, GraphCorrect } from "./core/LifeGraphModel";
-import { GraphTest } from "./utils/Testing";
 import { TreeCorrect, Graph3DCorrect, Graph2DTipTap, Graph2DReactForce, LoggingCorrect } from "./view/View";
 
 export const GraphContext = React.createContext<ShenT>(GraphCorrect.createShen());
