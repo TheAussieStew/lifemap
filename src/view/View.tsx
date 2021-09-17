@@ -102,13 +102,13 @@ export const TreeCorrect = observer((
     depth: number,
     seen: Set<QiT>
   ) => {
-    divs.push(TextCorrect(q1.meaning.toString()));
+    divs.push(TextCorrect(q1.information.toString()));
     seen.add(q1);
-    for (let sibling of q1.siblings) {
+    for (let sibling of q1.relations) {
       if (!seen.has(sibling)) recurse(divs, sibling, depth + 1, seen);
     }
   };
-  shen.siblings.map((q2: QiT) => recurse(divs, q2, 0, seen));
+  shen.relations.map((q2: QiT) => recurse(divs, q2, 0, seen));
   return divs;
 });
 
