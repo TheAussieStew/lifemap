@@ -32,9 +32,9 @@ export const ShenToReactForceGraphCorrect: ShenToReactForceGraph = (
     let randomNo = rand.next();
     randomNo = Math.floor(randomNo * 10) + 1;
     let group = depth === 1 ? randomNo : depth;
-    const node: ReactForceGraphNode = { id: q1.id.toString(), group: group, label: q1.meaning as string };
+    const node: ReactForceGraphNode = { id: q1.id.toString(), group: group, label: q1.information as string };
     nodes.push(node);
-    for (let sibling of q1.siblings) {
+    for (let sibling of q1.relations) {
       if (!seen.has(sibling)) {
         const link: ReactForceGraphLink = {
           source: q1.id.toString(),
@@ -47,7 +47,7 @@ export const ShenToReactForceGraphCorrect: ShenToReactForceGraph = (
       }
     }
   };
-  s.siblings.map((q2: QiT) => {
+  s.relations.map((q2: QiT) => {
     recurse(q2, 0, seen, nodes, links);
   });
   return { nodes: nodes, links: links };
@@ -81,11 +81,11 @@ export const ShenToG6GraphCorrect: ShenToG6Graph = (s: ShenT) => {
     randomNo = Math.floor(randomNo * 10) + 1;
     const node: G6GraphNode = {
       id: q1.id.toString(),
-      label: q1.meaning as string,
+      label: q1.information as string,
     };
     console.log("ns", node.label)
     nodes.push(node);
-    for (let sibling of q1.siblings) {
+    for (let sibling of q1.relations) {
       if (!seen.has(sibling)) {
         const link: G6GraphLink = {
           source: q1.id.toString(),
@@ -96,7 +96,7 @@ export const ShenToG6GraphCorrect: ShenToG6Graph = (s: ShenT) => {
       }
     }
   };
-  s.siblings.map((q2: QiT) => {
+  s.relations.map((q2: QiT) => {
     recurse(q2, 0, seen, nodes, links);
   });
   return { nodes: nodes, edges: links };
@@ -141,7 +141,7 @@ export const ShenToTiptapGraphCorrect: ShenToTiptapGraph = (s: ShenT) => {
       style: { border: "1px solid #222138", borderRadius: 5 },
     };
     elements.push(node);
-    for (let sibling of q1.siblings) {
+    for (let sibling of q1.relations) {
       if (!seen.has(sibling)) {
         const link: TiptapGraphLink = {
           id: "e" + q1.id.toString() + "-" + sibling.id.toString(),
@@ -154,7 +154,7 @@ export const ShenToTiptapGraphCorrect: ShenToTiptapGraph = (s: ShenT) => {
       }
     }
   };
-  s.siblings.map((q2: QiT) => {
+  s.relations.map((q2: QiT) => {
     recurse(q2, 0, seen, elements);})
     console.log("TT", elements)
   return { elements: elements };
