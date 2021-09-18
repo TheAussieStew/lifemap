@@ -17,41 +17,13 @@ import { Tiptap } from "../core/Tiptap";
 import ReactFlow from "react-flow-renderer";
 import { Button } from "@material-ui/core";
 
-
-
-// Lens Grid - how different lenses are arranged
-type LensGrid = unknown;
-
-// Loupe - switching between different lenses
-type Loupe = { lenses: Lens[]; selectedLens: Lens };
-
-// Lens - a composition of all optical elements
-type Lens = Distortion[] & Filter[] & Optic;
-
-// Distortion - visualise saliency (font styling) and entropy
-type Distortion = unknown;
-
-// Filter - an overlay of information
-type Filter = Clear | Censored | RoseTinted | QiField;
-type Clear = { type: "Clear" };
-type Censored = { type: "Censored" };
-type RoseTinted = { type: "RoseTinted" };
-type QiField = { type: "QiField" };
-
 // Optic - viewing information as a certain structure
 // it should be like: JSX[GraphNode] a wrapper around graph node, leave for future
 export type completeOptic = Tree;
 export type Optic = (q: QiT | ShenT) => JSX.Element[];
   // | Logging
   // | Tree // 1.5D but 1D on phones
-  // | Code // 1.5D
-  // | Masonry // 2D
   // | GraphOptic // 2D or 3D
-  // | Table // 2D
-  // | SpaceTime // 2D or 3D or even 4D?
-  // | LightCone
-  // | Calendar
-  // | Embed;
 type Code = unknown;
 export type Logging = (q: QiT | ShenT) => JSX.Element[];
 // @ts-ignore
@@ -82,9 +54,6 @@ export const TextCorrect = (inputText: string) => {
   );
 };
 
-export const TextAnimated = (inputText: string) => {
-};
-
 export type Tree = (q: QiT | ShenT) => JSX.Element[];
 // Had to sacrifice the functional, no use of side effects
 // nature of this component...can figure out another way 
@@ -112,7 +81,6 @@ export const TreeCorrect = observer((
   return divs;
 });
 
-type Masonry = unknown; // either evenly sized or unevenly sized grid that's packed together
 type GraphOptic = Graph2D | Graph3D;
 type Graph2D = unknown;
 type Graph3D = Optic;
@@ -363,10 +331,3 @@ export const Graph3DCorrect = observer(() => {
     </div>
   );
 });
-type Table = unknown;
-type Kanban = Table; // Maybe this is the same as lightcone? (done, doing, to do, stuck?)
-type SpaceTime = unknown; // what is this? same/diff to timeline? how to implement 4D?
-type LightCone = unknown; // evolution of timeline
-type Calendar = unknown; // what is this even
-type Embed = unknown;
-type Math = unknown; // should this be at Qi level?
