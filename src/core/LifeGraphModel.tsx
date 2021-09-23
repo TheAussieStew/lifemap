@@ -4,9 +4,7 @@ import { DateTime, Interval, Duration } from "luxon";
 export type Semantic =
   | string
   | Time
-  | EmotiveState
   | Void
-export type EmotiveState = QiT;
 type Time = TimePoint | TimeDuration | TimeField | undefined;
 type TimePoint = DateTime; 
 type TimeDuration = Duration;
