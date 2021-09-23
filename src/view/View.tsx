@@ -16,15 +16,16 @@ import { GraphCorrect, QiCorrect, QiT, Semantic, ShenT } from "../core/LifeGraph
 import { Tiptap } from "../core/Tiptap";
 import ReactFlow from "react-flow-renderer";
 import { Button } from "@material-ui/core";
+import { PortalFree } from "./Portal";
 
 // Optic - viewing information as a certain structure
 // it should be like: JSX[GraphNode] a wrapper around graph node, leave for future
 export type completeOptic = Tree;
-export type Optic = (q: QiT | ShenT) => JSX.Element[];
-  // | Logging
-  // | Tree // 1.5D but 1D on phones
-  // | GraphOptic // 2D or 3D
-type Code = unknown;
+export type Optic =
+  | Logging
+  | Bubble
+  | Tree // 1.5D but 1D on phones
+  | GraphOptic // 2D or 3D
 export type Logging = (q: QiT | ShenT) => JSX.Element[];
 // @ts-ignore
 export const LoggingCorrect = observer(() => {
@@ -42,15 +43,20 @@ export const LoggingCorrect = observer(() => {
     </>
   );
 });
-
-export type Text = (text: string) => JSX.Element[];
-//@ts-ignore
-export const TextCorrect = (inputText: string) => {
-  const [value, setValue] = useState(inputText);
+export type Bubble = (q: QiT | ShenT) => JSX.Element[];
+// @ts-ignore
+export const Bubble = (q: QiT) => {
   return (
-    <div>
-
-    </div>
+    <>
+      <PortalFree>
+        {q.shen}
+        {q.id}
+        {q.information}
+        {q.energy}
+        {q.temporal}
+        {q.orderings}
+      </PortalFree>
+    </>
   );
 };
 
@@ -82,8 +88,8 @@ export const TreeCorrect = observer((
 });
 
 type GraphOptic = Graph2D | Graph3D;
-type Graph2D = unknown;
-type Graph3D = Optic;
+type Graph2D = (q: QiT | ShenT) => JSX.Element[];
+type Graph3D = (q: QiT | ShenT) => JSX.Element[];
 export const Graph2DReactForce = observer(() => {
   const fgRef = useRef<any | undefined>(undefined);
   const shen = useContext(GraphContext);

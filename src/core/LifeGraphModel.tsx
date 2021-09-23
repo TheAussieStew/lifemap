@@ -1,10 +1,9 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import { DateTime, Interval, Duration } from "luxon";
 
-
 export type Semantic =
-  | Time
   | string
+  | Time
   | EmotiveState
   | Void
 export type EmotiveState = QiT;
