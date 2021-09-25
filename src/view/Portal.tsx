@@ -83,29 +83,33 @@ const Portal2 = (props: { text: string }) => {
 export const PortalFree = (props: { children: any }) => {
   const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
   const toggleIsExpanded = () => setIsExpanded(!isExpanded);
+  const handleChildClick = (e: any) => {
+    e.stopPropagation();
+    toggleIsExpanded();
+    console.log('child');
+  }
+
   return (
-    <>
-      <motion.div
-        layout
-        transition={{
-          type: "spring",
-          damping: 16,
-        }}
-        onClick={toggleIsExpanded}
-        whileTap={{ scale: 0.96 }}
-        style={{
-          borderRadius: 15,
-          display: "inline-block",
-          border: `2px solid #777777`,
-          overflow: "hidden",
-          width: isExpanded ? undefined : 100,
-          height: isExpanded ? undefined : 20,
-          padding: 4,
-        }}
-      >
-        {props.children}
-      </motion.div>
-    </>
+    <motion.div
+      layout
+      transition={{
+        type: "spring",
+        damping: 16,
+      }}
+      onClick={handleChildClick}
+      whileTap={{ scale: 0.96 }}
+      style={{
+        borderRadius: 17,
+        display: "inline-block",
+        border: `2px solid #777777`,
+        overflow: "hidden",
+        width: isExpanded ? undefined : 100,
+        height: isExpanded ? undefined : 20,
+        padding: 4,
+      }}
+    >
+      <AnimateSharedLayout>{props.children}</AnimateSharedLayout>
+    </motion.div>
   );
 };
 
