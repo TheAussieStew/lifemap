@@ -12,11 +12,12 @@ import { GraphContext } from "../Main";
 import { ShenToReactForceGraphCorrect, ShenToTiptapGraphCorrect } from "../core/Adaptors";
 import { mod, get, findBy } from "shades";
 import { motion } from "framer-motion";
-import { GraphCorrect, QiCorrect, QiT, Semantic, ShenT } from "../core/LifeGraphModel";
+import { GraphCorrect, QiCorrect, QiT, Concept, ShenT, Shen} from "../core/LifeGraphModel";
 import { Tiptap } from "../core/Tiptap";
 import ReactFlow from "react-flow-renderer";
 import { Button } from "@material-ui/core";
 import { PortalFree } from "./Portal";
+import { preview } from "@reactpreview/config";
 
 // Optic - viewing information as a certain structure
 // it should be like: JSX[GraphNode] a wrapper around graph node, leave for future
@@ -44,18 +45,47 @@ export const LoggingCorrect = observer(() => {
   );
 });
 export type Bubble = (q: QiT | ShenT) => JSX.Element[];
-// @ts-ignore
-export const Bubble = (q: QiT) => {
+export const Bubble = (props: {q: QiT | ShenT}) => {
+  return (
+    <PortalFree>
+      <motion.div layout style={{ display: "flex", flexDirection: "column" }}>
+        <motion.div layout>
+          {props.q.shen && <Bubble q={props.q.shen} />}
+        </motion.div>
+        <motion.div layout>{"id: " + props.q.id}</motion.div>
+        <motion.div
+          layout
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          {"information: "}
+          {/* TODO: Make Tiptap Onclick, not activate parent... */}
+          <motion.div layout style={{ margin: `-16px 0 -16px 0` }}>
+            <Tiptap content={props.q.information as string} />
+          </motion.div>
+        </motion.div>
+        <motion.div layout>{"relations: "}</motion.div>
+        {props.q.relations.map((relation, index) => {
+          <Bubble q={relation} />;
+        })}
+        <motion.div layout>{"energy: " + props.q.energy}</motion.div>
+        <motion.div layout>
+          {"temporal: " + props.q.temporal!.toString()}
+        </motion.div>
+        <motion.div layout>{"orderings: incomplete"}</motion.div>
+        {/* {props.q.orderings} */}
+      </motion.div>
+    </PortalFree>
+  );
+};
+preview(Bubble, {
+  example: {
+    q: QiCorrect.createQi(GraphCorrect.createShen()),
+  },
+});
+export const BubbleExample = () => {
   return (
     <>
-      <PortalFree>
-        {q.shen}
-        {q.id}
-        {q.information}
-        {q.energy}
-        {q.temporal}
-        {q.orderings}
-      </PortalFree>
+      <Bubble q={QiCorrect.createQi(GraphCorrect.createShen())} />
     </>
   );
 };

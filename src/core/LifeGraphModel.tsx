@@ -1,14 +1,16 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import { DateTime, Interval, Duration } from "luxon";
 
-export type Semantic =
+export type Concept =
   | string
   | Time
+  | Emotion
   | Void
-type Time = TimePoint | TimeDuration | TimeField | undefined;
+type Time = TimePoint | TimeDuration | TimeField;
 type TimePoint = DateTime; 
 type TimeDuration = Duration;
-type TimeField = TimePoint & TimeDuration & TimePoint;
+type TimeField = Interval;
+type Emotion = { emotionName: string };
 type Void = "Undefined";
 
 type Order = Before | During | After;
@@ -22,9 +24,9 @@ type Brightness = number;
 type Dispersion = number;
 
 export type QiT = {
-  shen: ShenT;
+  shen: ShenT | undefined;
   readonly id: number;
-  information: Semantic;
+  information: Concept;
   relations: QiT[];
   energy: QiZhi;
   temporal: Time;
@@ -32,7 +34,7 @@ export type QiT = {
 };
 type Qi = {
   createQi: (shen: ShenT) => QiT;
-  changeQi: (q: QiT, meaning: Semantic) => QiT;
+  changeQi: (q: QiT, meaning: Concept) => QiT;
   siblings: (q: QiT) => QiT[];
   createSibling: (q: QiT) => {q1: QiT, sibling: QiT};
 };
@@ -44,11 +46,11 @@ export const QiCorrect: Qi = {
       information: "",
       relations: [],
       energy: 0,
-      temporal: undefined,
+      temporal: DateTime.local(),
       orderings: []
     });
   },
-  changeQi: action((q: QiT, meaning: Semantic) => {
+  changeQi: action((q: QiT, meaning: Concept) => {
     q.information = meaning;
     return q;
   }),
@@ -61,8 +63,7 @@ export const QiCorrect: Qi = {
   }),
 };
 
-export type ShenT = AdjacencyList;
-type AdjacencyList = Omit<QiT, "shen">;
+export type ShenT = QiT
 // type OtherImplementation = unknown;
 export type Shen = {
   createShen: () => ShenT;
@@ -76,12 +77,13 @@ export type Shen = {
 };
 export const GraphCorrect: Shen = {
   createShen: () => {
-    let s: AdjacencyList = {
+    let s: ShenT = {
+      shen: undefined,
       id: 0,
       information: "Undefined",
       energy: 0,
       relations: [],
-      temporal: undefined,
+      temporal: DateTime.local(),
       orderings: []
     };
     return makeAutoObservable(s);
