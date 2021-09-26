@@ -24,7 +24,7 @@ type Brightness = number;
 type Dispersion = number;
 
 export type QiT = {
-  shen: ShenT | undefined;
+  shen: ShenT;
   readonly id: number;
   information: Concept;
   relations: QiT[];
@@ -40,7 +40,7 @@ type Qi = {
 };
 export const QiCorrect: Qi = {
   createQi: (shen: ShenT) => {
-    return makeAutoObservable({
+    return {
       shen: shen,
       id: Date.now(),
       information: "",
@@ -48,14 +48,13 @@ export const QiCorrect: Qi = {
       energy: 0,
       temporal: DateTime.local(),
       orderings: []
-    });
+    };
   },
   changeQi: action((q: QiT, meaning: Concept) => {
     q.information = meaning;
     return q;
   }),
   siblings: (q: QiT) => q.relations,
-  // journey seems to check limitlessly, it doesn't look at no. patts
   createSibling: action((q: QiT) => {
     let sibling = QiCorrect.createQi(q.shen);
     q.relations.push(sibling);
@@ -63,7 +62,7 @@ export const QiCorrect: Qi = {
   }),
 };
 
-export type ShenT = QiT
+export type ShenT = Omit<QiT, "shen">
 // type OtherImplementation = unknown;
 export type Shen = {
   createShen: () => ShenT;
@@ -78,15 +77,14 @@ export type Shen = {
 export const GraphCorrect: Shen = {
   createShen: () => {
     let s: ShenT = {
-      shen: undefined,
       id: 0,
-      information: "Undefined",
+      information: "Void",
       energy: 0,
       relations: [],
       temporal: DateTime.local(),
       orderings: []
     };
-    return makeAutoObservable(s);
+    return s;
   },
   createQi: (s: ShenT) => {
     let q: QiT;
@@ -94,6 +92,7 @@ export const GraphCorrect: Shen = {
     s.relations.push(q);
     return { q: q, s1: s };
   },
+  // Maybe get rid of create sibling, no siblings to Shen
   createSibling: (s: ShenT, q: QiT) => {
     let tuple: { q: QiT; s1: ShenT } = GraphCorrect.createQi(s);
     let sibling = tuple.q;
@@ -101,6 +100,7 @@ export const GraphCorrect: Shen = {
     sibling.relations.push(q);
     return { q1: q, sibling: sibling, s1: tuple.s1 };
   },
+  // Maybe get rid of create relation or create qi, they are the same 
   createRelation: (s: ShenT, q1: QiT, q2: QiT) => {
     let tuple: { q: QiT; s1: ShenT } = GraphCorrect.createQi(s);
     let relation = tuple.q;
@@ -114,4 +114,17 @@ export const GraphCorrect: Shen = {
 // const ShenFast: Shen = {};
 type ShenChecker = (sCorrect: Shen, sFast: Shen) => boolean;
 const ShenCheckerCorrect: ShenChecker = (sCorrect: Shen, sFast: Shen) => true;
+
+export const ExampleShen = () => {
+  let shen = GraphCorrect.createShen();
+  console.log("1", shen)
+  let tuple: { q: QiT; s1: ShenT } = GraphCorrect.createQi(shen);
+  console.log("2", tuple.s1)
+  console.log("2.5", tuple.q)
+  let result = GraphCorrect.createSibling(tuple.s1, tuple.q)
+  console.log("3 s1", result.s1)
+  console.log("3 q1", result.q1)
+  console.log("3 sibling1", result.sibling)
+  return shen;
+}
 
