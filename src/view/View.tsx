@@ -18,6 +18,8 @@ import ReactFlow from "react-flow-renderer";
 import { Button } from "@material-ui/core";
 import { PortalFree } from "./Portal";
 import { preview } from "@reactpreview/config";
+import ColorHash from 'color-hash'
+
 
 // Optic - viewing information as a certain structure
 // it should be like: JSX[GraphNode] a wrapper around graph node, leave for future
@@ -46,18 +48,29 @@ export const LoggingCorrect = observer(() => {
 });
 export type Bubble = (q: QiT | ShenT) => JSX.Element[];
 export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
+  const colour = new ColorHash().hex(props.q.id.toString());
   return (
-    <PortalFree hideDetail={props.hideDetail}>
-      <motion.div layout style={{ display: "flex", flexDirection: "column" }}>
-        <motion.div layout>
-          {props.q.hasOwnProperty("shen") && (
+    <PortalFree hideDetail={props.hideDetail} backgroundColor={colour}>
+      <motion.div
+        layout
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {props.q.hasOwnProperty("shen") && (
+          <motion.div
+            style={{ display: "flex", justifyContent: "space-between" }}
+            layout
+          >
+            {"神: "}
             <Bubble
               // @ts-ignore
               q={props.q.shen}
               hideDetail={true}
             />
-          )}
-        </motion.div>
+          </motion.div>
+        )}
         <motion.div layout>{"id: " + props.q.id}</motion.div>
         <motion.div
           layout
@@ -85,7 +98,7 @@ export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
 };
 preview(Bubble, {
   example: {
-    q: QiCorrect.createQi(GraphCorrect.createShen()),
+    q: ExampleShen(),
   },
 });
 export const BubbleExample = () => {
