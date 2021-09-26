@@ -80,7 +80,7 @@ const Portal2 = (props: { text: string }) => {
   );
 };
 
-export const PortalFree = (props: { children: any, hideDetail?: boolean }) => {
+export const PortalFree = (props: { children: any, hideDetail?: boolean, backgroundColor?: string }) => {
   type Expansion = "Expanded" | "Preview" | "Point"
   const [expansionState, setExpansionState] = React.useState<Expansion>(
     props.hideDetail ? "Point" : "Expanded"
@@ -106,6 +106,7 @@ export const PortalFree = (props: { children: any, hideDetail?: boolean }) => {
       onClick={handleChildClick}
       whileTap={{ scale: 0.96 }}
       style={{
+        backgroundColor: props.backgroundColor,
         borderRadius: 17,
         display: "inline-block",
         border: `2px solid #777777`,

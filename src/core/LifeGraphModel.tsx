@@ -42,7 +42,7 @@ export const QiCorrect: Qi = {
   createQi: (shen: ShenT) => {
     return {
       shen: shen,
-      id: Date.now(),
+      id: Date.now() + Math.random(),
       information: "",
       relations: [],
       energy: 0,
