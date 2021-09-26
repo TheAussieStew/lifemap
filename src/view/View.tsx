@@ -12,7 +12,7 @@ import { GraphContext } from "../Main";
 import { ShenToReactForceGraphCorrect, ShenToTiptapGraphCorrect } from "../core/Adaptors";
 import { mod, get, findBy } from "shades";
 import { motion } from "framer-motion";
-import { GraphCorrect, QiCorrect, QiT, Concept, ShenT, Shen} from "../core/LifeGraphModel";
+import { GraphCorrect, QiCorrect, QiT, Concept, ShenT, Shen, ExampleShen} from "../core/LifeGraphModel";
 import { Tiptap } from "../core/Tiptap";
 import ReactFlow from "react-flow-renderer";
 import { Button } from "@material-ui/core";
@@ -31,7 +31,7 @@ export type Logging = (q: QiT | ShenT) => JSX.Element[];
 // @ts-ignore
 export const LoggingCorrect = observer(() => {
   const [shen, setShen] = React.useState<ShenT>(useContext(GraphContext));
-    //TODO: Figure out how to manage circular data structures, on edit too
+  //TODO: Figure out how to manage circular data structures, on edit too
   return (
     <>
       <Tiptap
@@ -45,12 +45,18 @@ export const LoggingCorrect = observer(() => {
   );
 });
 export type Bubble = (q: QiT | ShenT) => JSX.Element[];
-export const Bubble = (props: {q: QiT | ShenT}) => {
+export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
   return (
-    <PortalFree>
+    <PortalFree hideDetail={props.hideDetail}>
       <motion.div layout style={{ display: "flex", flexDirection: "column" }}>
         <motion.div layout>
-          {props.q.shen && <Bubble q={props.q.shen} />}
+          {props.q.hasOwnProperty("shen") && (
+            <Bubble
+              // @ts-ignore
+              q={props.q.shen}
+              hideDetail={true}
+            />
+          )}
         </motion.div>
         <motion.div layout>{"id: " + props.q.id}</motion.div>
         <motion.div
@@ -64,9 +70,9 @@ export const Bubble = (props: {q: QiT | ShenT}) => {
           </motion.div>
         </motion.div>
         <motion.div layout>{"relations: "}</motion.div>
-        {props.q.relations.map((relation, index) => {
-          <Bubble q={relation} />;
-        })}
+        {props.q.relations.map((relation, index) => (
+          <Bubble q={relation} hideDetail={true} />
+        ))}
         <motion.div layout>{"energy: " + props.q.energy}</motion.div>
         <motion.div layout>
           {"temporal: " + props.q.temporal!.toString()}
@@ -85,7 +91,7 @@ preview(Bubble, {
 export const BubbleExample = () => {
   return (
     <>
-      <Bubble q={QiCorrect.createQi(GraphCorrect.createShen())} />
+      <Bubble q={ExampleShen()} />
     </>
   );
 };

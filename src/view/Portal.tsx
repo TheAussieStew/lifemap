@@ -80,12 +80,19 @@ const Portal2 = (props: { text: string }) => {
   );
 };
 
-export const PortalFree = (props: { children: any }) => {
-  const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
-  const toggleIsExpanded = () => setIsExpanded(!isExpanded);
+export const PortalFree = (props: { children: any, hideDetail?: boolean }) => {
+  type Expansion = "Expanded" | "Preview" | "Point"
+  const [expansionState, setExpansionState] = React.useState<Expansion>(
+    props.hideDetail ? "Point" : "Expanded"
+  );
+  const cycleExpansionState = () => {
+    if (expansionState === "Expanded") setExpansionState("Preview");
+    else if (expansionState === "Preview") setExpansionState("Point");
+    else if (expansionState === "Point") setExpansionState("Expanded");
+  };
   const handleChildClick = (e: any) => {
     e.stopPropagation();
-    toggleIsExpanded();
+    cycleExpansionState();
     console.log('child');
   }
 
@@ -103,12 +110,14 @@ export const PortalFree = (props: { children: any }) => {
         display: "inline-block",
         border: `2px solid #777777`,
         overflow: "hidden",
-        width: isExpanded ? undefined : 100,
-        height: isExpanded ? undefined : 20,
-        padding: 4,
+        width: expansionState === "Expanded" ? undefined : expansionState === "Preview" ? 100 : 10,
+        height: expansionState === "Expanded" ? undefined : expansionState === "Preview" ? 20 : 10,
+        padding: expansionState=== "Point" ? undefined : 4,
       }}
     >
-      <AnimateSharedLayout>{props.children}</AnimateSharedLayout>
+      <AnimateSharedLayout>
+        {!(expansionState === "Point") && props.children}
+      </AnimateSharedLayout>
     </motion.div>
   );
 };
