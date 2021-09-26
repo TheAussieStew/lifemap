@@ -48,7 +48,7 @@ export const LoggingCorrect = observer(() => {
 });
 export type Bubble = (q: QiT | ShenT) => JSX.Element[];
 export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
-  const colour = new ColorHash().hex(props.q.id.toString());
+  const colour = new ColorHash({ lightness: 0.9 }).hex(props.q.id.toString());
   return (
     <PortalFree hideDetail={props.hideDetail} backgroundColor={colour}>
       <motion.div
@@ -71,7 +71,13 @@ export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
             />
           </motion.div>
         )}
-        <motion.div layout>{"id: " + props.q.id}</motion.div>
+        <motion.div
+          layout
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <motion.div layout>{"id: "} </motion.div>
+          <motion.div layout>{props.q.id}</motion.div>
+        </motion.div>
         <motion.div
           layout
           style={{ display: "flex", justifyContent: "space-between" }}
@@ -82,10 +88,17 @@ export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
             <Tiptap content={props.q.information as string} />
           </motion.div>
         </motion.div>
-        <motion.div layout>{"relations: "}</motion.div>
-        {props.q.relations.map((relation, index) => (
-          <Bubble q={relation} hideDetail={true} />
-        ))}
+        <motion.div
+          layout
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          {"relations: "}
+          <motion.div layout>
+            {props.q.relations.map((relation, index) => (
+              <Bubble q={relation} hideDetail={true} />
+            ))}
+          </motion.div>
+        </motion.div>
         <motion.div layout>{"energy: " + props.q.energy}</motion.div>
         <motion.div layout>
           {"temporal: " + props.q.temporal!.toString()}
