@@ -13,30 +13,40 @@ type TimeField = Interval;
 type Emotion = { emotionName: string };
 type Void = "Undefined";
 
-type Order = Before | During | After;
-type Before = "->"
+type Causal = Precedes | During;
+// Refer to Casual Structure wikipedia
+// Omit strictly precedes vs chronogically procedes for now
+type Precedes = "<"
 type During = "o"
-type After = "<-"
 
 export type QiZhi = Colour & Brightness & Dispersion; // maybe make this into something that represents 通 more accurately
 type Colour = number;
 type Brightness = number;
 type Dispersion = number;
 
+type LinkQi<T extends (QiZhi | Causal)> = {
+  linkType: T;
+  linkTo: QiT;
+}
+
 export type QiT = {
   shen: ShenT;
   readonly id: number;
   information: Concept;
-  relations: QiT[];
-  energy: QiZhi;
+  relations: LinkQi<QiZhi>[];
+  energy: QiZhi; // aggregation of relations qizhi
   temporal: Time;
-  orderings: (Order & QiT)[];
+  // QiT can be Temporal, or another Information QiT, or both
+  // Why separate causal and other relations?
+  // Causal has to do with time, other relationships has to do with semantics and emotion (higher more complex centres)
+  causalRelations: LinkQi<Causal>[];
 };
 type Qi = {
   createQi: (shen: ShenT) => QiT;
   changeQi: (q: QiT, meaning: Concept) => QiT;
   siblings: (q: QiT) => QiT[];
-  createSibling: (q: QiT) => {q1: QiT, sibling: QiT};
+  createSibling: (q: QiT, qz: QiZhi) => { q1: QiT; sibling: QiT };
+  createCausalRelation: (qA: QiT, c: Causal, qB: QiT) => { q1: QiT; relation: Causal };
 };
 export const QiCorrect: Qi = {
   createQi: (shen: ShenT) => {
@@ -47,7 +57,7 @@ export const QiCorrect: Qi = {
       relations: [],
       energy: 0,
       temporal: DateTime.local(),
-      orderings: []
+      causalRelations: []
     };
   },
   changeQi: action((q: QiT, meaning: Concept) => {
@@ -55,11 +65,18 @@ export const QiCorrect: Qi = {
     return q;
   }),
   siblings: (q: QiT) => q.relations,
-  createSibling: action((q: QiT) => {
+  createSibling: action((q: QiT, qz: QiZhi) => {
     let sibling = QiCorrect.createQi(q.shen);
-    q.relations.push(sibling);
+    q.relations.push({linkType: qz, linkTo: sibling});
     return {q1: q, sibling: sibling};
   }),
+  createCausalRelation: (qA: QiT, c: Causal, qB: QiT) => { 
+    qA.causalRelations.push({linkType: c, linkTo: qB})
+    return {
+      q1: qA,
+      relation: c
+    }
+  }
 };
 
 export type ShenT = Omit<QiT, "shen">
@@ -82,7 +99,7 @@ export const GraphCorrect: Shen = {
       energy: 0,
       relations: [],
       temporal: DateTime.local(),
-      orderings: []
+      causalRelations: []
     };
     return s;
   },
