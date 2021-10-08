@@ -1,6 +1,5 @@
 import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { Handle } from 'react-flow-renderer';
-import G6, { Graph } from '@antv/g6';
 import { ForceGraph2D } from "react-force-graph";
 import { stringify } from "flatted";
 import { observer, useObserver } from "mobx-react-lite";
@@ -154,7 +153,6 @@ const Graph2DExample = () => <Graph2DReactForce q={ExampleShen()}/>
 
 export const Graph2DTipTap = observer(() => {
   const ref = React.useRef(null);
-  let graph: Graph | null = null;
   const shen = useContext(GraphContext);
 
   const addNeighbour = (nodeId: string) => {
