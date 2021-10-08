@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "plugins": [
+      {
+        "transform": "typescript-is/lib/transform-inline/transformer"
+      }
+    ],
     "lib": [
       "dom",
       "dom.iterable",
