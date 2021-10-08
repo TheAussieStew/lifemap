@@ -1,17 +1,25 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import { DateTime, Interval, Duration } from "luxon";
+import { Content } from "@tiptap/react";
+import { motion } from "framer-motion";
 
+type Type = { type: string };
 export type Concept =
-  | string
+  | RichText
   | Time
   | Emotion
   | Void
-type Time = TimePoint | TimeDuration | TimeField;
+type RichText = {type: "Rich Text", concept: Content}
+type Time = {
+  type: "Time"
+  concept: TimePoint | TimeDuration | TimeField,
+};
 type TimePoint = DateTime; 
 type TimeDuration = Duration;
 type TimeField = Interval;
-type Emotion = { emotionName: string };
-type Void = "Undefined";
+
+type Emotion = { type: "Emotion"; emotionName: string };
+type Void = {type: "Void", concept: "Undefined"};
 
 type Causal = Precedes | During;
 // Refer to Casual Structure wikipedia
@@ -19,32 +27,43 @@ type Causal = Precedes | During;
 type Precedes = "<"
 type During = "o"
 
-export type QiZhi = Colour & Brightness & Dispersion; // maybe make this into something that represents 通 more accurately
-type Colour = number;
-type Brightness = number;
-type Dispersion = number;
+export type QiZhi = {
+  colour: string;
+  dispersion: number;
+  halfCycleDuration: number;
+  repeatDelay: number;
+};
+const QiZhi = () => {
+  const qiZhi: QiZhi = {
+    colour: "#EFEFEF",
+    dispersion: 1,
+    halfCycleDuration: 1,
+    repeatDelay: 1,
+  };
+  return qiZhi;
+};
 
-type LinkQi<T extends (QiZhi | Causal)> = {
+export type LinkQi<T extends (QiZhi | Causal)> = {
   linkType: T;
   linkTo: QiT;
 }
-
 export type QiT = {
   shen: ShenT;
   readonly id: number;
   information: Concept;
-  relations: LinkQi<QiZhi>[];
+  relations: QiT[];
+  linkToRelations: QiT[];
   energy: QiZhi; // aggregation of relations qizhi
   temporal: Time;
   // QiT can be Temporal, or another Information QiT, or both
   // Why separate causal and other relations?
   // Causal has to do with time, other relationships has to do with semantics and emotion (higher more complex centres)
-  causalRelations: LinkQi<Causal>[];
+  causalRelations: QiT[];
+  linkToCausalRelations: QiT[];
 };
 type Qi = {
   createQi: (shen: ShenT) => QiT;
   changeQi: (q: QiT, meaning: Concept) => QiT;
-  siblings: (q: QiT) => QiT[];
   createSibling: (q: QiT, qz: QiZhi) => { q1: QiT; sibling: QiT };
   createCausalRelation: (qA: QiT, c: Causal, qB: QiT) => { q1: QiT; relation: Causal };
 };
@@ -53,18 +72,19 @@ export const QiCorrect: Qi = {
     return {
       shen: shen,
       id: Date.now() + Math.random(),
-      information: "",
+      information: {type: "Rich Text", concept: ""},
       relations: [],
-      energy: 0,
+      linkToRelations: [],
+      energy: QiZhi(),
       temporal: DateTime.local(),
-      causalRelations: []
+      causalRelations: [],
+      linkToCausalRelations: [],
     };
   },
   changeQi: action((q: QiT, meaning: Concept) => {
     q.information = meaning;
     return q;
   }),
-  siblings: (q: QiT) => q.relations,
   createSibling: action((q: QiT, qz: QiZhi) => {
     let sibling = QiCorrect.createQi(q.shen);
     q.relations.push({linkType: qz, linkTo: sibling});
