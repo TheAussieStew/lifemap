@@ -23,7 +23,6 @@
     "flatted": "3.1.1",
     "framer": "1.2.20",
     "framer-motion": "3.9.1",
-    "jsonata": "1.8.4",
     "lowlight": "1.20.0",
     "luxon": "1.25.0",
     "mobx": "6.0.5",
@@ -65,7 +64,9 @@
     ]
   },
   "devDependencies": {
-    "@types/color-hash": "1.0.1",
-    "ts-jest": "26.4.4"
+    "@types/color-hash": "^1.0.1",
+    "ts-jest": "26.4.4",
+    "ttypescript": "1.5.12",
+    "typescript-is": "0.18.3"
   }
 }
