@@ -9,17 +9,16 @@ export type Concept =
   | Time
   | Emotion
   | Void
-type RichText = {type: "Rich Text", concept: Content}
+type RichText = { concept: Content };
 type Time = {
-  type: "Time"
   concept: TimePoint | TimeDuration | TimeField,
 };
 type TimePoint = DateTime; 
 type TimeDuration = Duration;
 type TimeField = Interval;
 
-type Emotion = { type: "Emotion"; emotionName: string };
-type Void = {type: "Void", concept: "Undefined"};
+type Emotion = { concept: string };
+type Void = { concept: "Undefined" };
 
 type Causal = Precedes | During;
 // Refer to Casual Structure wikipedia
@@ -43,10 +42,6 @@ const QiZhi = () => {
   return qiZhi;
 };
 
-export type LinkQi<T extends (QiZhi | Causal)> = {
-  linkType: T;
-  linkTo: QiT;
-}
 export type QiT = {
   shen: ShenT;
   readonly id: number;
