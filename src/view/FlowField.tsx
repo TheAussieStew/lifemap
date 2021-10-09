@@ -14,7 +14,7 @@ const FlowField = () => {
   const detailMultiplier = 1.0;
   const fieldSpacing = Math.round(20 / detailMultiplier);
   const fieldLength = Math.round(25 * detailMultiplier);
-  const r = 40; // kind of like velocity
+  const r = 90; // kind of like velocity
   const tickDetailMultipier = 60;
   let vectorField: PolarVector[][] = [];
   const simplex = new SimplexNoise("lol");
@@ -25,7 +25,7 @@ const FlowField = () => {
     for (let y = 0; y < fieldLength; y++) {
       vectorField[x][y] = PolarVector(
         r,
-        90 + simplex.noise2D(x, y) * y * 4 + 10
+        90 + y / fieldLength * 270
       );
       vectorFieldArrows[x][y] = (
         <motion.div
@@ -45,8 +45,8 @@ const FlowField = () => {
     }
   }
 
-  const objectX = useMotionValue(0);
-  const objectY = useMotionValue(0);
+  const objectX = useMotionValue(40);
+  const objectY = useMotionValue(40);
   const move = () => {
     let fieldXLoc = Math.round(objectX.get() / fieldLength);
     let fieldYLoc = Math.round(objectY.get() / fieldLength);
