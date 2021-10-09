@@ -45,7 +45,7 @@ const FlowField = () => {
     }
   }
 
-  const objectX = useMotionValue(40);
+  const objectX = useMotionValue(45);
   const objectY = useMotionValue(40);
   const move = () => {
     let fieldXLoc = Math.round(objectX.get() / fieldLength);
@@ -58,6 +58,7 @@ const FlowField = () => {
       currentVector.r * Math.sin((currentVector.theta - 90) * (Math.PI / 180));
     objectX.set(objectX.get() + deltaX / tickDetailMultipier);
     objectY.set(objectY.get() + deltaY / tickDetailMultipier);
+    console.log("velocity", objectX.getVelocity(), objectY.getVelocity())
   };
 
   React.useEffect(() => {
@@ -82,6 +83,7 @@ const FlowField = () => {
           position: "absolute",
           width: 10,
           height: 10,
+	  borderRadius: "50%",
           backgroundColor: "purple",
           zIndex: 1,
           x: objectX,
