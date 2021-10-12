@@ -3,7 +3,6 @@ import { DateTime, Interval, Duration } from "luxon";
 import { Content } from "@tiptap/react";
 import { motion } from "framer-motion";
 
-type Type = { type: string };
 export type Concept =
   | RichText
   | Time
@@ -20,11 +19,14 @@ type TimeField = Interval;
 type Emotion = { concept: string };
 type Void = { concept: "Undefined" };
 
-type Causal = Precedes | During;
+type RelationToRelation = QiT
+
+type CausalRelationToRelation = Precedes | During | After;
 // Refer to Casual Structure wikipedia
 // Omit strictly precedes vs chronogically procedes for now
 type Precedes = "<"
 type During = "o"
+type After = ">"
 
 export type QiZhi = {
   colour: string;
@@ -46,21 +48,19 @@ export type QiT = {
   shen: ShenT;
   readonly id: number;
   information: Concept;
-  relations: QiT[];
-  linkToRelations: QiT[];
+  relations: Map<QiT, RelationToRelation[]>;
   energy: QiZhi; // aggregation of relations qizhi
-  temporal: Time;
+  // remove temporal. It should be in causal, as a during relationship. the first causal, the original.
   // QiT can be Temporal, or another Information QiT, or both
   // Why separate causal and other relations?
   // Causal has to do with time, other relationships has to do with semantics and emotion (higher more complex centres)
-  causalRelations: QiT[];
-  linkToCausalRelations: QiT[];
+  causalRelations: Map<QiT, CausalRelationToRelation[]>;
 };
 type Qi = {
   createQi: (shen: ShenT) => QiT;
   changeQi: (q: QiT, meaning: Concept) => QiT;
   createSibling: (q: QiT, qz: QiZhi) => { q1: QiT; sibling: QiT };
-  createCausalRelation: (qA: QiT, c: Causal, qB: QiT) => { q1: QiT; relation: Causal };
+  createCausalRelation: (qA: QiT, c: CausalRelationToRelation, qB: QiT) => { q1: QiT; relation: CausalRelationToRelation };
 };
 export const QiCorrect: Qi = {
   createQi: (shen: ShenT) => {
@@ -85,7 +85,7 @@ export const QiCorrect: Qi = {
     q.relations.push({linkType: qz, linkTo: sibling});
     return {q1: q, sibling: sibling};
   }),
-  createCausalRelation: (qA: QiT, c: Causal, qB: QiT) => { 
+  createCausalRelation: (qA: QiT, c: CausalRelationToRelation, qB: QiT) => { 
     qA.causalRelations.push({linkType: c, linkTo: qB})
     return {
       q1: qA,
