@@ -1,5 +1,5 @@
 import { motion, useMotionValue } from "framer-motion";
-import SimplexNoise from 'simplex-noise';
+import SimplexNoise from "simplex-noise";
 import React from "react";
 
 type PolarVector = {
@@ -10,6 +10,7 @@ const PolarVector = (r: number, theta: number) => {
   return { r: r, theta: theta };
 };
 
+// TODO: The Field should consist of force vectors, not velocity vectors
 const FlowField = () => {
   const detailMultiplier = 1.0;
   const fieldSpacing = Math.round(20 / detailMultiplier);
@@ -23,10 +24,7 @@ const FlowField = () => {
     vectorField[x] = [];
     vectorFieldArrows[x] = [];
     for (let y = 0; y < fieldLength; y++) {
-      vectorField[x][y] = PolarVector(
-        r,
-        90 + y / fieldLength * 270
-      );
+      vectorField[x][y] = PolarVector(r, 90 + (y / fieldLength) * 270);
       vectorFieldArrows[x][y] = (
         <motion.div
           style={{
@@ -35,9 +33,9 @@ const FlowField = () => {
             y: y * fieldSpacing,
             rotate: vectorField[x][y].theta,
           }}
-          initial={{ translateX: -5 }}
+          initial={{ translateX: -3 }}
           animate={{ translateX: 0 }}
-          transition={{ delay: (x + y) * 0.04 }}
+          transition={{ delay: (x + y) * 0.05 }}
         >
           ↑
         </motion.div>
@@ -58,7 +56,7 @@ const FlowField = () => {
       currentVector.r * Math.sin((currentVector.theta - 90) * (Math.PI / 180));
     objectX.set(objectX.get() + deltaX / tickDetailMultipier);
     objectY.set(objectY.get() + deltaY / tickDetailMultipier);
-    console.log("velocity", objectX.getVelocity(), objectY.getVelocity())
+    console.log("velocity", objectX.getVelocity(), objectY.getVelocity());
   };
 
   React.useEffect(() => {
@@ -83,7 +81,7 @@ const FlowField = () => {
           position: "absolute",
           width: 10,
           height: 10,
-	  borderRadius: "50%",
+          borderRadius: "50%",
           backgroundColor: "purple",
           zIndex: 1,
           x: objectX,
