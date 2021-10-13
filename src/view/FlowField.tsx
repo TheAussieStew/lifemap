@@ -1,5 +1,4 @@
 import { motion, useMotionValue } from "framer-motion";
-import SimplexNoise from "simplex-noise";
 import React from "react";
 
 type PolarVector = {
@@ -18,7 +17,6 @@ const FlowField = () => {
   const r = 90; // kind of like velocity
   const tickDetailMultipier = 60;
   let vectorField: PolarVector[][] = [];
-  const simplex = new SimplexNoise("lol");
   let vectorFieldArrows: JSX.Element[][] = [];
   for (let x = 0; x < fieldLength; x++) {
     vectorField[x] = [];
