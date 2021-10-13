@@ -7,7 +7,7 @@ export const GraphContext = React.createContext<ShenT>(GraphCorrect.createShen()
 const Main = () => {
   const shen = GraphCorrect.createShen();
   shen.information = "The Void";
-  let { q, s1 } = GraphCorrect.createQi(shen);
+  let { q, s1 } = GraphCorrect.createRelation(shen);
   q.information = "Hello universe!";
   return (
     <GraphContext.Provider value={shen}>

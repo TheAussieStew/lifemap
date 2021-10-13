@@ -1,14 +1,12 @@
 import ColorHash from "color-hash";
 import { motion } from "framer-motion";
 import React from "react";
-import { QiT, ShenT, ExampleShen } from "../core/LifeGraphModel";
+import { QiT, ShenT, ExampleShen, RelationToRelation, QiCorrect } from "../core/LifeGraphModel";
 import { Tiptap } from "../core/Tiptap";
 import { PortalFree } from "./Portal";
-import { is } from 'typescript-is';
 
 export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
   const colour = new ColorHash({ lightness: 0.9 }).hex(props.q.id.toString());
-  console.log(is<string>("Hi"))
 
   return (
     <PortalFree hideDetail={props.hideDetail} backgroundColor={colour}>
@@ -45,8 +43,15 @@ export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
         >
           {"information: "}
           {/* TODO: Make Tiptap Onclick, not activate parent... */}
+          {/* TODO: Make Tiptap save to store */}
+          {/* TODO: Create a proper store, outside of component*/}
           <motion.div layout style={{ margin: `-16px 0 -16px 0` }}>
-            <Tiptap content={props.q.information as string} />
+            <Tiptap
+              modShen={(text: string) => {
+                props.q.information = text;
+              }}
+              content={props.q.information as string}
+            />
           </motion.div>
         </motion.div>
         <motion.div
@@ -54,26 +59,35 @@ export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           {"relations: "}
-          <motion.div layout>
-            {props.q.relations.map((relation, index) => (
-              <Bubble q={relation} hideDetail={true} />
+          <motion.div layout style={{ display: "grid" }}>
+            {Array.from(props.q.relations.entries()).map((value, index) => (
+              <>
+                {value[1].map((rtr: RelationToRelation) => {
+                  <Bubble q={rtr} hideDetail={true} />;
+                })}
+                <Bubble q={value[0]} hideDetail={true} />
+              </>
             ))}
           </motion.div>
         </motion.div>
         <motion.div layout>{"energy: " + props.q.energy}</motion.div>
         <motion.div layout>
-          {"temporal: " + props.q.temporal!.toString()}
+          {Object.keys(props.q).slice(-1)[0] + ":"}
+          {/* <motion.div layout>
+            {Array.from(props.q.causalRelations.keys()).map((relation: QiT, index) => (
+              <Bubble q={relation} hideDetail={true} />
+            ))}
+          </motion.div> */}
         </motion.div>
-        <motion.div layout>{"orderings: incomplete"}</motion.div>
-        {/* {props.q.orderings} */}
       </motion.div>
     </PortalFree>
   );
 };
 export const BubbleExample = () => {
+  const shen = ExampleShen()
   return (
     <>
-      <Bubble q={ExampleShen()} />
+      <Bubble q={shen} />
     </>
   );
 };
