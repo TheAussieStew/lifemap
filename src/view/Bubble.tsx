@@ -4,6 +4,7 @@ import React from "react";
 import { QiT, ShenT, ExampleShen, RelationToRelation, QiCorrect } from "../core/LifeGraphModel";
 import { Tiptap } from "../core/Tiptap";
 import { PortalFree } from "./Portal";
+import { QiZhi } from "./QiZhi";
 
 export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
   const colour = new ColorHash({ lightness: 0.9 }).hex(props.q.id.toString());
@@ -70,7 +71,10 @@ export const Bubble = (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
             ))}
           </motion.div>
         </motion.div>
-        <motion.div layout>{"energy: " + props.q.energy}</motion.div>
+        <motion.div layout style={{display: "flex", alignItems:"center", gap: 20}}>
+          {"energy: " + props.q.energy}
+          <QiZhi energy={props.q.energy}/>
+          </motion.div>
         <motion.div layout>
           {Object.keys(props.q).slice(-1)[0] + ":"}
           {/* <motion.div layout>
