@@ -38,7 +38,7 @@ export type QiZhi = {
 };
 const QiZhi = () => {
   const qiZhi: QiZhi = {
-    colour: "#EFEFEF",
+    colour: "#FFFFFF",
     dispersion: 1,
     halfCycleDuration: 1,
     repeatDelay: 1,
