@@ -8,18 +8,18 @@ export type Concept =
   | Time
   | EmotionName
   | Void
-type RichText = Content 
+export type RichText = Content 
 export type Time = 
   TimePoint | TimeDuration | TimeField
 
-type TimePoint = DateTime; 
-type TimeDuration = Duration;
-type TimeField = Interval;
+export type TimePoint = DateTime; 
+export type TimeDuration = Duration;
+export type TimeField = Interval;
 // TODO: Probably need to buff out Time from a concept, into a fully fledged QiT, 
 // that all link with each other and have causal consistency
 
-type EmotionName = string 
-type Void = "Undefined"
+export type EmotionName = string 
+export type Void = "Undefined"
 
 export type RelationToRelation = QiT
 
