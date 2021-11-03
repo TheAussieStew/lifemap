@@ -3,6 +3,7 @@ import { useEditor, EditorContent, Content } from '@tiptap/react'
 import lowlight from 'lowlight'
 import StarterKit from '@tiptap/starter-kit'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { action } from 'mobx'
 
 
 const CustomStarterKit = StarterKit.extend({
@@ -27,14 +28,14 @@ export const Tiptap = (props: {content: Content, modShen?: (text: string) => voi
       CustomStarterKit,
     ],
     content: props.content,
-    onUpdate: ({editor}) => {
+    onUpdate: action(({editor}) => {
+      // send the content to an API here
       const json = editor.getJSON()
-      console.log("sd", json)
-      console.log("sd", json.content[0].content[0].text)
+      // console.log("sd", json)
+      // console.log("sd", json.content[0].content[0].text)
       const text = json.content[0].content[0].text;
       if (props.modShen) props.modShen(text)
-      // send the content to an API here
-    }
+    })
   })
 
   return (
