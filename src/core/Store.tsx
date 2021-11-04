@@ -1,31 +1,40 @@
 import {  autorun, isObservable, reaction, toJS } from 'mobx';
 import React from 'react'
 import { ExampleShen, GraphCorrect, ShenT } from "./LifeGraphModel";
-import { stringify } from "flatted";
+import { stringify, parse } from "flatted";
 import { Observer, observer } from 'mobx-react-lite';
 
 export const ShenContext = React.createContext<ShenT>(GraphCorrect.createShen())
 
-export const Store = (props: { children: any }) => {
-  const shen = React.useContext(ShenContext)
-  autorun(()=> {
+const download = (content: any, fileName: string, contentType: string) => {
+  var a = document.createElement("a");
+  var file = new Blob([content], { type: contentType });
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
+};
+// download(stringify(toJS(shen)), 'shen.txt', 'text/plain');
 
-      console.log("writing file")
-      console.log(toJS(shen.relations))
-      const rels = shen.relations.entries()
-      console.log("isob shen rels", isObservable(rels))
-      localStorage.setItem('shen', stringify(toJS(shen)));
-      const saved = localStorage.getItem('shen');
-      console.log("isob shen", isObservable(shen))
-      console.log("svd", stringify(toJS(shen)))
+export const Store = (props: { children: any }) => {
+  let shen: ShenT = React.useContext(ShenContext)
+  let loaded = false;
+  const dispose = autorun(() => {
+    if (!loaded) {
+      const localStorageShen = localStorage.getItem("shen")
+      if (localStorageShen !== null) {
+        shen = parse(localStorage.getItem("shen")!);
+        console.log("getting shen from storage", shen);
+        loaded = true;
+      }
+    }
+    toJS(shen)
+    console.log("writing file");
+    console.log(stringify(toJS(shen)))
+    localStorage.setItem("shen", stringify(toJS(shen)));
+  });
+  React.useEffect(() => {
+    // clean up dispose here
   })
-  // reaction(
-  //   () => toJS(shen),
-  //   () => {
-  //     console.log("writing file using reaction")
-  //     localStorage.setItem('shen', stringify(shen));
-  //   }
-  // );
   return (
     <ShenContext.Provider value={ExampleShen()}>
       {props.children}
