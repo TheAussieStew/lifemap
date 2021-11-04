@@ -1,6 +1,7 @@
 import React from "react";
 import { stringify } from "flatted";
 import { Tiptap } from "../core/Tiptap";
+import { QiT, ShenT } from "../core/LifeGraphModel";
 
 
 // Optic - viewing Qi in a certain way
@@ -28,4 +29,4 @@ export const LoggingCorrect: Logging = (props: {q: QiT | ShenT}) => {
     </>
   );
 };
-const ExampleLogging = () => <LoggingCorrect q={ExampleShen()} />;
+// const ExampleLogging = () => <LoggingCorrect q={ExampleShen()} />;
