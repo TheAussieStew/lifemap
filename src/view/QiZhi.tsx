@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import React from 'react';
-import { QiZhi } from "../core/LifeGraphModel";
+import { QiZhiT } from "../core/LifeGraphModel";
 
-export const QiZhi = (props: {energy: QiZhi}) => {
+export const QiZhi = (props: {energy: QiZhiT}) => {
   return (
     <motion.div
       initial={{
