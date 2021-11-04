@@ -9,6 +9,12 @@ export type Type<T extends string> = {type: T}
 
 export type Concept = { concept: RichText | Time | EmotionName | Void } & Type<"Concept">;
 export type RichText = { richText: Content } & Type<"RichText">;
+export const RichText = () => {
+  return observable({
+    richText: "",
+    type: "RichText",
+  });
+};
 export type Time = { time: TimePoint | TimeDuration | TimeField } & Type<"Time">;
 export type TimePoint = DateTime; 
 export type TimeDuration = Duration;
@@ -28,14 +34,14 @@ export type Precedes = "<";
 export type During = "o"
 export type After = ">"
 
-export type QiZhi = {
+export type QiZhiT = {
   colour: string;
   dispersion: number;
   halfCycleDuration: number;
   repeatDelay: number;
 };
 const QiZhi = () => {
-  const qiZhi: QiZhi = {
+  const qiZhi: QiZhiT = {
     colour: "#FFFFFF",
     dispersion: 1,
     halfCycleDuration: 1,
@@ -50,13 +56,13 @@ export type QiT = {
   readonly id: number; 
   information: Concept;
   relations: Map<QiT, RelationToRelation[]>; // q [ror] qTo
-  energy: QiZhi; // aggregation of relations qizhi
+  energy: QiZhiT; // aggregation of relations qizhi
   causalRelations: Map<QiT | Time, CausalRelationToRelation[]>;
 } & Type<"Qi">;
 type Qi = {
   createQi: (shen?: ShenT) => QiT | ShenT;
   changeQi: (q: QiT, meaning: Concept) => QiT;
-  createRelation: (q: QiT, qz?: QiZhi) => { q1: QiT; sibling: QiT };
+  createRelation: (q: QiT, qz?: QiZhiT) => { q1: QiT; sibling: QiT };
   createCausalRelation: (q: QiT, c: CausalRelationToRelation, qTo: QiT) => { q1: QiT };
 };
 export const QiCorrect: Qi = {
@@ -89,7 +95,7 @@ export const QiCorrect: Qi = {
     q.information = meaning;
     return q;
   }),
-  createRelation: action((q: QiT, qz?: QiZhi) => {
+  createRelation: action((q: QiT, qz?: QiZhiT) => {
     let relation = QiCorrect.createQi(q.shen) as QiT;
     let rtr = QiCorrect.createQi(q.shen) as QiT;
     q.relations.set(relation, [rtr])
