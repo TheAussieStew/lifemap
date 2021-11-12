@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import { autorun, toJS } from "mobx";
+import { action, autorun, toJS } from "mobx";
 import { Observer, observer, useLocalObservable } from "mobx-react-lite";
 import React from "react";
 
 // probably use ID instead of the actual JSX.Element
 const Connector = observer((props: { elementAAnchor: {x: number, y: number}, elementBAnchor:{x: number, y: number} }) => {
   return (
-    <motion.svg style={{ position: "absolute" }}>
+    <motion.svg>
       <motion.line
         stroke-width="1px"
         stroke="#000000"
@@ -28,7 +28,7 @@ const ExampleConnector = () => {
   const getBoundingClientRect = (id: string) => {
     return document.getElementById(id)?.getBoundingClientRect();
   };
-  const tick = () => {
+  const tick = action(() => {
     let elemARect = getBoundingClientRect("blue");
     let elemBRect = getBoundingClientRect("red");
     if (elemARect) {
@@ -39,17 +39,15 @@ const ExampleConnector = () => {
       elementBAnchor.x = (elemBRect.left + elemBRect.right) / 2;
       elementBAnchor.y = (elemBRect.top + elemBRect.bottom) / 2;
     }
-	  console.log("elemA", toJS(elementAAnchor))
-	  console.log("elemB", toJS(elementBAnchor))
-  };
+  });
   return (
     <>
       <div style={{ position: "absolute" }}>
         <motion.div
           drag
-          onDrag={(event, info) => {
+	  onUpdate={() => {
             tick();
-          }}
+	  }}
           id="blue"
           style={{
             borderRadius: 20,
@@ -60,9 +58,9 @@ const ExampleConnector = () => {
         />
         <motion.div
           drag
-          onDrag={(event, info) => {
+	  onUpdate={() => {
             tick();
-          }}
+	  }}
           id="red"
           style={{
             borderRadius: 20,
