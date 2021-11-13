@@ -6,8 +6,13 @@ import React from "react";
 // probably use ID instead of the actual JSX.Element
 const Connector = observer((props: { elementAAnchor: {x: number, y: number}, elementBAnchor:{x: number, y: number} }) => {
   return (
-    <motion.svg>
-      <motion.line
+    <motion.svg width="100%" height="100%">
+      <motion.path
+        d={`M${props.elementAAnchor.x},${props.elementAAnchor.y},${props.elementBAnchor.x},${props.elementBAnchor.y}`}
+	strokeWidth="3" 
+	stroke="black"
+      />
+      {/* <motion.line
         stroke-width="1px"
         stroke="#000000"
         x1={props.elementAAnchor.x}
@@ -15,7 +20,7 @@ const Connector = observer((props: { elementAAnchor: {x: number, y: number}, ele
         x2={props.elementBAnchor.x}
         y2={props.elementBAnchor.y}
         id="mySVG"
-      />
+      /> */}
     </motion.svg>
   );
 });
@@ -42,7 +47,7 @@ const ExampleConnector = () => {
   });
   return (
     <>
-      <div style={{ position: "absolute" }}>
+      <div style={{ position: "absolute", height: "100%", width: "100%" }}>
         <motion.div
           drag
 	  onUpdate={() => {
