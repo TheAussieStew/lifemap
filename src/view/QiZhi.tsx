@@ -33,15 +33,15 @@ export const QiZhiWrapper = (props: {energy: QiZhiT, children: any}) => {
       initial={{
         boxShadow: `0px 0px 8px 10px #EFEFEF`,
       }}
-      animate={{
-        boxShadow: `0px 0px 20px 10px ${props.energy.colour}`,
-      }}
-      transition={{
-        repeat: Infinity,
-        duration: 4,
-        repeatType: "reverse",
-        repeatDelay: 1,
-      }}
+      // animate={{
+      //   boxShadow: `0px 0px 20px 10px ${props.energy.colour}`,
+      // }}
+      // transition={{
+      //   repeat: Infinity,
+      //   duration: 4,
+      //   repeatType: "reverse",
+      //   repeatDelay: 1,
+      // }}
       style={{
         borderRadius: 20,
       }}

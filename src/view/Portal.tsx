@@ -110,7 +110,6 @@ export const PortalFree = (props: { children: any, id: string, hideDetail?: bool
         props.update ? props.update() : undefined;
       }}
       onClick={handleChildClick}
-      whileTap={{ scale: 0.96 }}
       style={{
         backgroundColor: props.backgroundColor,
         borderRadius: 17,
