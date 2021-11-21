@@ -216,7 +216,9 @@ export const AlphaBubble = observer(
     let connections: any[] = []
 
     return (
-      <>
+      <div style={{
+        display: "inline-block"
+      }}>
         {connections}
         {/* {props.q.type === "Qi" && (
           <motion.div layout id="causalRelations">
@@ -304,6 +306,7 @@ export const AlphaBubble = observer(
                             <>
                               <AlphaBubble q={rtr} hideDetail={true} />
                                 <Xarrow
+                                color={"#676767"}
                                   strokeWidth={2}
                                   headSize={4}
                                   start={rtr.id.toString()}
@@ -344,7 +347,7 @@ export const AlphaBubble = observer(
             </motion.div>
           </PortalFree>
         </QiZhiWrapper>
-      </>
+      </div>
     );
   }
 );
