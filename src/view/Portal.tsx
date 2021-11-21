@@ -80,7 +80,7 @@ const Portal2 = (props: { text: string }) => {
   );
 };
 
-export const PortalFree = (props: { children: any, hideDetail?: boolean, backgroundColor?: string }) => {
+export const PortalFree = (props: { children: any, id: string, hideDetail?: boolean, backgroundColor?: string, update?: () => void }) => {
   type Expansion = "Expanded" | "Preview" | "Point"
   const [expansionState, setExpansionState] = React.useState<Expansion>(
     props.hideDetail ? "Point" : "Expanded"
@@ -98,10 +98,16 @@ export const PortalFree = (props: { children: any, hideDetail?: boolean, backgro
 
   return (
     <motion.div
+    id={props.id}
+      drag
+      dragConstraints={{ left: 10, right: 10, top: 10, bottom: 10 }}
       layout
       transition={{
         type: "spring",
         damping: 16,
+      }}
+      onUpdate={() => {
+        props.update ? props.update() : undefined;
       }}
       onClick={handleChildClick}
       whileTap={{ scale: 0.96 }}
@@ -111,9 +117,19 @@ export const PortalFree = (props: { children: any, hideDetail?: boolean, backgro
         display: "inline-block",
         border: `2px solid #777777`,
         overflow: "hidden",
-        width: expansionState === "Expanded" ? undefined : expansionState === "Preview" ? 100 : 10,
-        height: expansionState === "Expanded" ? undefined : expansionState === "Preview" ? 20 : 10,
-        padding: expansionState=== "Point" ? undefined : 4,
+        width:
+          expansionState === "Expanded"
+            ? undefined
+            : expansionState === "Preview"
+            ? 100
+            : 10,
+        height:
+          expansionState === "Expanded"
+            ? undefined
+            : expansionState === "Preview"
+            ? 20
+            : 10,
+        padding: expansionState === "Point" ? undefined : 4,
       }}
     >
       <AnimateSharedLayout>
