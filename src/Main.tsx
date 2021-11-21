@@ -5,9 +5,14 @@ import { Bubble } from "./view/Bubble";
 const Main = () => {
   return (
     <Store>
-      <Bubble q={React.useContext(ShenContext)} />
+      <ShenContext.Consumer>
+        {(shen) => {
+        console.log("shen from consumer", shen)
+        return <Bubble q={shen} />}
+        }
+      </ShenContext.Consumer>
     </Store>
-  )
+  );
 };
 
 export default Main;

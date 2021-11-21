@@ -2,9 +2,9 @@ import {  autorun, isObservable, reaction, toJS } from 'mobx';
 import React from 'react'
 import { ExampleShen, GraphCorrect, ShenT } from "./LifeGraphModel";
 import { stringify, parse } from "flatted";
-import { Observer, observer } from 'mobx-react-lite';
 
 export const ShenContext = React.createContext<ShenT>(GraphCorrect.createShen())
+console.log("empty graph obj", toJS(GraphCorrect.createShen()))
 
 const download = (content: any, fileName: string, contentType: string) => {
   var a = document.createElement("a");
@@ -18,25 +18,24 @@ const download = (content: any, fileName: string, contentType: string) => {
 export const Store = (props: { children: any }) => {
   let shen: ShenT = React.useContext(ShenContext)
   let loaded = false;
-  const dispose = autorun(() => {
-    if (!loaded) {
-      const localStorageShen = localStorage.getItem("shen")
-      if (localStorageShen !== null) {
-        shen = parse(localStorage.getItem("shen")!);
-        console.log("getting shen from storage", shen);
-        loaded = true;
-      }
+  if (!loaded) {
+    const localStorageShen = localStorage.getItem("shen");
+    if (localStorageShen !== null) {
+      shen = parse(localStorage.getItem("shen")!);
+      console.log("getting shen from storage", shen);
+      loaded = true;
     }
+  }
+  const dispose = autorun(() => {
     toJS(shen)
-    console.log("writing file");
-    console.log(stringify(toJS(shen)))
     localStorage.setItem("shen", stringify(toJS(shen)));
+    console.log("writing file", stringify(toJS(shen)));
   });
   React.useEffect(() => {
     // clean up dispose here
   })
   return (
-    <ShenContext.Provider value={ExampleShen()}>
+    <ShenContext.Provider value={shen}>
       {props.children}
     </ShenContext.Provider>
   );

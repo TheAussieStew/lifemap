@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React from 'react';
+import React, { Children } from 'react';
 import { QiZhiT } from "../core/LifeGraphModel";
 
 export const QiZhi = (props: {energy: QiZhiT}) => {
@@ -24,5 +24,29 @@ export const QiZhi = (props: {energy: QiZhiT}) => {
         height: 15,
       }}
     />
+  );
+}
+
+export const QiZhiWrapper = (props: {energy: QiZhiT, children: any}) => {
+  return (
+    <motion.div
+      initial={{
+        boxShadow: `0px 0px 8px 10px #EFEFEF`,
+      }}
+      animate={{
+        boxShadow: `0px 0px 20px 10px ${props.energy.colour}`,
+      }}
+      transition={{
+        repeat: Infinity,
+        duration: 4,
+        repeatType: "reverse",
+        repeatDelay: 1,
+      }}
+      style={{
+        borderRadius: 20,
+      }}
+    >
+      {props.children}
+    </motion.div>
   );
 }

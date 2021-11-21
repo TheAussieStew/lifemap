@@ -15,12 +15,17 @@ export const RichText = () => {
     type: "RichText",
   });
 };
-export type Time = { time: TimePoint | TimeDuration | TimeField } & Type<"Time">;
+export type Time = { time: TimePoint | TimeLength | TimeField } & Type<"Time">;
 export type TimePoint = DateTime; 
-export type TimeDuration = Duration;
+export type TimeLength = Duration;
 export type TimeField = Interval;
 // TODO: Probably need to buff out Time from a concept, into a fully fledged QiT, 
 // that all link with each other and have causal consistency
+// The problem currently, is that causalRelations is hard to define lazily.
+// Could omit causal relations on time. But then how would calendars work?
+export type TimeQiT = {
+
+}
 
 export type EmotionName = {emotionName: string} & Type<"EmotionName">
 export type Void = "Undefined"
@@ -50,6 +55,7 @@ const QiZhi = () => {
   return qiZhi;
 };
 
+// TODO: Add a TimeQiT that inherits from QiT, but restricts information to only Time, not concept
 // Could use composition of types, similar to Type<>, e.g replace information: Concept
 export type QiT = {
   shen: ShenT;
@@ -57,7 +63,7 @@ export type QiT = {
   information: Concept;
   relations: Map<QiT, RelationToRelation[]>; // q [ror] qTo
   energy: QiZhiT; // aggregation of relations qizhi
-  causalRelations: Map<QiT | Time, CausalRelationToRelation[]>;
+  causalRelations: Map<QiT, CausalRelationToRelation[]>;
 } & Type<"Qi">;
 type Qi = {
   createQi: (shen?: ShenT) => QiT | ShenT;
@@ -66,7 +72,7 @@ type Qi = {
   createCausalRelation: (q: QiT, c: CausalRelationToRelation, qTo: QiT) => { q1: QiT };
 };
 export const QiCorrect: Qi = {
-  createQi: action((shen?: ShenT) => {
+  createQi: (shen?: ShenT) => {
     if (shen) {
       // TODO: need to create qi on shen too
       return observable({
@@ -76,7 +82,7 @@ export const QiCorrect: Qi = {
         information: {concept: {richText: "....", type: "RichText"}, type: "Concept"},
         relations: new Map<QiT, RelationToRelation[]>(),
         energy: QiZhi(),
-        causalRelations: new Map<QiT | Time, CausalRelationToRelation[]>().set(
+        causalRelations: new Map<QiT, CausalRelationToRelation[]>().set(
           {time: DateTime.local(), type: "Time"},
           [">"]
         ),
@@ -90,7 +96,7 @@ export const QiCorrect: Qi = {
         energy: QiZhi(),
       }) as ShenT;
     }
-  }),
+  },
   changeQi: action((q: QiT, meaning: Concept) => {
     q.information = meaning;
     return q;
@@ -126,10 +132,7 @@ const ShenCheckerCorrect: ShenChecker = (sCorrect: Shen, sFast: Shen) => true;
 
 export const ExampleShen = () => {
   let shen = GraphCorrect.createShen();
-  console.log("1", shen)
   let tuple: { q: QiT; s1: ShenT } = GraphCorrect.createRelation(shen);
-  console.log("2", tuple.s1)
-  console.log("2.5", tuple.q)
   let result = QiCorrect.createRelation(tuple.q)
   QiCorrect.createCausalRelation(tuple.q, "<", result.q1);
   return shen;
