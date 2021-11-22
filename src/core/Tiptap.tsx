@@ -3,6 +3,7 @@ import { useEditor, EditorContent, Content } from '@tiptap/react'
 import lowlight from 'lowlight'
 import StarterKit from '@tiptap/starter-kit'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { BubbleExtension } from './TiptapBubble'
 import { action } from 'mobx'
 
 
@@ -26,6 +27,7 @@ export const Tiptap = (props: {content: Content, modShen?: (text: string) => voi
         lowlight,
       }),
       CustomStarterKit,
+      BubbleExtension
     ],
     content: props.content,
     onUpdate: action(({editor}) => {
