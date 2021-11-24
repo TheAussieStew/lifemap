@@ -3,7 +3,7 @@ import { useEditor, EditorContent, Content } from '@tiptap/react'
 import lowlight from 'lowlight'
 import StarterKit from '@tiptap/starter-kit'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import { BubbleExtension } from "../view/Extension";
+import { BubbleExtension } from "../view/BubbleExtension";
 import { action } from 'mobx'
 
 const CustomStarterKit = StarterKit.extend({

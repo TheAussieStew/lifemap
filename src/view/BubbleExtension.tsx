@@ -2,7 +2,7 @@ import { Node, mergeAttributes } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import React from "react";
 import { QiCorrect } from "../core/LifeGraphModel";
-import { AlphaBubble, AlphaBubbleExample } from "./Bubble";
+import { AlphaBubble } from "./Bubble";
 
 export const BubbleExtension = Node.create({
   name: "bubbleExtension",
