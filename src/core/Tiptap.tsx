@@ -3,9 +3,8 @@ import { useEditor, EditorContent, Content } from '@tiptap/react'
 import lowlight from 'lowlight'
 import StarterKit from '@tiptap/starter-kit'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import { BubbleExtension } from './TiptapBubble'
+import { BubbleExtension } from "../view/Extension";
 import { action } from 'mobx'
-
 
 const CustomStarterKit = StarterKit.extend({
   addKeyboardShortcuts() {
@@ -27,7 +26,7 @@ export const Tiptap = (props: {content: Content, modShen?: (text: string) => voi
         lowlight,
       }),
       CustomStarterKit,
-      BubbleExtension
+      BubbleExtension,
     ],
     content: props.content,
     onUpdate: action(({editor}) => {

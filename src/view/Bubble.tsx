@@ -54,7 +54,6 @@ export const Bubble = observer(
             >
               {"神: "}
               <Bubble
-                // @ts-ignore
                 q={props.q.shen}
                 hideDetail={true}
               />
@@ -173,13 +172,14 @@ export const Bubble = observer(
               {"causalRelations: "}
               <motion.div layout style={{ display: "grid" }}>
                 {Array.from(props.q.causalRelations.keys()).map(
-                  (relation: QiT | Time, index) => (
+                  (relation: QiT, index) => (
                     <div key={index}>
                       {(props.q as QiT).causalRelations.get(relation) + " "}
                       {relation.type === "Qi" ? (
                         <Bubble q={relation} hideDetail={true} />
                       ) : (
-                        relation.time.toString().substring(0, 18) + "..."
+                        // relation.time.toString().substring(0, 18) + "..."
+                        <></>
                       )}
                     </div>
                   )
@@ -294,7 +294,7 @@ export const AlphaBubble = observer(
                 layout
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
-                <motion.div
+                {/* <motion.div
                   layout
                   style={{ display: "grid", placeItems: "center" }}
                 >
@@ -319,30 +319,7 @@ export const AlphaBubble = observer(
                       </motion.div>
                     )
                   )}
-                  <motion.div
-                    layout
-                    onClick={(e: any) => {
-                      e.stopPropagation();
-                      if (props.q.type === "Shen") {
-                        GraphCorrect.createRelation(props.q);
-                      } else {
-                        QiCorrect.createRelation(props.q);
-                      }
-                    }}
-                    whileTap={{ scale: 0.8 }}
-                    style={{
-                      borderRadius: "50%",
-                      height: 20,
-                      width: 20,
-                      scale: 0.7,
-                      display: "grid",
-                      placeItems: "center",
-                      border: `2px solid #777777`,
-                    }}
-                  >
-                    +
-                  </motion.div>
-                </motion.div>
+                </motion.div> */}
               </motion.div>
             </motion.div>
           </PortalFree>
@@ -355,9 +332,7 @@ export const AlphaBubble = observer(
 export const AlphaBubbleExample = () => {
   return (
     <Store>
-      <Xwrapper>
-        <AlphaBubble q={React.useContext(ShenContext)} />
-      </Xwrapper>
+      <AlphaBubble q={React.useContext(ShenContext)} />
     </Store>
   );
 };

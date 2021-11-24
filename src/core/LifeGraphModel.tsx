@@ -83,6 +83,7 @@ export const QiCorrect: Qi = {
         relations: new Map<QiT, RelationToRelation[]>(),
         energy: QiZhi(),
         causalRelations: new Map<QiT, CausalRelationToRelation[]>().set(
+          //@ts-ignore
           {time: DateTime.local(), type: "Time"},
           [">"]
         ),
@@ -91,7 +92,22 @@ export const QiCorrect: Qi = {
       return observable({
         type: "Shen",
         id: Date.now() + Math.random(),
-        information: {concept: {richText: "....", type: "RichText"}, type: "Concept"},
+        information: {
+          concept: {
+            richText: `
+        <p>
+      This is still the text editor you’re used to, but enriched with node views.
+    </p>
+    <bubble-extension>
+    </bubble-extension>
+    <p>
+      Did you see that? That’s a React component. We are really living in the future.
+    </p>
+        `,
+            type: "RichText",
+          },
+          type: "Concept",
+        },
         relations: new Map<QiT, RelationToRelation[]>(),
         energy: QiZhi(),
       }) as ShenT;
