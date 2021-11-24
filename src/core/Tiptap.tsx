@@ -32,9 +32,11 @@ export const Tiptap = (props: {content: Content, modShen?: (text: string) => voi
     onUpdate: action(({editor}) => {
       // send the content to an API here
       const json = editor.getJSON()
-      console.log("new text", json.content[0].content[0].text)
-      const text = json.content[0].content[0].text;
-      if (props.modShen) props.modShen(text)
+      if (json) {
+      // console.log("new text", json.content[0].content[0].text)
+      // const text = json.content[0].content[0].text;
+      // if (props.modShen) props.modShen(text)
+      }
     })
   })
 

@@ -1,16 +1,11 @@
 import React from "react";
 import { ShenContext, Store } from "./core/Store";
-import { Bubble } from "./view/Bubble";
+import { AlphaBubble, Bubble } from "./view/Bubble";
 
 const Main = () => {
   return (
     <Store>
-      <ShenContext.Consumer>
-        {(shen) => {
-        console.log("shen from consumer", shen)
-        return <Bubble q={shen} />}
-        }
-      </ShenContext.Consumer>
+      <AlphaBubble q={React.useContext(ShenContext)} />
     </Store>
   );
 };

@@ -98,8 +98,6 @@ export const QiCorrect: Qi = {
         <p>
       This is still the text editor you’re used to, but enriched with node views.
     </p>
-    <bubble-extension>
-    </bubble-extension>
     <p>
       Did you see that? That’s a React component. We are really living in the future.
     </p>
