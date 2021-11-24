@@ -1,5 +1,5 @@
 import ColorHash from "color-hash";
-import { motion } from "framer-motion";
+import { AnimateSharedLayout, motion } from "framer-motion";
 import { DateTime } from "luxon";
 import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
 import { action, isObservable } from "mobx";
@@ -105,7 +105,7 @@ export const Bubble = observer(
             layout
             style={{ display: "flex", justifyContent: "space-between" }}
           >
-            {"relations: "}
+            {/* {"relations: "}
             <motion.div layout style={{ display: "grid" }}>
               {Array.from(props.q.relations.entries()).map(
                 (keyValue, index) => (
@@ -158,7 +158,7 @@ export const Bubble = observer(
               >
                 +
               </motion.div>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
           <motion.div
             layout

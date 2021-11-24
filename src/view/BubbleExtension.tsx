@@ -1,15 +1,16 @@
 import { Node, mergeAttributes } from "@tiptap/core";
-import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
+import { NodeViewWrapper, ReactNodeViewRenderer, textblockTypeInputRule } from "@tiptap/react";
 import React from "react";
 import { QiCorrect } from "../core/LifeGraphModel";
 import { AlphaBubble } from "./Bubble";
+
+export const backtickInputRegex = /^```(?<language>[a-z]*)?[\s\n]$/
 
 export const BubbleExtension = Node.create({
   name: "bubbleExtension",
 
   group: "block",
 
-  atom: true,
 
   addAttributes() {
     return {
@@ -26,9 +27,18 @@ export const BubbleExtension = Node.create({
       },
     ];
   },
+  draggable: true,
 
   renderHTML({ HTMLAttributes }) {
     return ["bubble-extension", mergeAttributes(HTMLAttributes)];
+  },
+  addInputRules() {
+    return [
+      textblockTypeInputRule({
+        find: backtickInputRegex,
+        type: this.type,
+      }),
+    ]
   },
 
   addNodeView() {

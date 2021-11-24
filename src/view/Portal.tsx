@@ -99,8 +99,6 @@ export const PortalFree = (props: { children: any, id: string, hideDetail?: bool
   return (
     <motion.div
       id={props.id}
-      drag
-      dragConstraints={{ left: 10, right: 10, top: 10, bottom: 10 }}
       layout
       transition={{
         type: "spring",
