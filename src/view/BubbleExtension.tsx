@@ -11,6 +11,7 @@ export const BubbleExtension = Node.create({
 
   group: "block",
 
+  atom: true,
 
   addAttributes() {
     return {
