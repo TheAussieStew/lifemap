@@ -8,8 +8,8 @@ export const tildeInputRegex = /^```(?<language>[a-z]*)?[\s\n]$/
 
 export const BubbleExtension = Node.create({
   name: "bubbleExtension",
-  group: "inline",
-  inline: true,
+  group: "block",
+  content: "text*",
   parseHTML() {
     return [
       {
