@@ -22,9 +22,6 @@ const CustomStarterKit = StarterKit.extend({
 export const Tiptap = (props: {content: Content, modShen?: (text: string) => void}) => {
   const editor = useEditor({
     extensions: [
-      CodeBlockLowlight.configure({
-        lowlight,
-      }),
       CustomStarterKit,
       BubbleExtension,
     ],
@@ -33,7 +30,7 @@ export const Tiptap = (props: {content: Content, modShen?: (text: string) => voi
       // send the content to an API here
       const json = editor.getJSON()
       if (json) {
-      // console.log("new text", json.content[0].content[0].text)
+      console.log("changed, json:", json)
       // const text = json.content[0].content[0].text;
       // if (props.modShen) props.modShen(text)
       }
