@@ -4,12 +4,14 @@ import React from "react";
 import { QiCorrect } from "../core/LifeGraphModel";
 import { AlphaBubble } from "./Bubble";
 
-export const tildeInputRegex = /^```(?<language>[a-z]*)?[\s\n]$/
+export const tildeInputRegex = /~>$/
 
 export const BubbleExtension = Node.create({
   name: "bubbleExtension",
   group: "inline",
   inline: true,
+  selectable: false,
+  atom: true,
   parseHTML() {
     return [
       {
@@ -34,7 +36,7 @@ export const BubbleExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <AlphaBubble q={QiCorrect.createQi()} hideDetail={true}/>
+          <AlphaBubble q={QiCorrect.createQi()} hideDetail={true} />
         </NodeViewWrapper>
       );
     });

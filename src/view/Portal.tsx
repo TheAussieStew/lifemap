@@ -83,12 +83,12 @@ const Portal2 = (props: { text: string }) => {
 export const PortalFree = (props: { children: any, id: string, hideDetail?: boolean, backgroundColor?: string, update?: () => void }) => {
   type Expansion = "Expanded" | "Preview" | "Point"
   const [expansionState, setExpansionState] = React.useState<Expansion>(
-    props.hideDetail ? "Point" : "Expanded"
+    props.hideDetail ? "Preview" : "Expanded"
   );
   const cycleExpansionState = () => {
     if (expansionState === "Expanded") setExpansionState("Preview");
-    else if (expansionState === "Preview") setExpansionState("Point");
-    else if (expansionState === "Point") setExpansionState("Expanded");
+    else if (expansionState === "Preview") setExpansionState("Expanded");
+    // else if (expansionState === "Point") setExpansionState("Expanded");
   };
   const handleChildClick = (e: any) => {
     e.stopPropagation();
