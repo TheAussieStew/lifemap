@@ -213,13 +213,10 @@ export const AlphaBubble = observer(
 
     const updateXarrow = useXarrow()
 
-    let connections: any[] = []
-
     return (
-      <div style={{
+      <motion.div layout style={{
         display: "inline-block"
       }}>
-        {connections}
         {/* {props.q.type === "Qi" && (
           <motion.div layout id="causalRelations">
             <motion.div layout style={{ display: "grid" }}>
@@ -267,7 +264,7 @@ export const AlphaBubble = observer(
                   onClick={(e: any) => {
                     e.stopPropagation();
                   }}
-                  style={{ margin: `-16px 0 -16px 0` }}
+                  style={{ margin: `0 0 0 0` }}
                 >
                   <Tiptap
                     modShen={action((text: string) => {
@@ -324,7 +321,7 @@ export const AlphaBubble = observer(
             </motion.div>
           </PortalFree>
         </QiZhiWrapper>
-      </div>
+      </motion.div>
     );
   }
 );

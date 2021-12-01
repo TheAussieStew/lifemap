@@ -94,9 +94,8 @@ export const QiCorrect: Qi = {
         id: Date.now() + Math.random(),
         information: {
           concept: {
-            richText: 
-            `<p>
-            ...
+            richText: `<p>
+            ..
             </p>
             `,
             type: "RichText",
