@@ -94,9 +94,7 @@ export const QiCorrect: Qi = {
         id: Date.now() + Math.random(),
         information: {
           concept: {
-            richText: `<p>
-            ..
-            </p>
+            richText: `<h3>Welcome to Enkrateia</h3><p>Enkrateia is a next-generation collaborative personal wisdom management tool. It's based off data types and ways to view them called lenses. Both types and lenses are user customisable, so in a sense, this software contains functionality that makes it closer to a programming language rather than a traditional note taking tool. Feel free to play around with the example below. Note that if you want to save changes, or view your own personal copy, you'll have to login.</p><p>It's an example of a new type of software, one that is local-first, while also being enabled for online collaboration. This means that people don't have to stay online in order to do their work, they can work asynchronously and then go online when required. </p><p>From now on, I'll keep all my notes on Enkrateia, and online. I won't use any other note taking systems after I've made this.</p>
             `,
             type: "RichText",
           },

@@ -1,10 +1,8 @@
 {
-    "folders": [
-        {
-            "path": "."
-        },
-        {
-            "path": "../natural-ui"
-        }
-    ]
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
 }
