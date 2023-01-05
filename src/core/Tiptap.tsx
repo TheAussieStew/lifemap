@@ -1,9 +1,12 @@
 import React from 'react'
 import { useEditor, EditorContent, Content, BubbleMenu, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Collaboration from '@tiptap/extension-collaboration'
 import { BubbleExtension } from "../view/BubbleExtension";
 import { action } from 'mobx'
 import { motion } from 'framer-motion'
+import * as Y from 'yjs'
+import { HocuspocusProvider } from '@hocuspocus/provider'
 import './styles.scss'
 
 const MenuBar = (props: { editor: Editor | null }) => {
@@ -259,9 +262,22 @@ const CustomStarterKit = StarterKit.extend({
 });
 
 export const Tiptap = (props: {content: Content, modShen?: (text: string) => void}) => {
+  // A new Y document
+  const ydoc = new Y.Doc()
+
+  const provider = new HocuspocusProvider({
+    url: 'ws://127.0.0.1:1234',
+    name: 'example-document',
+  })
+
   const editor = useEditor({
     extensions: [
-      CustomStarterKit,
+      CustomStarterKit.configure({
+        history: false
+      }),
+      Collaboration.configure({
+        document: provider.document
+      }),
       BubbleExtension,
     ],
     content: props.content ? props.content : "",
