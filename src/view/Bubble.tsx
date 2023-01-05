@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { useXarrow } from "react-xarrows";
 import { action, isObservable } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import React from "react";
@@ -199,8 +198,6 @@ export const AlphaBubble = observer(
       tick: true,
     }));
 
-    const updateXarrow = useXarrow()
-
     return (
       <motion.div layout style={{
         display: "inline-block"
@@ -230,7 +227,6 @@ export const AlphaBubble = observer(
             update={action(() => {
               tick.tick ? (tick.tick = false) : (tick.tick = true);
               console.log("updating");
-              updateXarrow()
             })}
           >
             <motion.div
