@@ -114,9 +114,9 @@ export const PortalFree = (props: { children: any, id: string, hideDetail?: bool
       onClick={handleChildClick}
       style={{
         backgroundColor: props.backgroundColor,
-        borderRadius: 17,
+        borderRadius: 10,
         display: "inline-block",
-        border: `2px solid #777777`,
+        border: `2px solid #DDDDDD`,
         overflow: "hidden",
         width:
           expansionState === "Expanded"
@@ -145,7 +145,7 @@ export const PortalFree = (props: { children: any, id: string, hideDetail?: bool
 const truncate = (input: string) =>
   input.length > 5 ? `${input.substring(0, 5)}...` : input;
 
-const PortalExample = () => {
+export const PortalExample = () => {
   return (
     <AnimateSharedLayout>
       <Portal

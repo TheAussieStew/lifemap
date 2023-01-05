@@ -1,29 +1,20 @@
-import ColorHash from "color-hash";
-import { AnimateSharedLayout, motion } from "framer-motion";
-import { DateTime } from "luxon";
-import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
+import { motion } from "framer-motion";
+import { useXarrow } from "react-xarrows";
 import { action, isObservable } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import React from "react";
 import {
   QiT,
   ShenT,
-  ExampleShen,
-  RelationToRelation,
   QiCorrect,
-  Time,
   RichText,
-  GraphCorrect,
 } from "../core/LifeGraphModel";
 import { ShenContext, Store } from "../core/Store";
 import { Tiptap } from "../core/Tiptap";
-import { RefinedConnector } from "./components/Connector";
 import { PortalFree } from "./Portal";
-import { QiZhi, QiZhiWrapper } from "./QiZhi";
 
 export const Bubble = observer(
   (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
-    const colour = new ColorHash({ lightness: 0.9 }).hex(props.q.id.toString());
     let shen = React.useContext(ShenContext);
     let tick = useLocalObservable(() => ({
       tick: true,
@@ -33,7 +24,6 @@ export const Bubble = observer(
       <PortalFree
         id={props.q.id.toString()}
         hideDetail={props.hideDetail}
-        backgroundColor={colour}
         update={action(() => {
           tick.tick ? (tick.tick = false) : (tick.tick = true);
           console.log("updating");
@@ -165,7 +155,6 @@ export const Bubble = observer(
             style={{ display: "flex", alignItems: "center", gap: 20 }}
           >
             {"energy: " + props.q.energy}
-            <QiZhi energy={props.q.energy} />
           </motion.div>
           {props.q.type === "Qi" && (
             <motion.div layout id="causalRelations">
@@ -205,7 +194,6 @@ export const BubbleExample = () => {
 // While causal relations are left and right, next to, spatially
 export const AlphaBubble = observer(
   (props: { q: QiT | ShenT; hideDetail?: boolean }) => {
-    const colour = new ColorHash({ lightness: 0.9 }).hex(props.q.id.toString());
     let shen = React.useContext(ShenContext);
     let tick = useLocalObservable(() => ({
       tick: true,
@@ -236,11 +224,9 @@ export const AlphaBubble = observer(
             </motion.div>
           </motion.div>
         )} */}
-        <QiZhiWrapper energy={props.q.energy}>
           <PortalFree
             id={props.q.id.toString()}
             hideDetail={props.hideDetail}
-            backgroundColor={colour}
             update={action(() => {
               tick.tick ? (tick.tick = false) : (tick.tick = true);
               console.log("updating");
@@ -320,7 +306,6 @@ export const AlphaBubble = observer(
               </motion.div>
             </motion.div>
           </PortalFree>
-        </QiZhiWrapper>
       </motion.div>
     );
   }
