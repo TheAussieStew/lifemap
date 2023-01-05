@@ -25,11 +25,13 @@
     "luxon": "1.25.0",
     "mobx": "6.0.5",
     "mobx-react-lite": "3.2.0",
+    "postcss-normalize": "^10.0.1",
     "react": "16.13.0",
     "react-dom": "16.13.0",
     "react-scripts": "5.0.0",
     "shades": "2.1.0",
-    "typescript": "4.0.3"
+    "typescript": "4.0.3",
+    "web-vitals": "^3.1.0"
   },
   "scripts": {
     "dev": "react-scripts start",
