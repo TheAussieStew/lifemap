@@ -6,7 +6,8 @@ import { BubbleExtension } from "../view/BubbleExtension";
 import { action } from 'mobx'
 import { motion } from 'framer-motion'
 import * as Y from 'yjs'
-import { HocuspocusProvider } from '@hocuspocus/provider'
+import { IndexeddbPersistence } from 'y-indexeddb'
+// import { HocuspocusProvider } from '@hocuspocus/provider'
 import './styles.scss'
 
 const MenuBar = (props: { editor: Editor | null }) => {
@@ -265,10 +266,13 @@ export const Tiptap = (props: {content: Content, modShen?: (text: string) => voi
   // A new Y document
   const ydoc = new Y.Doc()
 
-  const provider = new HocuspocusProvider({
-    url: 'ws://127.0.0.1:1234',
-    name: 'example-document',
-  })
+  // Store the Y document in the browser
+  new IndexeddbPersistence('example-document', ydoc)
+
+  // const provider = new HocuspocusProvider({
+  //   url: 'ws://127.0.0.1:1234',
+  //   name: 'example-document',
+  // })
 
   const editor = useEditor({
     extensions: [
@@ -276,7 +280,7 @@ export const Tiptap = (props: {content: Content, modShen?: (text: string) => voi
         history: false
       }),
       Collaboration.configure({
-        document: provider.document
+        document: ydoc 
       }),
       BubbleExtension,
     ],

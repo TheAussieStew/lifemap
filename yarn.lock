@@ -8011,7 +8011,7 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lib0@^0.2.42, lib0@^0.2.46, lib0@^0.2.47, lib0@^0.2.49:
+lib0@^0.2.35, lib0@^0.2.42, lib0@^0.2.46, lib0@^0.2.47, lib0@^0.2.49:
   version "0.2.58"
   resolved "https://registry.yarnpkg.com/lib0/-/lib0-0.2.58.tgz#bb5326a1e028f72fd3a5bdb20e61404bff08d0a5"
   integrity sha512-6ovqPaYfOKU7GkkVxz/wjMR0zsqmNsISLvH+h9Lx5YNtWDZey69aYsTGXaSVpUPpJ+ZFtIvcZHsTGL3MbwOM8A==
@@ -11945,6 +11945,13 @@ xtend@~3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-3.0.0.tgz#5cce7407baf642cba7becda568111c493f59665a"
   integrity sha1-XM50B7r2Qsunvs2laBEcST9ZZlo=
+
+y-indexeddb@^9.0.9:
+  version "9.0.9"
+  resolved "https://registry.yarnpkg.com/y-indexeddb/-/y-indexeddb-9.0.9.tgz#fd360f6b62ce1b2d4127671fe73b4feb08de70b2"
+  integrity sha512-GcJbiJa2eD5hankj46Hea9z4hbDnDjvh1fT62E5SpZRsv8GcEemw34l1hwI2eknGcv5Ih9JfusT37JLx9q3LFg==
+  dependencies:
+    lib0 "^0.2.35"
 
 y-prosemirror@^1.2.0:
   version "1.2.0"
