@@ -2,11 +2,11 @@ import { Node, mergeAttributes } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import React from "react";
 import { QiCorrect } from "../core/LifeGraphModel";
-import { AlphaBubble } from "./Bubble";
+import { Group } from "./Group";
 
 export const tildeInputRegex = /~>$/
 
-export const BubbleExtension = Node.create({
+export const GroupExtension = Node.create({
   name: "bubbleExtension",
   group: "inline",
   inline: true,
@@ -36,7 +36,7 @@ export const BubbleExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <AlphaBubble q={QiCorrect.createQi()} hideDetail={true} />
+          <Group q={QiCorrect.createQi()} hideDetail={true} />
         </NodeViewWrapper>
       );
     });
