@@ -1,13 +1,9 @@
 import React from 'react'
 import { useEditor, EditorContent, Content, BubbleMenu, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import Collaboration from '@tiptap/extension-collaboration'
 import { GroupExtension } from "../view/GroupExtension";
-import { action } from 'mobx'
+import { action, comparer } from 'mobx'
 import { motion } from 'framer-motion'
-import * as Y from 'yjs'
-import { IndexeddbPersistence } from 'y-indexeddb'
-// import { HocuspocusProvider } from '@hocuspocus/provider'
 import './styles.scss'
 
 const MenuBar = (props: { editor: Editor | null }) => {
@@ -159,91 +155,6 @@ const MenuBar = (props: { editor: Editor | null }) => {
         <button onClick={() => editor.chain().focus().redo().run()}>
           redo
         </button>
-        {/* <button
-          onClick={() => editor.chain().focus().setTextAlign("left").run()}
-        >
-          left
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("center").run()}
-        >
-          centre
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("right").run()}
-        >
-          right
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-        >
-          justify
-        </button>
-        <button onClick={() => editor.chain().focus().unsetTextAlign().run()}>
-          set default
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setFontFamily("Cabin").run()}
-          className={
-            editor.isActive("textStyle", { fontFamily: "Cabin" })
-              ? "is-active"
-              : ""
-          }
-        >
-          Cabin Font
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().setFontFamily("Josefin Sans").run()
-          }
-          className={
-            editor.isActive("textStyle", { fontFamily: "Josefin Sans" })
-              ? "is-active"
-              : ""
-          }
-        >
-          Josefin Sans Font
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setFontSize("40px").run()}
-          className={
-            editor.isActive("textStyle", { fontSize: "40px" })
-              ? "is-active"
-              : ""
-          }
-        >
-          40 Pt
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setColor("#70CFF8").run()}
-          className={
-            editor.isActive("textStyle", { color: "#70CFF8" })
-              ? "is-active"
-              : ""
-          }
-        >
-          Blue
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setColor("#e53935").run()}
-          className={
-            editor.isActive("textStyle", { color: "#e53935" })
-              ? "is-active"
-              : ""
-          }
-        >
-          Red
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setColor("#FEFFFF").run()}
-          className={
-            editor.isActive("textStyle", { color: "#FEFFFF" })
-              ? "is-active"
-              : ""
-          }
-        >
-          White
-        </button> */}
       </motion.div>
     </BubbleMenu>
   );
@@ -262,50 +173,90 @@ const CustomStarterKit = StarterKit.extend({
   },
 });
 
-export const Tiptap = (props: {content: Content, modShen?: (text: string) => void}) => {
-  // A new Y document
-  const ydoc = new Y.Doc()
+// This component will first load in the default text
+// Then will load in the text referred to by the qiID
+export const RichText = (props: {
+  defaultContent: string | Content;
+  quantaId?: string;
+  editable?: boolean;
+}) => {
+  // First, load content
+  let content: Content = "Empty";
+  if (props.quantaId) {
+    console.log("quantaId", props.quantaId);
+    // TODO: Maybe use a converter, but Content has possible type null which DocumentData can't be
+    const docRef = doc(db, "contents", props.quantaId);
+    getDoc(docRef).then((doc) => {
+      // If Firestore reference exists, then set the document as the content
+      if (doc.exists()) {
+        content = doc.data() as Content;
+        if (editor && !comparer.structural(editor.getJSON(), content)) {
+          editor.commands.setContent(content);
+        }
+      } else {
+        // Otherwise, create a new doc
+        const content = {
+          type: "doc",
+          content: [
+            {
+              type: "paragraph",
+              attrs: { textAlign: "left" },
+              content: [{ type: "text", text: "Empty text" }],
+            },
+          ],
+        };
+        setDoc(docRef, content, { merge: true });
+      }
+      // Then change editor content
+      // if (content && editor) editor.commands.setContent(content)
+    });
+  } else if (typeof props.defaultContent === "string") {
+    content = props.defaultContent
+  } else {
+    content = props.defaultContent;
+  }
 
-  // Store the Y document in the browser
-  new IndexeddbPersistence('example-document', ydoc)
-
-  // const provider = new HocuspocusProvider({
-  //   url: 'ws://127.0.0.1:1234',
-  //   name: 'example-document',
-  // })
-
-  const editor = useEditor({
+  // Then, initialise editor
+  let editor = useEditor({
     extensions: [
-      CustomStarterKit.configure({
-        history: false
-      }),
-      Collaboration.configure({
-        document: ydoc 
-      }),
-      GroupExtension,
+      StarterKit,
     ],
-    content: props.content ? props.content : "",
-    onUpdate: action(({editor}) => {
-      // send the content to an API here
-      const json = editor.getJSON()
-      const html = editor.getHTML()
-      if (json) {
-      console.log("changed, json:", json)
-      // const text = json.content[0].content[0].text;
-      // if (props.modShen) props.modShen(text)
+    content: content,
+    onUpdate: ({ editor }) => {
+      if (props.quantaId) {
+        const contentJSON = editor.getJSON();
+        const docRef = doc(db, "contents", props.quantaId);
+        if (contentJSON) {
+          setDoc(docRef, editor.getJSON(), { merge: true });
+        }
+        console.log("Saved JSON to Firestore");
       }
-      if (html) {
-      console.log("changed, html:", html)
-      // const text = json.content[0].content[0].text;
-      // if (props.modShen) props.modShen(text)
-      }
-    })
-  })
+    },
+    editable: props.editable ? true : false,
+  });
 
   return (
     <>
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+      {props.editable && <MenuBar editor={editor} />}
+      {!props.editable && typeof props.defaultContent === "string" ? (
+        <div
+          style={{
+            fontFamily: "Josefin Sans",
+          }}
+        >
+          {props.defaultContent}
+        </div>
+      ) : (
+        <div style={{ marginTop: -18, marginBottom: -15 }}>
+          {editor && <EditorContent editor={editor} />}
+        </div>
+      )}
     </>
   );
-}
+};
+
+const ExampleRichText = () => {
+  const content = "To be or not to be is the question"
+  return <RichText defaultContent={content} editable={true} />;
+};
+
