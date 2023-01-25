@@ -1,12 +1,11 @@
 import React from "react";
-import { ShenContext, Store } from "./core/Store";
-import { Group } from "./view/Group";
+import Editor from "./core/Editor";
 
 const Main = () => {
   return (
-    <Store>
-      <Group q={React.useContext(ShenContext)} />
-    </Store>
+    <>
+      <Editor/>
+    </>
   );
 };
 
