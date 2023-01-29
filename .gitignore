@@ -15,6 +15,9 @@
 
 # misc
 .DS_Store
+
+# Secrets can only be stored in *.local files so they're
+# not checked in
 .env.local
 .env.development.local
 .env.test.local
