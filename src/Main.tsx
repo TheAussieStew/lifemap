@@ -1,10 +1,10 @@
 import React from "react";
-import Editor from "./core/Editor";
+import RichText from "./core/RichText";
 
 const Main = () => {
   return (
     <>
-      <Editor/>
+      <RichText/>
     </>
   );
 };
