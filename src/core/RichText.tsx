@@ -5,7 +5,6 @@ import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
 import { GroupExtension } from '../view/structure/GroupTipTapExtension'
 import { MathExtension } from '../view/content/MathTipTapExtension'
-import './styles.scss'
 
 const RichText = (props: { text: string | Y.Doc }) => {
 
