@@ -1,22 +1,13 @@
 import Collaboration from '@tiptap/extension-collaboration'
 import * as Y from 'yjs'
-import { IndexeddbPersistence } from 'y-indexeddb'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
 import { GroupExtension } from '../view/structure/GroupTipTapExtension'
-import { generateUniqueID } from '../utils/utils'
 import { MathExtension } from '../view/content/MathTipTapExtension'
+import './styles.scss'
 
-
-
-const Editor = () => {
-  const ydoc = new Y.Doc()
-  // A unique ID per document
-  const yDocumentName = generateUniqueID()
-  console.debug(yDocumentName)
-  // Store the Y document in the browser
-  new IndexeddbPersistence(yDocumentName, ydoc)
+const RichText = (props: { text: string | Y.Doc }) => {
 
   const editor = useEditor({
     extensions: [
@@ -24,12 +15,18 @@ const Editor = () => {
       StarterKit.configure({
         history: false
       }),
-      Collaboration.configure({
-        document: ydoc,
-      }),
+      // Collaboration.configure({
+      //   document: props.text,
+      // }),
       GroupExtension,
       MathExtension
     ],
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
+      },
+    },
+    content: "lel",
     onUpdate: ({ editor }) => {
       console.debug("JSON Output", editor.getJSON())
       console.debug("HTML Output", editor.getHTML())
@@ -47,4 +44,4 @@ const Editor = () => {
   )
 }
 
-export default Editor
+export default RichText

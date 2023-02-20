@@ -35,7 +35,7 @@ export const MathExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <Math equation={"1 + 1"}/>
+          <Math equationString={"1 + 1"}/>
         </NodeViewWrapper>
       );
     });

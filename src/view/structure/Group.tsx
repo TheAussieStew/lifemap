@@ -1,7 +1,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-export const Group = (props: {children: any}) => {
+export type GroupLenses = "verticalArray";
+
+export const Group = (props: {childrenNodes: any[], lens: GroupLenses}) => {
 
     return (
         <motion.div
@@ -15,7 +17,14 @@ export const Group = (props: {children: any}) => {
                 padding: `10px`,
             }}
         >
-            {props.children}
+            {props.childrenNodes}
         </motion.div>
+    )
+}
+
+export const GroupExample = () => {
+    const calculations: any[] = []
+    return (
+        <Group childrenNodes={calculations} lens={"verticalArray"}/>
     )
 }

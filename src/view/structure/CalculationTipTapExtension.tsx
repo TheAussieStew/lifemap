@@ -7,8 +7,12 @@ import { generateUniqueID } from "../../utils/utils";
 
 export const tildeInputRegex = /~>$/
 
-export const GroupExtension = Node.create({
-  name: "groupExtension",
+export const CalculationExtension = Node.create({
+  name: "calculationExtension",
+  // Can only contain a math and portal
+  // TODO: See if I can make this constraint more rigid
+  content: "(math | portal)+",
+  // TODO: Clarify whether this is allowed
   group: "(block & structure)",
   inline: false,
   selectable: false,
@@ -16,12 +20,12 @@ export const GroupExtension = Node.create({
   parseHTML() {
     return [
       {
-        tag: "group-extension",
+        tag: "calculation-extension",
       },
     ];
   },
   renderHTML({ HTMLAttributes }) {
-    return ["group-extension", mergeAttributes(HTMLAttributes)];
+    return ["calculation-extension", mergeAttributes(HTMLAttributes)];
   },
   draggable: true,
   addAttributes() {
@@ -44,9 +48,7 @@ export const GroupExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <Group>
-            <RichText roomName={generateUniqueID()}/>
-          </Group>
+          <Calculation/>
         </NodeViewWrapper>
       );
     });
