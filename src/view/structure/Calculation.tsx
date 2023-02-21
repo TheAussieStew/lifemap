@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { DisplayLens, EvaluationLens, Latex } from '../../core/Model';
-import { MathEquation } from '../content/Math';
+import { Math } from '../content/Math';
 
 export type GroupLenses = "verticalArray";
 
@@ -23,15 +23,8 @@ export const Calculation = (props: { equationString: string, lenses: [DisplayLen
                 display: "grid"
             }}
         >
-            <Math equationString={equationString} lenses={["natural", "identity"]} onChange={(equationString) => {
-                // Update the original equation store on update
-                setEquationString(equationString)
-                console.log(equationString)
-            } } />
-            <Math equationString={equationString} lenses={props.lenses} onChange={() => {
-                // Update the original equation store on update
-                console.log('evavl', equationString)
-            } } />
+            <Math equationString={equationString} lenses={["natural", "identity"]}/>
+            <Math equationString={equationString} lenses={props.lenses}/>
         </motion.div>
     );
 }
