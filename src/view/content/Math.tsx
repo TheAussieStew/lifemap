@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
 import { motion } from 'framer-motion'
 import MathView, { MathViewRef } from "react-math-view"
-import { ComputeEngine } from '@cortex-js/compute-engine';
-import { DisplayLens, EvaluationLens, Latex, MathJSON, MathLens } from '../../core/Model';
-import RichText from '../../core/RichText';
+import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
+import { DisplayLens, EvaluationLens, Latex, MathEquation, MathJSON, MathLens } from '../../core/Model';
+import { RichText } from '../../core/RichText';
+import { MathfieldElement, convertLatexToAsciiMath, convertLatexToMathMl, convertLatexToSpeakableText} from 'mathlive';
 
 
-export const Math = (props: { equationString: Latex, lenses: [DisplayLens, EvaluationLens], onChange: (equationString: Latex) => void }) => {
+export const Math = (props: { equationString: Latex, lenses: [DisplayLens, EvaluationLens] }) => {
     const ref = React.useRef<MathViewRef>(null)
     const toggleKeyboard = useCallback(
         () => ref.current?.executeCommand("toggleVirtualKeyboard"),
@@ -16,23 +17,12 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
     const ce = new ComputeEngine();
     const [equationString, setEquationString] = React.useState(props.equationString || "");
 
-    const onChange = useCallback((e: React.SyntheticEvent<any, any>) => {
-        setEquationString(e.currentTarget.getValue());
-        console.log(e.currentTarget.getValue())
-        props.onChange(e.currentTarget.getValue());
-      }, [props.onChange]);
-
-      React.useEffect(() => {
-        // Update 
-      }, [equationString]);
-
-    let expression = ce.parse(equationString)
+    let expression: BoxedExpression = ce.parse(equationString)
     let outputEquationString = ""
 
     // Configure evaluation mode
     switch (props.lenses[1]) {
         case "identity":
-            expression = expression;
             break;
         case "evaluate":
             expression = expression.evaluate();
@@ -47,21 +37,20 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
 
     // Check display lens to determine which format to display output
     // https://cortexjs.io/mathlive/guides/static/
+    // Convert to string
     switch (props.lenses[0]) {
         case "latex":
             // Use props.equation and feed into RichText view
             // Or try and activate latex editing mode
-            outputEquationString = expression.toString();
+            outputEquationString = expression.latex;
             
             break;
         case "linear":
-            if (ref.current) {
-                outputEquationString = ref.current.getValue('ascii-math');
-            }
-
+            outputEquationString = convertLatexToAsciiMath(expression.latex)
             break;
         case "mathjson":
-            outputEquationString = expression.toJSON().toString();
+            outputEquationString = expression.toString()
+            console.log("o", outputEquationString)
 
             break;
         case "natural":
@@ -78,9 +67,9 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
             {
                 {
                     'latex':
-                        <textarea
-                            value={outputEquationString}
-                            onChange={() => { }}
+                        <RichText
+                            text={outputEquationString}
+                            lenses={["text"]}
                         />,
                     'natural': 
                         <MathView
@@ -92,17 +81,16 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
                             }}
                             value={outputEquationString}
                             ref={ref}
-                            onChange={onChange}
                         />,
                     'linear': 
-                        <textarea
-                            value={outputEquationString}
-                            onChange={() => { }}
+                        <RichText
+                            text={outputEquationString}
+                            lenses={["code"]}
                         />,
                     'mathjson':
-                        <textarea
-                            value={outputEquationString}
-                            onChange={() => { }}
+                        <RichText
+                            text={outputEquationString}
+                            lenses={["code"]}
                         />,
                 }[props.lenses[0]]
             }
@@ -116,9 +104,6 @@ export const MathNaturalExample = () => {
 
     let equationString = computation;
     return (
-        <Math equationString={equationString} lenses={["natural", "numeric"]} onChange={() => {
-            // Update the original equation store on update
-            return "lol"
-        }} />
+        <Math equationString={equationString} lenses={["natural", "numeric"]} />
     )
 }
