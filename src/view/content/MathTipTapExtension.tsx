@@ -1,7 +1,7 @@
 import React from "react";
 import { Node, mergeAttributes } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
-import { Math } from "./Math";
+import { MathEquation } from "./Math";
 
 export const tildeInputRegex = /->$/
 

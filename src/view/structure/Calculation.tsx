@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { DisplayLens, EvaluationLens, Latex } from '../../core/Model';
-import { Math } from '../content/Math';
+import { MathEquation } from '../content/Math';
 
 export type GroupLenses = "verticalArray";
 
