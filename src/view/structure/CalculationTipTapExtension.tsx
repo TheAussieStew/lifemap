@@ -2,8 +2,9 @@ import React from "react";
 import { Node, mergeAttributes } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Group } from "./Group";
-import RichText from "../../core/RichText";
+import RichText from "../content/RichText";
 import { generateUniqueID } from "../../utils/utils";
+import { Calculation } from "./Calculation";
 
 export const tildeInputRegex = /~>$/
 
@@ -48,7 +49,7 @@ export const CalculationExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <Calculation/>
+          <Calculation equationString={""} lenses={["natural", "numeric"]}/>
         </NodeViewWrapper>
       );
     });

@@ -23,8 +23,10 @@ export const Calculation = (props: { equationString: string, lenses: [DisplayLen
                 display: "grid"
             }}
         >
-            <Math equationString={equationString} lenses={["natural", "identity"]}/>
-            <Math equationString={equationString} lenses={props.lenses}/>
+            <Math equationString={equationString} lenses={["natural", "identity"]} onChange={(change) => {
+            } }/>
+            <Math equationString={equationString} lenses={props.lenses} onChange={(change) => {
+            } }/>
         </motion.div>
     );
 }

@@ -1,7 +1,7 @@
 import React from "react";
-import { Node, mergeAttributes } from "@tiptap/core";
+import { Node, mergeAttributes, JSONContent } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
-import { MathEquation } from "./Math";
+import { Math } from "./Math";
 
 export const tildeInputRegex = /->$/
 
@@ -35,7 +35,9 @@ export const MathExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <Math equationString={"1 + 1"}/>
+          <Math equationString={"1 + 1"} lenses={["natural", "numeric"]} onChange={function (change: string | JSONContent): void {
+            //
+          } }/>
         </NodeViewWrapper>
       );
     });

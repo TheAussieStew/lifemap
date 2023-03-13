@@ -1,29 +1,37 @@
 import React from "react";
 import * as Y from 'yjs'
+import { useSyncedStore } from "@syncedstore/react";
 import { IndexeddbPersistence } from "y-indexeddb";
-import { generateUniqueID } from '../utils/utils'
+import * as mobx from "mobx";
+import syncedStore, { enableMobxBindings, getYjsDoc } from "@syncedstore/core";
+import { QiC, QiId, QiT, ShenT } from "../core/Model";
+import { TiptapTransformer } from '@hocuspocus/transformer'
+
+enableMobxBindings(mobx);
+
+const qi1 = new QiC()
+qi1.type = "ContextCreatedQi"
 
 // Handles storing and syncing information from a single qi to the database
-export const QiStore = (props: {children: any}) => {
-  const ydoc = new Y.Doc()
-  // A unique ID per document
-  // const yDocumentName = generateUniqueID()
-  // console.debug(yDocumentName)
+export const QiStoreContext = React.createContext<QiT>(qi1);
 
-  const roomName = props.roomName
+export const QiStore = (props: { qiId: QiId, userId: string, children: JSX.Element}) => {
+  // Initialise an empty ydoc to fill later with data from IndexedDB
+  const qi2 = new QiC()
+  qi2.type = "StoreCreatedQi"
+
+  const roomName = props.qiId
+
   // Sync the contents of the room with the empty ydoc
-  new IndexeddbPersistence(roomName, ydoc)
+  new IndexeddbPersistence("000000", qi2.information)
 
-  const yarray = ydoc.getArray('equations')
-  // Insert a single equation, I'm confused, will this be rendered automatically by TipTap if it uses this custom data structure?
-  yarray.insert(0, [new Y.Text("1+1")]);
-    const QiStoreContent = React.createContext<QiT>(DefaultQi());
+  return (
+    <QiStoreContext.Provider value={qi2}>
+      {props.children}
+    </QiStoreContext.Provider>
+  );
+}
 
-    let qi: QiT | ShenT = React.useContext(QiStoreContent);
-
-    return (
-        <QiStoreContent.Provider value={qi}>
-          {props.children}
-        </QiStoreContent.Provider>
-      );
+export const QiStoreUsage = () => {
+  let qi: QiT | ShenT = React.useContext(QiStoreContext);
 }
