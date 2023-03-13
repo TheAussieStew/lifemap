@@ -1,10 +1,10 @@
 import * as React from 'react';
-import Main from './Main';
+import { Qi } from './core/Qi';
 
 const App = () => {
   return (
     <React.StrictMode>
-      <Main/>
+      <Qi qiId={'000000'} userId={'000000'}/>
     </React.StrictMode>
   );
 };

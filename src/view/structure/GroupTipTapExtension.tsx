@@ -2,7 +2,7 @@ import React from "react";
 import { Node, mergeAttributes } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Group } from "./Group";
-import RichText from "../../core/RichText";
+import RichText from "../content/RichText";
 import { generateUniqueID } from "../../utils/utils";
 
 export const tildeInputRegex = /~>$/
@@ -44,8 +44,8 @@ export const GroupExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <Group>
-            <RichText roomName={generateUniqueID()}/>
+          <Group lens={"verticalArray"}>
+            {/* <RichText roomName={"000000"} /> */}
           </Group>
         </NodeViewWrapper>
       );

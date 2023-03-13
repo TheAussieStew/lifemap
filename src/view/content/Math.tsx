@@ -3,16 +3,19 @@ import { motion } from 'framer-motion'
 import MathView, { MathViewRef } from "react-math-view"
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
 import { DisplayLens, EvaluationLens, Latex, MathEquation, MathJSON, MathLens } from '../../core/Model';
-import { RichText } from '../../core/RichText';
+import { RichText } from './RichText';
 import { MathfieldElement, convertLatexToAsciiMath, convertLatexToMathMl, convertLatexToSpeakableText} from 'mathlive';
+import { JSONContent } from '@tiptap/react';
 
-
-export const Math = (props: { equationString: Latex, lenses: [DisplayLens, EvaluationLens] }) => {
+export const Math = (props: { equationString: Latex, lenses: [DisplayLens, EvaluationLens], onChange: (change: string | JSONContent) => void }) => {
     const ref = React.useRef<MathViewRef>(null)
     const toggleKeyboard = useCallback(
         () => ref.current?.executeCommand("toggleVirtualKeyboard"),
         [ref]
     )
+
+    // is<Latex>(props.equationString);
+
 
     const ce = new ComputeEngine();
     const [equationString, setEquationString] = React.useState(props.equationString || "");
@@ -25,12 +28,15 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
         case "identity":
             break;
         case "evaluate":
+            // @ts-ignore
             expression = expression.evaluate();
             break;
         case "simplify":
+            // @ts-ignore
             expression = expression.simplify();
             break;
         case "numeric":
+            // @ts-ignore
             expression = expression.N();
             break;
     }
@@ -42,10 +48,12 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
         case "latex":
             // Use props.equation and feed into RichText view
             // Or try and activate latex editing mode
+            // @ts-ignore
             outputEquationString = expression.latex;
             
             break;
         case "linear":
+            // @ts-ignore
             outputEquationString = convertLatexToAsciiMath(expression.latex)
             break;
         case "mathjson":
@@ -55,7 +63,8 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
             break;
         case "natural":
             // N/A
-            outputEquationString = expression.latex.toString();
+            // @ts-ignore
+            outputEquationString = expression.latex
 
             break;
         default:
@@ -70,6 +79,7 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
                         <RichText
                             text={outputEquationString}
                             lenses={["text"]}
+                            onChange={props.onChange}
                         />,
                     'natural': 
                         <MathView
@@ -80,17 +90,24 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
                                 display: "inline-block",
                             }}
                             value={outputEquationString}
+                            onChange={(e: React.SyntheticEvent<any, any>) => {
+                                // console.log('value', e.currentTarget.getValue('spoken'), ref.current?.getValue('latex'));
+                                console.log(e.currentTarget.getValue('latex'))
+                                props.onChange(e.currentTarget.getValue('latex'))
+                            }}
                             ref={ref}
                         />,
                     'linear': 
                         <RichText
                             text={outputEquationString}
                             lenses={["code"]}
+                            onChange={props.onChange}
                         />,
                     'mathjson':
                         <RichText
                             text={outputEquationString}
                             lenses={["code"]}
+                            onChange={props.onChange}
                         />,
                 }[props.lenses[0]]
             }
@@ -104,6 +121,6 @@ export const MathNaturalExample = () => {
 
     let equationString = computation;
     return (
-        <Math equationString={equationString} lenses={["natural", "numeric"]} />
+        <Math equationString={equationString} lenses={["natural", "numeric"]} onChange={() => { return }} />
     )
 }
