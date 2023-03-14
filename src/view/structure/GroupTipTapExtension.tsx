@@ -4,6 +4,7 @@ import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/r
 import { Group } from "./Group";
 import RichText from "../content/RichText";
 import { generateUniqueID } from "../../utils/utils";
+import { Qi } from "../../core/Qi";
 
 export const tildeInputRegex = /~>$/
 
@@ -45,7 +46,7 @@ export const GroupExtension = Node.create({
       return (
         <NodeViewWrapper>
           <Group lens={"verticalArray"}>
-            {/* <RichText roomName={"000000"} /> */}
+            <Qi qiId={"000001"} userId={""} />
           </Group>
         </NodeViewWrapper>
       );

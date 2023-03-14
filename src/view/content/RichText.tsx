@@ -1,17 +1,20 @@
 import React from 'react'
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import { lowlight } from 'lowlight'
-import js from 'highlight.js/lib/languages/javascript'
-import Collaboration from '@tiptap/extension-collaboration'
-import * as Y from 'yjs'
 import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
+import Collaboration from '@tiptap/extension-collaboration'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import js from 'highlight.js/lib/languages/javascript'
+import { lowlight } from 'lowlight'
+import * as Y from 'yjs'
 import { GroupExtension } from '../structure/GroupTipTapExtension'
 import { MathExtension } from './MathTipTapExtension'
-import './styles.scss'
 import { QiC, QiC_2, QiT, SectionLens } from '../../core/Model'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { TiptapTransformer } from '@hocuspocus/transformer'
+import './styles.scss'
+import { Indent } from '../../utils/Indent'
 
 lowlight.registerLanguage('js', js)
 
@@ -47,9 +50,14 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     CodeBlockLowlight.configure({
       lowlight,
     }),
+    TaskList,
+    TaskItem.configure({
+      nested: true,
+    }),
     // Add our custom extensions below
     GroupExtension,
     MathExtension,
+    Indent
   ]
 
   // if (typeof props.text !== "string") {
@@ -71,7 +79,7 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     onUpdate: ({ editor }) => {
       props.onChange(editor.getJSON())
       // console.debug("JSON Output", editor.getJSON())
-      // console.debug("HTML Output", editor.getHTML())
+      console.debug("HTML Output", editor.getHTML())
     },
   })
 
