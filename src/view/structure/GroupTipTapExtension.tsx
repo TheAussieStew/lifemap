@@ -7,12 +7,13 @@ import { generateUniqueID } from "../../utils/utils";
 import { Qi } from "../../core/Qi";
 
 export const tildeInputRegex = /~>$/
+export const groupInputRegex = /^\s*(\(\))\s$/
 
 export const GroupExtension = Node.create({
   name: "groupExtension",
-  group: "(block & structure)",
+  group: "block",
   inline: false,
-  selectable: false,
+  selectable: true,
   atom: true,
   parseHTML() {
     return [
@@ -35,7 +36,7 @@ export const GroupExtension = Node.create({
   addInputRules() {
     return [
       nodeInputRule({
-        find: tildeInputRegex,
+        find: groupInputRegex,
         type: this.type,
         getAttributes: ({ groups }) => groups,
       }),
@@ -46,7 +47,7 @@ export const GroupExtension = Node.create({
       return (
         <NodeViewWrapper>
           <Group lens={"verticalArray"}>
-            <Qi qiId={"000001"} userId={""} />
+            {/* <Qi qiId={"000009"} userId={""} /> */}
           </Group>
         </NodeViewWrapper>
       );
