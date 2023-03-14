@@ -6,15 +6,14 @@ import TaskList from '@tiptap/extension-task-list'
 import Collaboration from '@tiptap/extension-collaboration'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import js from 'highlight.js/lib/languages/javascript'
-import { lowlight } from 'lowlight'
 import * as Y from 'yjs'
+import { QiC, QiT, SectionLens } from '../../core/Model'
+import { lowlight } from 'lowlight'
 import { GroupExtension } from '../structure/GroupTipTapExtension'
 import { MathExtension } from './MathTipTapExtension'
-import { QiC, QiC_2, QiT, SectionLens } from '../../core/Model'
-import { IndexeddbPersistence } from 'y-indexeddb'
-import { TiptapTransformer } from '@hocuspocus/transformer'
-import './styles.scss'
 import { Indent } from '../../utils/Indent'
+import './styles.scss'
+import { IndexeddbPersistence } from 'y-indexeddb'
 
 lowlight.registerLanguage('js', js)
 
@@ -32,14 +31,6 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     default:
       break;
   }
-
-  let ydoc = new Y.Doc()
-  new IndexeddbPersistence("000000", ydoc)
-  let qi = new QiC()
-  let qi2 = new QiC_2()
-  new IndexeddbPersistence("000000", qi2.information)
-  const prosemirrorJSON = TiptapTransformer.fromYdoc(qi2.information)
-  console.debug("prosemirrorJSON from within RichText", prosemirrorJSON)
 
   let extensions: Extensions = [
     // Add official extensions
@@ -77,8 +68,8 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     },
     content: content,
     onUpdate: ({ editor }) => {
-      props.onChange(editor.getJSON())
-      // console.debug("JSON Output", editor.getJSON())
+      // props.onChange(editor.getJSON())
+      console.debug("JSON Output", editor.getJSON())
       console.debug("HTML Output", editor.getHTML())
     },
   })

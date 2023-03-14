@@ -1,13 +1,6 @@
 import React from "react";
-import * as Y from 'yjs'
-import { useSyncedStore } from "@syncedstore/react";
 import { IndexeddbPersistence } from "y-indexeddb";
-import * as mobx from "mobx";
-import syncedStore, { enableMobxBindings, getYjsDoc } from "@syncedstore/core";
 import { QiC, QiId, QiT, ShenT } from "../core/Model";
-import { TiptapTransformer } from '@hocuspocus/transformer'
-
-enableMobxBindings(mobx);
 
 const qi1 = new QiC()
 qi1.type = "ContextCreatedQi"
