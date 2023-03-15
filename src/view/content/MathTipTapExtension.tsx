@@ -6,7 +6,7 @@ import { Math } from "./Math";
 export const tildeInputRegex = /->$/
 
 export const MathExtension = Node.create({
-  name: "mathExtension",
+  name: "math",
   group: "inline",
   inline: true,
   selectable: false,
@@ -14,12 +14,12 @@ export const MathExtension = Node.create({
   parseHTML() {
     return [
       {
-        tag: "math-extension",
+        tag: "math",
       },
     ];
   },
   renderHTML({ HTMLAttributes }) {
-    return ["math-extension", mergeAttributes(HTMLAttributes)];
+    return ["math", mergeAttributes(HTMLAttributes)];
   },
   draggable: true,
   addInputRules() {

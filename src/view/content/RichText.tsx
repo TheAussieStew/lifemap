@@ -3,7 +3,8 @@ import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
-import Collaboration from '@tiptap/extension-collaboration'
+import Collaboration, { isChangeOrigin } from '@tiptap/extension-collaboration'
+import UniqueID from '@tiptap-pro/extension-unique-id'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import js from 'highlight.js/lib/languages/javascript'
 import * as Y from 'yjs'
@@ -45,6 +46,11 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     TaskItem.configure({
       nested: true,
     }),
+    UniqueID.configure({
+      types: ['group', 'paragraph'],
+      filterTransaction: transaction => !isChangeOrigin(transaction),
+      attributeName: 'qiId',
+    }),
     // Add our custom extensions below
     GroupExtension,
     MathExtension,
@@ -66,7 +72,7 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
       },
     },
-    content: content,
+    // content: content,
     onUpdate: ({ editor }) => {
       // props.onChange(editor.getJSON())
       console.debug("JSON Output", editor.getJSON())
