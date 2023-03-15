@@ -6,10 +6,7 @@ import RichText from "./content/RichText";
 // Handles different views of a single qi
 // This view is the equivalent of a single window in the app and design
 export const QiView = (props: { qi: QiT | ShenT }) => {
-
-  console.debug("qi type", props.qi.type)
   let qi = React.useContext(QiStoreContext)
-  console.debug("qi2 type", qi.type)
 
   // Create a Lens selector
   const Lens = () => {

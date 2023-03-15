@@ -2517,6 +2517,13 @@
   dependencies:
     "@babel/runtime" "^7.10.2"
 
+"@tiptap-pro/extension-unique-id@^2.0.0-beta.237":
+  version "2.0.0-beta.237"
+  resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-unique-id/-/extension-unique-id-2.0.0-beta.237.tgz#7a2a398e3dd689e4d5b34f17cbfc35f69639a731"
+  integrity sha512-nxh03M5ZgVwSOEgb+6+eNl5jjH6e19bWZPkaCZM/b8Ge3rrQunX9QTdUnHF/EAiGz/nXLf5PWGsPwhNQlI6B7Q==
+  dependencies:
+    uuid "^8.3.2"
+
 "@tiptap/core@2.0.0-beta.209", "@tiptap/core@^2.0.0-beta.174", "@tiptap/core@^2.0.0-beta.209":
   version "2.0.0-beta.209"
   resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.0.0-beta.209.tgz#fd0edb8f87a5eea70c6a11e0d7e628738a10ef3f"

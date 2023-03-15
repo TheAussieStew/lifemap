@@ -9,7 +9,7 @@ import { Calculation } from "./Calculation";
 export const tildeInputRegex = /~>$/
 
 export const CalculationExtension = Node.create({
-  name: "calculationExtension",
+  name: "calculation",
   // Can only contain a math and portal
   // TODO: See if I can make this constraint more rigid
   content: "(math | portal)+",
@@ -21,12 +21,12 @@ export const CalculationExtension = Node.create({
   parseHTML() {
     return [
       {
-        tag: "calculation-extension",
+        tag: "calculation",
       },
     ];
   },
   renderHTML({ HTMLAttributes }) {
-    return ["calculation-extension", mergeAttributes(HTMLAttributes)];
+    return ["calculation", mergeAttributes(HTMLAttributes)];
   },
   draggable: true,
   addAttributes() {

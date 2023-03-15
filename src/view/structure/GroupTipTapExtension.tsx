@@ -1,5 +1,6 @@
 import React from "react";
 import { Node, mergeAttributes } from "@tiptap/core";
+import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Group } from "./Group";
 import RichText from "../content/RichText";
@@ -7,10 +8,10 @@ import { generateUniqueID } from "../../utils/utils";
 import { Qi } from "../../core/Qi";
 
 export const tildeInputRegex = /~>$/
-export const groupInputRegex = /^\s*(\(\))\s$/
+export const groupInputRegex = /^\s*(\( \))\s$/
 
 export const GroupExtension = Node.create({
-  name: "groupExtension",
+  name: "group",
   group: "block",
   inline: false,
   selectable: true,
@@ -18,21 +19,14 @@ export const GroupExtension = Node.create({
   parseHTML() {
     return [
       {
-        tag: "group-extension",
+        tag: "group",
       },
     ];
   },
   renderHTML({ HTMLAttributes }) {
-    return ["group-extension", mergeAttributes(HTMLAttributes)];
+    return ["group", HTMLAttributes];
   },
   draggable: true,
-  addAttributes() {
-    return {
-      guid: {
-        default: 0,
-      },
-    }
-  },
   addInputRules() {
     return [
       nodeInputRule({
@@ -43,11 +37,12 @@ export const GroupExtension = Node.create({
     ]
   },
   addNodeView() {
+    // TODO: props should be typed
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
           <Group lens={"verticalArray"}>
-            {/* <Qi qiId={"000009"} userId={""} /> */}
+            <Qi qiId={props.node.attrs.qiId} userId={""} />
           </Group>
         </NodeViewWrapper>
       );
