@@ -1,4 +1,9 @@
 /* Basic editor styles */
+
+.ProseMirror:focus {
+  outline: none;
+}
+
 .ProseMirror {
   >*+* {
     margin-top: 0em;
