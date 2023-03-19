@@ -27,7 +27,7 @@ export const Group = (props: { children: any, lens: GroupLenses }) => {
                 }}
                 transition={{
                     type: "ease",
-                    duration: 0.3
+                    duration: 0.4
                 }}
                 style={{
                     minHeight: 20,
