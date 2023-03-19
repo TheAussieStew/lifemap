@@ -3,6 +3,7 @@ import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
+import Heading from '@tiptap/extension-heading'
 import Collaboration, { isChangeOrigin } from '@tiptap/extension-collaboration'
 import UniqueID from '@tiptap-pro/extension-unique-id'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
@@ -15,11 +16,12 @@ import { MathExtension } from './MathTipTapExtension'
 import { Indent } from '../../utils/Indent'
 import './styles.scss'
 import { IndexeddbPersistence } from 'y-indexeddb'
+import { FlowMenu } from '../structure/FlowMenu'
 
 lowlight.registerLanguage('js', js)
 
 export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [SectionLens], onChange: (change: string | JSONContent) => void }) => {
-  let content = props.text
+  const isYDoc = typeof props.text !== "string";
   switch (props.lenses[0]) {
     case "code":
       // content = `<pre><code class="language-javascript">${props.text}</pre></code>`
@@ -46,6 +48,9 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     TaskItem.configure({
       nested: true,
     }),
+    Heading.configure({
+      levels: [1, 2, 3, 4],
+    }),
     UniqueID.configure({
       types: ['group', 'paragraph'],
       filterTransaction: transaction => !isChangeOrigin(transaction),
@@ -57,13 +62,13 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     Indent
   ]
 
-  // if (typeof props.text !== "string") {
+  if (isYDoc) {
     extensions.push(
       Collaboration.configure({
         document: props.qi!.information,
       }),
     )
-  // }
+  }
 
   const editor = useEditor({
     extensions: extensions,
@@ -72,7 +77,7 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
       },
     },
-    // content: content,
+    content: isYDoc ? null : props.text,
     onUpdate: ({ editor }) => {
       // props.onChange(editor.getJSON())
       console.debug("JSON Output", editor.getJSON())
@@ -87,7 +92,10 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
   }
 
   return (
-    <EditorContent editor={editor} />
+    <>
+      <FlowMenu editor={editor} />
+      <EditorContent editor={editor} />
+    </>
   )
 }
 
