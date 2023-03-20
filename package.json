@@ -7,8 +7,6 @@
     "@capacitor/core": "^4.6.2",
     "@capacitor/ios": "^4.6.2",
     "@cortex-js/compute-engine": "^0.12.2",
-    "@deepkit/core": "^1.0.1-alpha.89",
-    "@deepkit/type": "^1.0.1-alpha.91",
     "@hocuspocus/cli": "^1.0.0",
     "@hocuspocus/provider": "^1.0.0",
     "@hocuspocus/server": "^1.0.0",
