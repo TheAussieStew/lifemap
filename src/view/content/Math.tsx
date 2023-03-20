@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { motion } from 'framer-motion'
 import MathView, { MathViewRef } from "react-math-view"
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
-import { DisplayLens, EvaluationLens, Latex, MathEquation, MathJSON, MathLens } from '../../core/Model';
+import { DisplayLens, EvaluationLens, Latex } from '../../core/Model';
 import { RichText } from './RichText';
 import { MathfieldElement, convertLatexToAsciiMath, convertLatexToMathMl, convertLatexToSpeakableText} from 'mathlive';
 import { JSONContent } from '@tiptap/react';

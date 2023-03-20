@@ -20,6 +20,10 @@ export const QiView = (props: { qi: QiT | ShenT }) => {
             console.log(change) 
           }}
         />;
+      // case 'maths':
+      //     <Math equationString={props.qi.information} lenses={["natural", "numeric"]} onChange={function (change: string | JSONContent): void {
+      //       //
+      //     } }/>
       default:
         return <>Empty</>;
     }

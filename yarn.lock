@@ -1566,7 +1566,7 @@
   resolved "https://registry.yarnpkg.com/@deepkit/type-spec/-/type-spec-1.0.1-alpha.89.tgz#4c1491f30f0f12671f872280e1e3ab4de5bbeb8c"
   integrity sha512-g+KTTw5FqtKYHlYInfxd+7sSv2M1XI9GFfzrxvpp8f5FxU/bU3sGzAcd2dXU4ksu1Z+PwoJsLV363OrT+3gmqQ==
 
-"@deepkit/type@^1.0.1-alpha.90":
+"@deepkit/type@^1.0.1-alpha.91":
   version "1.0.1-alpha.91"
   resolved "https://registry.yarnpkg.com/@deepkit/type/-/type-1.0.1-alpha.91.tgz#e2399a675a4aa0ff0ceca4a28c796e9643345de4"
   integrity sha512-TWyR2H7kFTiPhnup7lz0NmF3kPKMQpwN6Y3wfIentGeW8B3e9uy4Tb3OfymeZ/JLE4S4oAGHPTBRYucG8bX1aA==
@@ -2599,6 +2599,11 @@
   dependencies:
     tippy.js "^6.3.7"
 
+"@tiptap/extension-font-family@^2.0.0-beta.220":
+  version "2.0.0-beta.220"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-font-family/-/extension-font-family-2.0.0-beta.220.tgz#95c2e6f23e2fcf5182101a30ddd9cebb058344b9"
+  integrity sha512-pfc90SvUdTbD4bQBNbl3G6f7qzIjwLTOn0ddYLLqJhAb08xjt+emxPq86xv7npWmoGjAwPH3iGV4HpQEcKPuwQ==
+
 "@tiptap/extension-gapcursor@2.0.0-beta.33":
   version "2.0.0-beta.33"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-gapcursor/-/extension-gapcursor-2.0.0-beta.33.tgz#99414204e61655d4df61efc27823732176719532"
@@ -2671,6 +2676,11 @@
   version "2.0.0-beta.220"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-task-list/-/extension-task-list-2.0.0-beta.220.tgz#ba349d84dfb9fd5dff90bfea8fb234cd90383d78"
   integrity sha512-Hix7/Er4T4xKz4uLTxniJaDtcctmooaxoHiHv4yDUOXZYiK5BZypr8cbCcUaoD3qpfGe8O5JBzY2sbwk0PkNwA==
+
+"@tiptap/extension-text-style@^2.0.0-beta.220":
+  version "2.0.0-beta.220"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-text-style/-/extension-text-style-2.0.0-beta.220.tgz#d72f2ee3247a14a1fc6702145ede83ddcc8de97a"
+  integrity sha512-eKavMVrVrnHq/iR1ksyPvoJTfiT6rxDKYZoN8WifqRyOz/y+TjuqH/AzV6NgAU+mSu6c0AY7a3Y0FfFU2BV7JA==
 
 "@tiptap/extension-text@^2.0.0-beta.209":
   version "2.0.0-beta.209"
