@@ -11,6 +11,27 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
             {props.editor && <BubbleMenu editor={props.editor} tippyOptions={{ duration: 100 }}>
                 <button
                     // @ts-ignore
+                    onClick={() => props.editor.chain().focus().setFontFamily('EB Garamond').run()}
+                    className={props.editor.isActive('textStyle', { fontFamily: 'EB Garamond' }) ? 'is-active' : ''}
+                >
+                    EB Garamond
+                </button>
+                <button
+                    // @ts-ignore
+                    onClick={() => props.editor.chain().focus().setFontFamily('Manrope').run()}
+                    className={props.editor.isActive('textStyle', { fontFamily: 'Manrope' }) ? 'is-active' : ''}
+                >
+                    Manrope
+                </button>
+                <button
+                    // @ts-ignore
+                    onClick={() => props.editor.chain().focus().setFontFamily('Inter').run()}
+                    className={props.editor.isActive('textStyle', { fontFamily: 'Inter' }) ? 'is-active' : ''}
+                >
+                    Inter
+                </button>
+                <button
+                    // @ts-ignore
                     onClick={() => props.editor.chain().focus().toggleBold().run()}
                     className={props.editor.isActive('bold') ? 'is-active' : ''}
                 >

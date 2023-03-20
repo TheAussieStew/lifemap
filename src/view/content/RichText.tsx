@@ -3,24 +3,24 @@ import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
+import FontFamily from '@tiptap/extension-font-family'
+import TextStyle from '@tiptap/extension-text-style'
 import Heading from '@tiptap/extension-heading'
 import Collaboration, { isChangeOrigin } from '@tiptap/extension-collaboration'
 import UniqueID from '@tiptap-pro/extension-unique-id'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import js from 'highlight.js/lib/languages/javascript'
-import * as Y from 'yjs'
-import { QiC, QiT, SectionLens } from '../../core/Model'
+import { QiC, QiT, TextSectionLens, RichTextT } from '../../core/Model'
 import { lowlight } from 'lowlight'
 import { GroupExtension } from '../structure/GroupTipTapExtension'
 import { MathExtension } from './MathTipTapExtension'
 import { Indent } from '../../utils/Indent'
-import './styles.scss'
-import { IndexeddbPersistence } from 'y-indexeddb'
 import { FlowMenu } from '../structure/FlowMenu'
+import './styles.scss'
 
 lowlight.registerLanguage('js', js)
 
-export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [SectionLens], onChange: (change: string | JSONContent) => void }) => {
+export const RichText = (props: { qi?: QiT, text: RichTextT, lenses: [TextSectionLens], onChange: (change: string | JSONContent) => void }) => {
   const isYDoc = typeof props.text !== "string";
   switch (props.lenses[0]) {
     case "code":
@@ -39,7 +39,11 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     // Add official extensions
     // @ts-ignore
     StarterKit.configure({
-      history: false
+      // Here undefined is the equivalent of true
+      // TODO: Problem, it looks like when setting this to false
+      // collaboration history doesn't take over...
+      // history: isYDoc ? false : undefined
+      history: undefined
     }),
     CodeBlockLowlight.configure({
       lowlight,
@@ -50,6 +54,10 @@ export const RichText = (props: { qi?: QiT, text: string | Y.Doc, lenses: [Secti
     }),
     Heading.configure({
       levels: [1, 2, 3, 4],
+    }),
+    TextStyle,
+    FontFamily.configure({
+      types: ['textStyle'],
     }),
     UniqueID.configure({
       types: ['group', 'paragraph'],
