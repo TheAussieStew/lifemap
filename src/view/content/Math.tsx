@@ -2,29 +2,29 @@ import React, { useCallback } from 'react'
 import { motion } from 'framer-motion'
 import MathView, { MathViewRef } from "react-math-view"
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
-import { DisplayLens, EvaluationLens, Latex } from '../../core/Model';
-import { RichText } from './RichText';
+import { DisplayLens, EvaluationLens, Latex, MathsLoupe, MathsLoupeC, QiC, QiT } from '../../core/Model';
+import { CustomisedEditor, RichText } from './RichText';
 import { MathfieldElement, convertLatexToAsciiMath, convertLatexToMathMl, convertLatexToSpeakableText} from 'mathlive';
 import { JSONContent } from '@tiptap/react';
+import { check } from '../../generated/check';
+import { Qi } from '../../core/Qi';
 
-export const Math = (props: { equationString: Latex, lenses: [DisplayLens, EvaluationLens], onChange: (change: string | JSONContent) => void }) => {
+export const Math = (props: { qi: QiT, equationString?: Latex, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
     const ref = React.useRef<MathViewRef>(null)
     const toggleKeyboard = useCallback(
         () => ref.current?.executeCommand("toggleVirtualKeyboard"),
         [ref]
     )
-
-    // is<Latex>(props.equationString);
-
+    const text = props.qi.informationText
 
     const ce = new ComputeEngine();
-    const [equationString, setEquationString] = React.useState(props.equationString || "");
+    const [equationString, setEquationString] = React.useState(text|| "");
 
     let expression: BoxedExpression = ce.parse(equationString)
     let outputEquationString = ""
 
     // Configure evaluation mode
-    switch (props.lenses[1]) {
+    switch (props.loupe.evaluationLenses[props.loupe.selectedEvaluationLens]) {
         case "identity":
             break;
         case "evaluate":
@@ -44,7 +44,7 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
     // Check display lens to determine which format to display output
     // https://cortexjs.io/mathlive/guides/static/
     // Convert to string
-    switch (props.lenses[0]) {
+    switch (props.loupe.displayLenses[props.loupe.selectedDisplayLens]) {
         case "latex":
             // Use props.equation and feed into RichText view
             // Or try and activate latex editing mode
@@ -58,7 +58,6 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
             break;
         case "mathjson":
             outputEquationString = expression.toString()
-            console.log("o", outputEquationString)
 
             break;
         case "natural":
@@ -83,7 +82,7 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
                         />,
                     'natural': 
                         <MathView
-                            readOnly={props.lenses[1] !== "identity"}
+                            readOnly={props.loupe.evaluationLenses[props.loupe.selectedEvaluationLens] !== "identity"}
                             style={{
                                 fontSize: 25,
                                 fontFamily: "SF Pro",
@@ -109,7 +108,7 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
                             lenses={["code"]}
                             onChange={props.onChange}
                         />,
-                }[props.lenses[0]]
+                }[props.loupe.displayLenses[props.loupe.selectedDisplayLens]]
             }
         </>
     )
@@ -118,9 +117,23 @@ export const Math = (props: { equationString: Latex, lenses: [DisplayLens, Evalu
 export const MathNaturalExample = () => {
     const computation = `10 * 12`
     const quadraticFormula = String.raw`x=\frac{-b\pm \sqrt{b^2-4ac}}{2a}`
-
+    let qi: QiT = new QiC()
+    qi.informationTypeName = 'maths' 
+    let mathsLoupe = new MathsLoupeC()
     let equationString = computation;
     return (
-        <Math equationString={equationString} lenses={["natural", "numeric"]} onChange={() => { return }} />
+        <Math qi={qi} equationString={equationString} loupe={mathsLoupe} onChange={() => { return }} />
+    )
+}
+
+export const MathWithQiExample = () => {
+    const computation = `10 * 12`
+    const quadraticFormula = String.raw`x=\frac{-b\pm \sqrt{b^2-4ac}}{2a}`
+    let qi: QiT = new QiC()
+    qi.informationTypeName = "latex"
+    let mathsLoupe = new MathsLoupeC()
+    let equationString = computation;
+    return (
+        <Qi qiId={'000000'} userId={'000000'} loupe={mathsLoupe} />
     )
 }

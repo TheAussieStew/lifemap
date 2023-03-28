@@ -1,5 +1,5 @@
 import React from 'react'
-import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react'
+import { EditorContent, Extension, Extensions, JSONContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
@@ -20,22 +20,10 @@ import './styles.scss'
 
 lowlight.registerLanguage('js', js)
 
-export const RichText = (props: { qi?: QiT, text: RichTextT, lenses: [TextSectionLens], onChange: (change: string | JSONContent) => void }) => {
-  const isYDoc = typeof props.text !== "string";
-  switch (props.lenses[0]) {
-    case "code":
-      // content = `<pre><code class="language-javascript">${props.text}</pre></code>`
 
-      break;
-    case "text":
-      // Do nothing
-
-      break;
-    default:
-      break;
-  }
-
-  let extensions: Extensions = [
+export const CustomisedEditor = (information: RichTextT) => {
+  const isYDoc = typeof information !== "string";
+const customExtensions: Extensions = [
     // Add official extensions
     // @ts-ignore
     StarterKit.configure({
@@ -43,7 +31,7 @@ export const RichText = (props: { qi?: QiT, text: RichTextT, lenses: [TextSectio
       // TODO: Problem, it looks like when setting this to false
       // collaboration history doesn't take over...
       // history: isYDoc ? false : undefined
-      history: undefined
+      history: undefined,
     }),
     CodeBlockLowlight.configure({
       lowlight,
@@ -71,27 +59,45 @@ export const RichText = (props: { qi?: QiT, text: RichTextT, lenses: [TextSectio
   ]
 
   if (isYDoc) {
-    extensions.push(
+    customExtensions.push(
       Collaboration.configure({
-        document: props.qi!.information,
+        document: information,
       }),
     )
   }
 
-  const editor = useEditor({
-    extensions: extensions,
+  return useEditor({
+    extensions: customExtensions,
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
       },
     },
-    content: isYDoc ? null : props.text,
+    content: isYDoc ? null : information,
     onUpdate: ({ editor }) => {
-      // props.onChange(editor.getJSON())
-      console.debug("JSON Output", editor.getJSON())
-      console.debug("HTML Output", editor.getHTML())
-    },
+      console.log("JSON Output", editor.getJSON())
+      console.log("HTML Output", editor.getHTML())
+      console.log("editor getText", editor.getText())
+    }
   })
+}
+
+export const RichText = (props: { qi?: QiT, text: RichTextT, lenses: [TextSectionLens], onChange: (change: string | JSONContent) => void }) => {
+
+  switch (props.lenses[0]) {
+    case "code":
+      // content = `<pre><code class="language-javascript">${props.text}</pre></code>`
+
+      break;
+    case "text":
+      // Do nothing
+
+      break;
+    default:
+      break;
+  }
+
+  let editor = CustomisedEditor(props.text)
 
   if (process.env.NODE_ENV === 'development') {
     if (editor) {
