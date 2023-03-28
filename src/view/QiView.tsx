@@ -1,7 +1,9 @@
 import React from "react";
 import { QiStoreContext } from "../backend/QiStore";
-import { QiT, ShenT } from "../core/Model";
+import { MathsLoupeC, QiT, ShenT } from "../core/Model";
 import RichText from "./content/RichText";
+import { Math } from "./content/Math";
+import { JSONContent } from "@tiptap/core";
 
 // Handles different views of a single qi
 // This view is the equivalent of a single window in the app and design
@@ -10,8 +12,9 @@ export const QiView = (props: { qi: QiT | ShenT }) => {
 
   // Create a Lens selector
   const Lens = () => {
-    switch (typeof props.qi.type) {
-      case 'string':
+    console.log("type", qi.informationTypeName)
+    switch (qi.informationTypeName) {
+      case 'jsonContent':
         return <RichText
           qi={qi}
           text={props.qi.information}
@@ -20,12 +23,15 @@ export const QiView = (props: { qi: QiT | ShenT }) => {
             console.log(change) 
           }}
         />;
-      // case 'maths':
-      //     <Math equationString={props.qi.information} lenses={["natural", "numeric"]} onChange={function (change: string | JSONContent): void {
-      //       //
-      //     } }/>
+      case 'ascii-math':
+      case 'math-live-boxed-json-expression':
+      case 'latex':
+        const loupe = new MathsLoupeC()
+        return <Math qi={props.qi} loupe={loupe} onChange={function (change: string | JSONContent): void {
+          //
+        }} />
       default:
-        return <>Empty</>;
+        throw Error("Qi does not fall into any existing informationTypes")
     }
   };
 

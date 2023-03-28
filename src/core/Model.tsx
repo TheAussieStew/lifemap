@@ -3,8 +3,12 @@ import { Doc } from 'yjs'
 import { MathJsonDictionary } from "@cortex-js/compute-engine/dist/types/math-json/math-json-format";
 import { JSONContent, Node } from "@tiptap/react";
 import { generateUniqueID } from "../utils/utils";
-import { computed, makeObservable, observable } from "mobx";
+import { TiptapTransformer } from '@hocuspocus/transformer'
+
+import { computed, makeAutoObservable, makeObservable, observable } from "mobx";
 import * as Y from 'yjs'
+import { Editor } from "@tiptap/core";
+import { CustomisedEditor } from "../view/content/RichText";
 
 // Shen represents the store that holds all other Qi
 // It's similar to the root and subdocuments model referenced in Y.js 
@@ -13,23 +17,27 @@ export type ShenT = QiT
 export type QiId = string;
 export type QiT = {
     information: Doc, 
-    lens: Lenses,
+    informationText: string,
+    informationTypeName: TypeName, 
+    loupe: Loupe,
+    lens: Lens,
     id: QiId, 
     // userId: string, // Ignore user authentication for now
-    type: Types, 
     relations: Set<QiId>, // Just parse the doc for relations
     // maybe caching for calculations
 }
 export class QiC implements QiT {
     information: Doc = new Y.Doc();
-    type: Types = "";
-    lens: Lenses = "normalText";
+    informationTypeName: TypeName = "jsonContent";
+    lens: Lens = "normalText";
+    loupe: Loupe = [];
 
     constructor() {
         makeObservable(this, {
             information: observable,
+            informationText: computed,
+            informationTypeName: observable,
             id: computed,
-            type: observable,
             relations: computed
         })
     }
@@ -41,29 +49,30 @@ export class QiC implements QiT {
     get relations() {
         return this.information.getSubdocGuids()
     }
+
+    get informationText() {
+        // const editor = CustomisedEditor(this.information);
+        const prosemirrorJSON: JSONContent = TiptapTransformer.fromYdoc(this.information)
+        console.log(prosemirrorJSON)
+        if (prosemirrorJSON.text) {
+            return prosemirrorJSON.text
+        } else {
+            return ""
+        }
+    }
 }
-export class QiC_2 implements QiT {
-    information: Doc = new Y.Doc();
-    lens: Lenses = "normalText"
-    id: QiId = this.information.guid;
-    type: Types = "";
-    relations: Set<QiId> = this.information.getSubdocGuids()
-}
 
-export type QiT_2 = Doc
+export type TypeName = Content 
 
-export type Types = Content | Structure | Reference
+// | Structure | Reference
 
-export type Content = Text | MathEquation
+export type Content = RichText | MathEquation
 // If we switch from one node to another, the marks and other styling information should be preserved. 
 // So the paradigm of viewing information in many different ways isn't really possible
 // TODO: This type, shouldn't refer to Node, Node is a way of viewing a type, it should refer to the data inside the schema
 // Call this text, not rich text, since the lenses make it rich
-export type RichTextT = Y.Doc | JSONContent | Text
-export type Text = string
-export type MathEquation = Latex | AsciiMath | BoxedMathJSONExpression
-export type Latex = string
-export type AsciiMath = string
+export type RichText = "yDoc" | "jsonContent"
+export type MathEquation = "latex" | "ascii-math" | "math-live-boxed-json-expression"
 
 export type Structure = Group | Calculation
 export type Group = Content[]
@@ -73,16 +82,62 @@ export type Calculation = (MathEquation & Portal)
 export type Reference = Portal
 export type Portal = string
 
-export type Lenses = MathLens | RichTextLens | "Other"
+export type Loupe = MathsLoupe | IdentityLoupe
+
+export type IdentityLoupe = Lens[]
+
+export type MathsLoupe = {
+    readonly displayLenses: DisplayLens[],
+    selectedDisplayLens: number, // index
+    readonly evaluationLenses: EvaluationLens[],
+    selectedEvaluationLens: number, // index
+    readonly notationLenses: NotationLens[],
+    selectedNotationLens: number, // index
+    readonly precisionLenses: PrecisionLens[],
+    selectedPrecisionLens: number, // index
+    readonly fractionLenses: FractionLens[],
+    selectedFractionLens: number, // index
+    readonly baseNLenses: BaseNLens[]
+    selectedBaseNLens: number, // index
+}
+export class MathsLoupeC implements MathsLoupe {
+    readonly displayLenses: DisplayLens[] = [...displayLenses];
+    selectedDisplayLens: number = 0;
+    readonly evaluationLenses: EvaluationLens[] = [...evaluationLenses];
+    selectedEvaluationLens: number = 0;
+    readonly notationLenses: NotationLens[] = [...notationLenses];
+    selectedNotationLens: number = 0;
+    readonly precisionLenses: PrecisionLens[] = [...precisionLenses];
+    selectedPrecisionLens: number = 0;
+    readonly fractionLenses: FractionLens[] = [...fractionLenses];
+    selectedFractionLens: number = 0;
+    readonly baseNLenses: BaseNLens[] = [...baseNLenses];
+    selectedBaseNLens: number = 0;
+
+    constructor() {
+        makeAutoObservable(this)
+    }
+}
+
+export type Lens = MathLens | RichTextLens | "Other"
 
 export type MathLens = DisplayLens | EvaluationLens | NotationLens | PrecisionLens | FractionLens | BaseNLens
-export type DisplayLens = "latex" | "natural" | "linear" | "mathjson"
-export type EvaluationLens = "identity" | "evaluate" | "simplify" | "numeric" 
-export type NotationLens = "scientific" | "engineering"
-export type PrecisionLens = "15" | "100" | number
-export type FractionLens = "simplified" | "mixed" | "decimal"
-export type BaseNLens = "hexadecimal" | "decimal" | "octal" | "binary"
+export const displayLenses = ["latex", "natural", "linear", "mathjson"] as const
+export type DisplayLens = typeof displayLenses[number]
+export const evaluationLenses = ["identity", "evaluate", "simplify", "numeric"] as const
+export type EvaluationLens = typeof evaluationLenses[number]
+export const notationLenses = ["normal", "scientific", "engineering"] as const
+export type NotationLens = typeof notationLenses[number]
+export const precisionLenses = ["15", "100", "number"] as const
+export type PrecisionLens = typeof precisionLenses[number]
+export const fractionLenses = ["decimal", "simplified", "mixed"] as const
+export type FractionLens = typeof fractionLenses[number]
+export const baseNLenses = ["decimal", "octal", "hexadecimal", "binary"] as const
+export type BaseNLens = typeof baseNLenses[number]
 
+export const mathsLenses = [...displayLenses, ...evaluationLenses, ...notationLenses, ...precisionLenses, ...fractionLenses, ...baseNLenses] as const
+
+// TODO: Use the const literal assertion in the same way here
 export type RichTextLens = TextMarkLens | TextSectionLens
 export type TextMarkLens = "normalText" 
 export type TextSectionLens = "code" | "text"

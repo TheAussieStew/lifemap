@@ -3,6 +3,7 @@ import { Node, mergeAttributes, JSONContent } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Math } from "./Math";
 import { Qi } from "../../core/Qi";
+import { MathsLoupeC, QiC } from "../../core/Model";
 
 export const tildeInputRegex = /->$/
 
@@ -36,10 +37,7 @@ export const MathExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-            <Qi qiId={props.node.attrs.qiId} userId={""} />
-          <Math equationString={"Enter your equation here"} lenses={["natural", "numeric"]} onChange={function (change: string | JSONContent): void {
-            //
-          } }/>
+            <Math qi={new QiC()} equationString={"1 + 1"} loupe={new MathsLoupeC()} onChange={() => { return }} />
         </NodeViewWrapper>
       );
     });

@@ -1,15 +1,20 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { DisplayLens, EvaluationLens, Latex } from '../../core/Model';
+import { DisplayLens, EvaluationLens, Latex, MathsLoupe, MathsLoupeC } from '../../core/Model';
 import { Math } from '../content/Math';
+import { Qi } from '../../core/Qi';
 
 export type GroupLenses = "verticalArray";
 
-export const Calculation = (props: { equationString: string, lenses: [DisplayLens, EvaluationLens] }) => {
+export const Calculation = (props: { equationString: string, loupe: MathsLoupe}) => {
     let [equationString, setEquationString] = React.useState<Latex>(props.equationString);
+    let identityLoupe = new MathsLoupeC()
+
     React.useEffect(() => {
         console.log("updated eq", equationString)
       }, [equationString]);
+
+
     return (
         <motion.div
             layoutId="calculation"
@@ -23,17 +28,17 @@ export const Calculation = (props: { equationString: string, lenses: [DisplayLen
                 display: "grid"
             }}
         >
-            <Math equationString={equationString} lenses={["natural", "identity"]} onChange={(change) => {
-            } }/>
-            <Math equationString={equationString} lenses={props.lenses} onChange={(change) => {
-            } }/>
+            <Qi qiId={"000000"} loupe={identityLoupe} userId={'000000'} />
+            <Qi qiId={"000000"} loupe={identityLoupe} userId={'000000'} />
         </motion.div>
     );
 }
 
-export const GroupExample = () => {
-    const equationString = ``
+export const CalculationExample = () => {
+    const equationString = `1 + 17`
+    let evaluationLoupe = new MathsLoupeC()
+    evaluationLoupe.selectedEvaluationLens = evaluationLoupe.evaluationLenses.indexOf('numeric')
     return (
-        <Calculation equationString={equationString} lenses={['natural', 'numeric']}/>
+        <Calculation equationString={equationString} loupe={evaluationLoupe}/>
     )
 }
