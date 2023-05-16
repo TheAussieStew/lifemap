@@ -1,14 +1,8 @@
-import { BoxedExpression as BoxedMathJSONExpression } from "@cortex-js/compute-engine";
 import { Doc } from 'yjs'
-import { MathJsonDictionary } from "@cortex-js/compute-engine/dist/types/math-json/math-json-format";
-import { JSONContent, Node } from "@tiptap/react";
-import { generateUniqueID } from "../utils/utils";
+import { JSONContent } from "@tiptap/react";
 import { TiptapTransformer } from '@hocuspocus/transformer'
-
 import { computed, makeAutoObservable, makeObservable, observable } from "mobx";
 import * as Y from 'yjs'
-import { Editor } from "@tiptap/core";
-import { CustomisedEditor } from "../view/content/RichText";
 
 // Shen represents the store that holds all other Qi
 // It's similar to the root and subdocuments model referenced in Y.js 
@@ -71,8 +65,10 @@ export type Content = RichText | MathEquation
 // So the paradigm of viewing information in many different ways isn't really possible
 // TODO: This type, shouldn't refer to Node, Node is a way of viewing a type, it should refer to the data inside the schema
 // Call this text, not rich text, since the lenses make it rich
-export type RichText = "yDoc" | "jsonContent"
+export type RichText = "yDoc" | "jsonContent" | "string"
+export type RichTextT = Y.Doc | JSONContent | string
 export type MathEquation = "latex" | "ascii-math" | "math-live-boxed-json-expression"
+export type Latex = string
 
 export type Structure = Group | Calculation
 export type Group = Content[]
@@ -102,7 +98,7 @@ export type MathsLoupe = {
 }
 export class MathsLoupeC implements MathsLoupe {
     readonly displayLenses: DisplayLens[] = [...displayLenses];
-    selectedDisplayLens: number = 0;
+    selectedDisplayLens: number = 1;
     readonly evaluationLenses: EvaluationLens[] = [...evaluationLenses];
     selectedEvaluationLens: number = 0;
     readonly notationLenses: NotationLens[] = [...notationLenses];

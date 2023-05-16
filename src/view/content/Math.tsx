@@ -1,15 +1,13 @@
 import React, { useCallback } from 'react'
-import { motion } from 'framer-motion'
 import MathView, { MathViewRef } from "react-math-view"
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
-import { DisplayLens, EvaluationLens, Latex, MathsLoupe, MathsLoupeC, QiC, QiT } from '../../core/Model';
-import { CustomisedEditor, RichText } from './RichText';
-import { MathfieldElement, convertLatexToAsciiMath, convertLatexToMathMl, convertLatexToSpeakableText} from 'mathlive';
+import { MathsLoupe, MathsLoupeC, QiC, QiT } from '../../core/Model';
+import { RichText } from './RichText';
+import { convertLatexToAsciiMath} from 'mathlive';
 import { JSONContent } from '@tiptap/react';
-import { check } from '../../generated/check';
 import { Qi } from '../../core/Qi';
 
-export const Math = (props: { qi: QiT, equationString?: Latex, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
+export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
     const ref = React.useRef<MathViewRef>(null)
     const toggleKeyboard = useCallback(
         () => ref.current?.executeCommand("toggleVirtualKeyboard"),
@@ -118,9 +116,19 @@ export const MathNaturalExample = () => {
     const computation = `10 * 12`
     const quadraticFormula = String.raw`x=\frac{-b\pm \sqrt{b^2-4ac}}{2a}`
     let qi: QiT = new QiC()
-    qi.informationTypeName = 'maths' 
+    // qi.informationTypeName = 'maths' 
     let mathsLoupe = new MathsLoupeC()
     let equationString = computation;
+    const content = `
+    $$
+        \frac{1}{2}
+    $$
+    `
+    const parsedContent = `
+    <math-live>
+        \frac{1}{2}
+    </math-live>
+    `
     return (
         <Math qi={qi} equationString={equationString} loupe={mathsLoupe} onChange={() => { return }} />
     )

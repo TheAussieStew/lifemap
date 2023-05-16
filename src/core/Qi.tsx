@@ -3,7 +3,7 @@ import { QiId, Loupe, MathsLoupeC } from "../core/Model";
 import { QiStore, QiStoreContext } from "../backend/QiStore";
 import { QiView } from "../view/QiView";
 
-export const Qi = (props: { qiId: QiId; userId: string, loupe: Loupe }) => {
+export const Qi = (props: { qiId: QiId; userId: string, loupe?: Loupe }) => {
   return (
     // This store is not visual, it is purely to feed information
     // @ts-ignore

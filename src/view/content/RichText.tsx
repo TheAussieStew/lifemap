@@ -1,5 +1,5 @@
 import React from 'react'
-import { EditorContent, Extension, Extensions, JSONContent, useEditor } from '@tiptap/react'
+import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
@@ -17,13 +17,18 @@ import { MathExtension } from './MathTipTapExtension'
 import { Indent } from '../../utils/Indent'
 import { FlowMenu } from '../structure/FlowMenu'
 import './styles.scss'
+import { Doc } from 'yjs'
+import { observer } from 'mobx-react-lite'
+import { QiStoreContext } from '../../backend/QiStore'
 
 lowlight.registerLanguage('js', js)
 
 
 export const CustomisedEditor = (information: RichTextT) => {
+  let qi = React.useContext(QiStoreContext)
+
   const isYDoc = typeof information !== "string";
-const customExtensions: Extensions = [
+  const customExtensions: Extensions = [
     // Add official extensions
     // @ts-ignore
     StarterKit.configure({
@@ -31,7 +36,7 @@ const customExtensions: Extensions = [
       // TODO: Problem, it looks like when setting this to false
       // collaboration history doesn't take over...
       // history: isYDoc ? false : undefined
-      history: undefined,
+      history: false,
     }),
     CodeBlockLowlight.configure({
       lowlight,
@@ -61,7 +66,8 @@ const customExtensions: Extensions = [
   if (isYDoc) {
     customExtensions.push(
       Collaboration.configure({
-        document: information,
+        document: qi.information,
+        field: 'default',
       }),
     )
   }
@@ -82,7 +88,7 @@ const customExtensions: Extensions = [
   })
 }
 
-export const RichText = (props: { qi?: QiT, text: RichTextT, lenses: [TextSectionLens], onChange: (change: string | JSONContent) => void }) => {
+export const RichText = observer((props: { qi?: QiT, text: RichTextT, lenses: [TextSectionLens], onChange: (change: string | JSONContent) => void }) => {
 
   switch (props.lenses[0]) {
     case "code":
@@ -111,7 +117,7 @@ export const RichText = (props: { qi?: QiT, text: RichTextT, lenses: [TextSectio
       <EditorContent editor={editor} />
     </>
   )
-}
+})
 
 export const RichTextCodeExample = () => {
   const content = `
@@ -129,6 +135,12 @@ export const RichTextCodeExample = () => {
     else
       console.log(i);
   }</code></pre>
+  <math>
+   1 + 1 = 2
+  </math>
+  <math-live>
+   1 + 1 = 2
+  </math-live>
 `
   return (<RichText qi={new QiC()} text={content} lenses={["code"]} onChange={() => {
   }} />)

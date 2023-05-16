@@ -29,7 +29,7 @@ export const Calculation = (props: { equationString: string, loupe: MathsLoupe})
             }}
         >
             <Qi qiId={"000000"} loupe={identityLoupe} userId={'000000'} />
-            <Qi qiId={"000000"} loupe={identityLoupe} userId={'000000'} />
+            <Qi qiId={"000000"} loupe={props.loupe} userId={'000000'} />
         </motion.div>
     );
 }

@@ -4,10 +4,11 @@ import { MathsLoupeC, QiT, ShenT } from "../core/Model";
 import RichText from "./content/RichText";
 import { Math } from "./content/Math";
 import { JSONContent } from "@tiptap/core";
+import { observer } from "mobx-react-lite";
 
 // Handles different views of a single qi
 // This view is the equivalent of a single window in the app and design
-export const QiView = (props: { qi: QiT | ShenT }) => {
+export const QiView = observer((props: { qi: QiT | ShenT }) => {
   let qi = React.useContext(QiStoreContext)
 
   // Create a Lens selector
@@ -40,4 +41,4 @@ export const QiView = (props: { qi: QiT | ShenT }) => {
       <Lens />
     </>
   );
-};
+});

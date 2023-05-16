@@ -1,18 +1,18 @@
 import React from "react";
-import { Node, mergeAttributes } from "@tiptap/core";
-import { Node as ProseMirrorNode } from 'prosemirror-model';
+import { Node, wrappingInputRule } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Group } from "./Group";
-import RichText from "../content/RichText";
-import { generateUniqueID } from "../../utils/utils";
 import { Qi } from "../../core/Qi";
 
 export const tildeInputRegex = /~>$/
+// TODO: Match for brackets with text in between
 export const groupInputRegex = /^\s*(\( \))\s$/
+
+export const inputRegex = /^\s*>\s$/
 
 export const GroupExtension = Node.create({
   name: "group",
-  group: "block",
+  group: "block+",
   inline: false,
   selectable: true,
   atom: true,
