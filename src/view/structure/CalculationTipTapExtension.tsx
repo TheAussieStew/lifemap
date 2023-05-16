@@ -5,6 +5,7 @@ import { Group } from "./Group";
 import RichText from "../content/RichText";
 import { generateUniqueID } from "../../utils/utils";
 import { Calculation } from "./Calculation";
+import { MathsLoupeC } from "../../core/Model";
 
 export const tildeInputRegex = /~>$/
 
@@ -49,7 +50,7 @@ export const CalculationExtension = Node.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          <Calculation equationString={""} lenses={["natural", "numeric"]}/>
+          <Calculation equationString={""} loupe={new MathsLoupeC()}/>
         </NodeViewWrapper>
       );
     });
