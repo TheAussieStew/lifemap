@@ -21,8 +21,95 @@ import FormatAlignJustify from '@mui/icons-material/FormatAlignJustify';
 export const FlowMenu = (props: { editor: Editor | null }) => {
     if (props.editor === null) return null;
 
+    const [isFixed, setIsFixed] = React.useState(false);
+    const [top, setTop] = React.useState(0);
+    const [right, setRight] = React.useState(0);
+    const [bottom, setBottom] = React.useState(0);
+    const [left, setLeft] = React.useState(0);
+    const elementRef = React.useRef<HTMLDivElement>(null);
     const [value, setValue] = React.useState<string>('');
 
+    // Make sure the menu stays within the viewport
+    React.useEffect(() => {
+        const handleScroll = () => {
+          if (elementRef.current) {
+            const rect = elementRef.current.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+    
+            if (rect.top < 0) {
+              // The element is about to be hidden at the top of the viewport
+              // Update its position to keep it visible
+              setIsFixed(true);
+              setTop(0);
+              setLeft(rect.left);
+            } else if (rect.bottom > viewportHeight) {
+              // The element is about to be hidden at the bottom of the viewport
+              // Update its position to keep it visible
+              setIsFixed(true);
+              setTop(viewportHeight - rect.height);
+              setLeft(rect.left);
+            } else if (rect.left < 0) {
+              // The element is about to be hidden on the left side of the viewport
+              // Update its position to keep it visible
+              setIsFixed(true);
+              setTop(rect.top);
+              setLeft(0);
+            } else if (rect.right > viewportWidth) {
+              // The element is about to be hidden on the right side of the viewport
+              // Update its position to keep it visible
+              setIsFixed(true);
+              setTop(rect.top);
+              setLeft(viewportWidth - rect.width);
+            } else {
+              // The element is still visible
+              // Reset its position
+              setIsFixed(false);
+            }
+          }
+        };
+    
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
+    
+      React.useEffect(() => {
+        if (elementRef.current) {
+          const rect = elementRef.current.getBoundingClientRect();
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+    
+          if (rect.top < 0) {
+            // The element is initially rendered off-screen at the top of the viewport
+            // Update its position to keep it visible
+            setIsFixed(true);
+            setTop(0);
+            setLeft(rect.left);
+          } else if (rect.bottom > viewportHeight) {
+            // The element is initially rendered off-screen at the bottom of the viewport
+            // Update its position to keep it visible
+            setIsFixed(true);
+            setTop(viewportHeight - rect.height);
+            setLeft(rect.left);
+          } else if (rect.left < 0) {
+            // The element is initially rendered off-screen on the left side of the viewport
+            // Update its position to keep it visible
+            setIsFixed(true);
+            setTop(rect.top);
+            setLeft(0);
+          } else if (rect.right > viewportWidth) {
+            // The element is initially rendered off-screen on the right side of the viewport
+            // Update its position to keep it visible
+            setIsFixed(true);
+            setTop(rect.top);
+            // TODO: This is kind of hacky, there shouldn't need to be a multiplier
+            setLeft(viewportWidth - 1.5 * rect.width);
+          } else {
+            // The element is initially rendered on-screen
+            // Do nothing
+          }
+        }
+      }, []);
 
     const handleChange = (
         event: React.MouseEvent<Element> | React.KeyboardEvent<Element> | React.FocusEvent<Element> | null,
@@ -44,28 +131,32 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
 
     return (
         <BubbleMenu editor={props.editor} tippyOptions={{ duration: 100 }}>
-            <motion.div style={{
-                boxSizing: "border-box",
-                flexShrink: 0,
-                width: "min-content",
-                height: "min-content",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "5px 15px 5px 15px",
-                boxShadow:
-                    "0px 0.6021873017743928px 3.010936508871964px -0.9166666666666666px rgba(0, 0, 0, 0.14), 0px 2.288533303243457px 11.442666516217285px -1.8333333333333333px rgba(0, 0, 0, 0.13178), 0px 10px 50px -2.75px rgba(0, 0, 0, 0.1125)",
-                backgroundColor: "#ffffff",
-                overflow: "visible",
-                zIndex: 1,
-                position: "relative",
-                alignContent: "center",
-                flexWrap: "nowrap",
-                gap: "10",
-                borderRadius: "10px",
-                border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
-            }}>
+            <motion.div 
+                ref={elementRef}
+                style={{
+                    position: isFixed ? "fixed" : "relative",
+                    top: isFixed ? 0 : undefined,
+                    left: isFixed ? left : undefined,
+                    boxSizing: "border-box",
+                    flexShrink: 0,
+                    width: "min-content",
+                    height: "min-content",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "5px 15px 5px 15px",
+                    boxShadow:
+                        "0px 0.6021873017743928px 3.010936508871964px -0.9166666666666666px rgba(0, 0, 0, 0.14), 0px 2.288533303243457px 11.442666516217285px -1.8333333333333333px rgba(0, 0, 0, 0.13178), 0px 10px 50px -2.75px rgba(0, 0, 0, 0.1125)",
+                    backgroundColor: "#ffffff",
+                    overflow: "visible",
+                    zIndex: 1,
+                    alignContent: "center",
+                    flexWrap: "nowrap",
+                    gap: "10",
+                    borderRadius: "10px",
+                    border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
+                }}>
                 <Select
                     placeholder="Type"
                     startDecorator={<InfoIcon />}
