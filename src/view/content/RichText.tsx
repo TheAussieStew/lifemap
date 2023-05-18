@@ -5,6 +5,7 @@ import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import FontFamily from '@tiptap/extension-font-family'
 import TextStyle from '@tiptap/extension-text-style'
+import Underline from '@tiptap/extension-underline'
 import Heading from '@tiptap/extension-heading'
 import Collaboration, { isChangeOrigin } from '@tiptap/extension-collaboration'
 import UniqueID from '@tiptap-pro/extension-unique-id'
@@ -15,14 +16,15 @@ import { lowlight } from 'lowlight'
 import { GroupExtension } from '../structure/GroupTipTapExtension'
 import { MathExtension } from './MathTipTapExtension'
 import { Indent } from '../../utils/Indent'
+import TextAlign from '@tiptap/extension-text-align'
 import { FlowMenu } from '../structure/FlowMenu'
 import './styles.scss'
 import { Doc } from 'yjs'
 import { observer } from 'mobx-react-lite'
 import { QiStoreContext } from '../../backend/QiStore'
+import { FontSize } from './FontSizeTipTapExtension'
 
 lowlight.registerLanguage('js', js)
-
 
 export const CustomisedEditor = (information: RichTextT) => {
   let qi = React.useContext(QiStoreContext)
@@ -49,6 +51,11 @@ export const CustomisedEditor = (information: RichTextT) => {
       levels: [1, 2, 3, 4],
     }),
     TextStyle,
+    Underline,
+    FontSize,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'],
+    }),
     FontFamily.configure({
       types: ['textStyle'],
     }),
@@ -123,6 +130,9 @@ export const RichTextCodeExample = () => {
   const content = `
   <p>
     That’s a boring paragraph followed by a fenced code block:
+  </p>
+  <p>
+    Some more text is right here
   </p>
   <pre><code class="language-javascript">for (var i=1; i <= 20; i++)
   {
