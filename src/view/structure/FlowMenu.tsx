@@ -19,8 +19,6 @@ import FormatAlignRight from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustify from '@mui/icons-material/FormatAlignJustify';
 
 export const FlowMenu = (props: { editor: Editor | null }) => {
-    if (props.editor === null) return null;
-
     const [isFixed, setIsFixed] = React.useState(false);
     const [top, setTop] = React.useState(0);
     const [right, setRight] = React.useState(0);
@@ -29,87 +27,91 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
     const elementRef = React.useRef<HTMLDivElement>(null);
     const [value, setValue] = React.useState<string>('');
 
+
     // Make sure the menu stays within the viewport
     React.useEffect(() => {
         const handleScroll = () => {
-          if (elementRef.current) {
+            if (elementRef.current) {
+                const rect = elementRef.current.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                if (rect.top < 0) {
+                    // The element is about to be hidden at the top of the viewport
+                    // Update its position to keep it visible
+                    setIsFixed(true);
+                    setTop(0);
+                    setLeft(rect.left);
+                } else if (rect.bottom > viewportHeight) {
+                    // The element is about to be hidden at the bottom of the viewport
+                    // Update its position to keep it visible
+                    setIsFixed(true);
+                    setTop(viewportHeight - rect.height);
+                    setLeft(rect.left);
+                } else if (rect.left < 0) {
+                    // The element is about to be hidden on the left side of the viewport
+                    // Update its position to keep it visible
+                    setIsFixed(true);
+                    setTop(rect.top);
+                    setLeft(0);
+                } else if (rect.right > viewportWidth) {
+                    // The element is about to be hidden on the right side of the viewport
+                    // Update its position to keep it visible
+                    setIsFixed(true);
+                    setTop(rect.top);
+                    setLeft(viewportWidth - rect.width);
+                } else {
+                    // The element is still visible
+                    // Reset its position
+                    setIsFixed(false);
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    React.useEffect(() => {
+        if (elementRef.current) {
             const rect = elementRef.current.getBoundingClientRect();
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-    
+
             if (rect.top < 0) {
-              // The element is about to be hidden at the top of the viewport
-              // Update its position to keep it visible
-              setIsFixed(true);
-              setTop(0);
-              setLeft(rect.left);
+                // The element is initially rendered off-screen at the top of the viewport
+                // Update its position to keep it visible
+                setIsFixed(true);
+                setTop(0);
+                setLeft(rect.left);
             } else if (rect.bottom > viewportHeight) {
-              // The element is about to be hidden at the bottom of the viewport
-              // Update its position to keep it visible
-              setIsFixed(true);
-              setTop(viewportHeight - rect.height);
-              setLeft(rect.left);
+                // The element is initially rendered off-screen at the bottom of the viewport
+                // Update its position to keep it visible
+                setIsFixed(true);
+                setTop(viewportHeight - rect.height);
+                setLeft(rect.left);
             } else if (rect.left < 0) {
-              // The element is about to be hidden on the left side of the viewport
-              // Update its position to keep it visible
-              setIsFixed(true);
-              setTop(rect.top);
-              setLeft(0);
+                // The element is initially rendered off-screen on the left side of the viewport
+                // Update its position to keep it visible
+                setIsFixed(true);
+                setTop(rect.top);
+                setLeft(0);
             } else if (rect.right > viewportWidth) {
-              // The element is about to be hidden on the right side of the viewport
-              // Update its position to keep it visible
-              setIsFixed(true);
-              setTop(rect.top);
-              setLeft(viewportWidth - rect.width);
+                // The element is initially rendered off-screen on the right side of the viewport
+                // Update its position to keep it visible
+                setIsFixed(true);
+                setTop(rect.top);
+                // TODO: This is kind of hacky, there shouldn't need to be a multiplier
+                setLeft(viewportWidth - 1.5 * rect.width);
             } else {
-              // The element is still visible
-              // Reset its position
-              setIsFixed(false);
+                // The element is initially rendered on-screen
+                // Do nothing
             }
-          }
-        };
-    
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-      }, []);
-    
-      React.useEffect(() => {
-        if (elementRef.current) {
-          const rect = elementRef.current.getBoundingClientRect();
-          const viewportWidth = window.innerWidth;
-          const viewportHeight = window.innerHeight;
-    
-          if (rect.top < 0) {
-            // The element is initially rendered off-screen at the top of the viewport
-            // Update its position to keep it visible
-            setIsFixed(true);
-            setTop(0);
-            setLeft(rect.left);
-          } else if (rect.bottom > viewportHeight) {
-            // The element is initially rendered off-screen at the bottom of the viewport
-            // Update its position to keep it visible
-            setIsFixed(true);
-            setTop(viewportHeight - rect.height);
-            setLeft(rect.left);
-          } else if (rect.left < 0) {
-            // The element is initially rendered off-screen on the left side of the viewport
-            // Update its position to keep it visible
-            setIsFixed(true);
-            setTop(rect.top);
-            setLeft(0);
-          } else if (rect.right > viewportWidth) {
-            // The element is initially rendered off-screen on the right side of the viewport
-            // Update its position to keep it visible
-            setIsFixed(true);
-            setTop(rect.top);
-            // TODO: This is kind of hacky, there shouldn't need to be a multiplier
-            setLeft(viewportWidth - 1.5 * rect.width);
-          } else {
-            // The element is initially rendered on-screen
-            // Do nothing
-          }
         }
-      }, []);
+    }, []);
+
+
+    if (props.editor === null) return null;
 
     const handleChange = (
         event: React.MouseEvent<Element> | React.KeyboardEvent<Element> | React.FocusEvent<Element> | null,
@@ -131,7 +133,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
 
     return (
         <BubbleMenu editor={props.editor} tippyOptions={{ duration: 100 }}>
-            <motion.div 
+            <motion.div
                 ref={elementRef}
                 style={{
                     position: isFixed ? "fixed" : "relative",
@@ -161,7 +163,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     placeholder="Type"
                     startDecorator={<InfoIcon />}
                     sx={{ width: 140 }}
-                    value={value} 
+                    value={value}
                     onChange={handleChange}
                 >
                     <Option value="Rich Text">Rich Text</Option>
@@ -178,12 +180,12 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     <Option value="Inter"
                         onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}
                     >
-                        Inter 
+                        Inter
                     </Option>
                     <Option value="Arial"
                         onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}
                     >
-                        Arial 
+                        Arial
                     </Option>
                 </Select>
                 <Select
@@ -256,28 +258,28 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                         </IconButton>
                     </Option>
                 </Select>
-                <IconButton 
+                <IconButton
                     // @ts-ignore
                     onClick={() => props.editor!.chain().focus().toggleBold().run()}
                     className={props.editor.isActive('bold') ? 'is-active' : ''}
                     variant="plain">
                     <FormatBoldIcon />
                 </IconButton>
-                <IconButton 
+                <IconButton
                     // @ts-ignore
                     onClick={() => props.editor!.chain().focus().toggleItalic().run()}
                     className={props.editor.isActive('italic') ? 'is-active' : ''}
                     variant="plain">
                     <FormatItalicIcon />
                 </IconButton>
-                <IconButton 
+                <IconButton
                     // @ts-ignore
                     onClick={() => props.editor!.chain().focus().toggleUnderline().run()}
                     className={props.editor.isActive('underline') ? 'is-active' : ''}
                     variant="plain">
                     <FormatUnderlinedIcon />
                 </IconButton>
-                <IconButton 
+                <IconButton
                     // @ts-ignore
                     onClick={() => props.editor!.chain().focus().toggleStrike().run()}
                     className={props.editor.isActive('strike') ? 'is-active' : ''}
