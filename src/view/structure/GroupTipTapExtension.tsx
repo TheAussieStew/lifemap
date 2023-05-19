@@ -8,11 +8,10 @@ export const tildeInputRegex = /~>$/
 // TODO: Match for brackets with text in between
 export const groupInputRegex = /^\s*(\( \))\s$/
 
-export const inputRegex = /^\s*>\s$/
-
 export const GroupExtension = Node.create({
   name: "group",
-  group: "block+",
+  group: "block",
+  content: "block*",
   inline: false,
   selectable: true,
   atom: true,
@@ -30,7 +29,7 @@ export const GroupExtension = Node.create({
   addInputRules() {
     return [
       nodeInputRule({
-        find: groupInputRegex,
+        find: tildeInputRegex,
         type: this.type,
         getAttributes: ({ groups }) => groups,
       }),
@@ -39,6 +38,7 @@ export const GroupExtension = Node.create({
   addNodeView() {
     // TODO: props should be typed
     return ReactNodeViewRenderer((props: any) => {
+            console.log("qiId", props.node.attrs.qiId)
       return (
         <NodeViewWrapper>
           <Group lens={"verticalArray"}>

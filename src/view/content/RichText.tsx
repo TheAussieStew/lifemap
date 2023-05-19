@@ -23,6 +23,8 @@ import { Doc } from 'yjs'
 import { observer } from 'mobx-react-lite'
 import { QiStoreContext } from '../../backend/QiStore'
 import { FontSize } from './FontSizeTipTapExtension'
+import { IndexeddbPersistence } from 'y-indexeddb'
+import * as Y from 'yjs'
 
 lowlight.registerLanguage('js', js)
 
