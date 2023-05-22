@@ -1,4 +1,6 @@
 import React from 'react'
+import { Color } from '@tiptap/extension-color'
+import { Highlight } from '@tiptap/extension-highlight'
 import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
@@ -41,6 +43,9 @@ export const CustomisedEditor = (information: RichTextT) => {
     CodeBlockLowlight.configure({
       lowlight,
     }),
+    Color.configure({
+      types: ['textStyle'],
+    }),
     TaskList,
     TaskItem.configure({
       nested: true,
@@ -51,6 +56,7 @@ export const CustomisedEditor = (information: RichTextT) => {
     TextStyle,
     Underline,
     FontSize,
+    Highlight,
     TextAlign.configure({
       types: ['heading', 'paragraph'],
     }),

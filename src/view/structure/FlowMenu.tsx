@@ -17,6 +17,11 @@ import FormatAlignLeft from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignCentre from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignRight from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustify from '@mui/icons-material/FormatAlignJustify';
+import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
+import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
+import { Tag } from "../content/Tag"
+import { black, highlightYellow } from "../Theme"
+import FormatColorFill from "@mui/icons-material/FormatColorFill"
 
 export const FlowMenu = (props: { editor: Editor | null }) => {
     const [isFixed, setIsFixed] = React.useState(false);
@@ -155,7 +160,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     zIndex: 1,
                     alignContent: "center",
                     flexWrap: "nowrap",
-                    gap: "10",
+                    gap: "10px",
                     borderRadius: "10px",
                     border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
                 }}>
@@ -258,34 +263,64 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                         </IconButton>
                     </Option>
                 </Select>
-                <IconButton
-                    // @ts-ignore
-                    onClick={() => props.editor!.chain().focus().toggleBold().run()}
-                    className={props.editor.isActive('bold') ? 'is-active' : ''}
-                    variant="plain">
-                    <FormatBoldIcon />
-                </IconButton>
-                <IconButton
-                    // @ts-ignore
-                    onClick={() => props.editor!.chain().focus().toggleItalic().run()}
-                    className={props.editor.isActive('italic') ? 'is-active' : ''}
-                    variant="plain">
-                    <FormatItalicIcon />
-                </IconButton>
-                <IconButton
-                    // @ts-ignore
-                    onClick={() => props.editor!.chain().focus().toggleUnderline().run()}
-                    className={props.editor.isActive('underline') ? 'is-active' : ''}
-                    variant="plain">
-                    <FormatUnderlinedIcon />
-                </IconButton>
-                <IconButton
-                    // @ts-ignore
-                    onClick={() => props.editor!.chain().focus().toggleStrike().run()}
-                    className={props.editor.isActive('strike') ? 'is-active' : ''}
-                    variant="plain">
-                    <FormatStrikethrough />
-                </IconButton>
+                <Tag>
+                    <IconButton
+                        style={{ color: black }}
+                        size="sm"
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().toggleBold().run()}
+                        className={props.editor.isActive('bold') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatBoldIcon />
+                    </IconButton>
+                    <IconButton
+                        style={{ color: black }}
+                        size="sm"
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().toggleItalic().run()}
+                        className={props.editor.isActive('italic') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatItalicIcon />
+                    </IconButton>
+                    <IconButton
+                        style={{ color: black }}
+                        size="sm"
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().toggleUnderline().run()}
+                        className={props.editor.isActive('underline') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatUnderlinedIcon />
+                    </IconButton>
+                    <IconButton
+                        style={{ color: black }}
+                        size="sm"
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().toggleStrike().run()}
+                        className={props.editor.isActive('strike') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatStrikethrough />
+                    </IconButton>
+                </Tag>
+                <Tag>
+                    <IconButton
+                        style={{ color: black }}
+                        size="sm"
+                        // @ts-ignore
+                        onClick={() => props.editor.chain().focus().setColor('#958DF1').run()}
+                        className={props.editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatColorTextIcon />
+                    </IconButton>
+                    <IconButton
+                        style={{ color: black }}
+                        size="sm"
+                        // TODO: Highlight color is controlled by mark style in styles.css and not the color parameter here
+                        onClick={() => props.editor!.chain().focus().toggleHighlight({ color: highlightYellow}).run()}
+                        className={props.editor!.isActive('highlight', { color: highlightYellow }) ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatColorFill />
+                    </IconButton>
+                </Tag>
             </motion.div>
         </BubbleMenu>
     )

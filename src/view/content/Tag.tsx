@@ -22,7 +22,6 @@ export const Tag = (props: { children: any }) => {
                     alignContent: "center",
                     flexWrap: "nowrap",
                     gap: "5px",
-                    position: "absolute",
                     borderRadius: "5px",
                     border: "1px solid #BBBBBB"
                   }
@@ -34,12 +33,12 @@ export const Tag = (props: { children: any }) => {
     )
 }
 
-export const TypeTag = (props: {icon: string, label: string}) => {
+export const TypeTag = (props: { icon?: string, label: string }) => {
     return (
         <Tag>
-            <span>
+            {props.icon && <span>
                 {props.icon}
-            </span>
+            </span>}
             <span>
                 {props.label}
             </span>
