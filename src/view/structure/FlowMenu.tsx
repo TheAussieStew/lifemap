@@ -102,7 +102,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                 setIsFixed(true);
                 setTop(rect.top);
                 // TODO: This is kind of hacky, there shouldn't need to be a multiplier
-                setLeft(viewportWidth - 1.5 * rect.width);
+                setLeft(viewportWidth - 1.9 * rect.width);
             } else {
                 // The element is initially rendered on-screen
                 // Do nothing
@@ -190,7 +190,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                 </Select>
                 <Select
                     placeholder="Size"
-                    sx={{ width: 60 }}
+                    sx={{ width: 80 }}
                 >
                     <Option value="20"
                         onClick={() => props.editor!.chain().focus().setFontSize('20px').run()}
