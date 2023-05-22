@@ -9,10 +9,6 @@ import { Qi } from '../../core/Qi';
 
 export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
     const ref = React.useRef<MathViewRef>(null)
-    const toggleKeyboard = useCallback(
-        () => ref.current?.executeCommand("toggleVirtualKeyboard"),
-        [ref]
-    )
     const text = props.qi.informationText
 
     const ce = new ComputeEngine();
