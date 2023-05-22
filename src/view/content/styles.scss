@@ -9,6 +9,13 @@
     margin-top: 0em;
   }
 
+  mark {
+    background-color: #ffe066;
+    border-radius: 0.25em;
+    box-decoration-break: clone;
+    padding: 0.125em 0;
+  }
+
   p {
     margin: 0em 0;
   }
