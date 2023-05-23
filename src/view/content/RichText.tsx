@@ -123,8 +123,10 @@ export const RichText = observer((props: { qi?: QiT, text: RichTextT, lenses: [T
 
   return (
     <>
+      <div>
       <FlowMenu editor={editor} />
-      <EditorContent editor={editor} />
+      </div>
+        <EditorContent editor={editor} />
     </>
   )
 })
