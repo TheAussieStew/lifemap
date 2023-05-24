@@ -24,7 +24,7 @@ import './styles.scss'
 import { observer } from 'mobx-react-lite'
 import { QiStoreContext } from '../../backend/QiStore'
 import { FontSize } from './FontSizeTipTapExtension'
-import { suggestion } from './TagTipTapExtension'
+import { mentionSuggestionOptions } from './TagTipTapExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -56,7 +56,8 @@ export const CustomisedEditor = (information: RichTextT) => {
       HTMLAttributes: {
         class: 'mention',
       },
-      suggestion,
+      // @ts-ignore
+      mentionSuggestionOptions,
     }),
     Heading.configure({
       levels: [1, 2, 3, 4],
