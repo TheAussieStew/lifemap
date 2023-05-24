@@ -10,6 +10,7 @@ import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
 import Heading from '@tiptap/extension-heading'
 import Collaboration, { isChangeOrigin } from '@tiptap/extension-collaboration'
+import Mention from '@tiptap/extension-mention'
 import UniqueID from '@tiptap-pro/extension-unique-id'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import js from 'highlight.js/lib/languages/javascript'
@@ -23,6 +24,7 @@ import './styles.scss'
 import { observer } from 'mobx-react-lite'
 import { QiStoreContext } from '../../backend/QiStore'
 import { FontSize } from './FontSizeTipTapExtension'
+import { suggestion } from './TagTipTapExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -49,6 +51,12 @@ export const CustomisedEditor = (information: RichTextT) => {
     TaskList,
     TaskItem.configure({
       nested: true,
+    }),
+    Mention.configure({
+      HTMLAttributes: {
+        class: 'mention',
+      },
+      suggestion,
     }),
     Heading.configure({
       levels: [1, 2, 3, 4],
