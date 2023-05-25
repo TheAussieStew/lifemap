@@ -44,7 +44,7 @@
     "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "2.0.3",
     "@tiptap/starter-kit": "2.0.3",
-    "@tiptap/suggestion": "^2.0.3",
+    "@tiptap/suggestion": "2.0.0-beta.91",
     "@types/jest": "26.0.15",
     "@types/node": "12.0.0",
     "@types/react": "16.9.53",

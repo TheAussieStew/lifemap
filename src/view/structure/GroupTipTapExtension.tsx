@@ -13,7 +13,7 @@ export const GroupExtension = Node.create({
   group: "block",
   content: "block*",
   inline: false,
-  selectable: true,
+  selectable: false,
   atom: true,
   parseHTML() {
     return [
