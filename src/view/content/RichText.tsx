@@ -53,10 +53,6 @@ export const CustomisedEditor = (information: RichTextT) => {
       nested: true,
     }),
     Mention.configure({
-      HTMLAttributes: {
-        class: 'mention',
-      },
-      // @ts-ignore
       mentionSuggestionOptions,
     }),
     Heading.configure({
