@@ -56,7 +56,7 @@
     "highlight.js": "^11.7.0",
     "katex": "^0.16.4",
     "lowlight": "^2.8.1",
-    "mathlive": "0.94.0",
+    "mathlive": "0.94.3",
     "mobx": "^6.8.0",
     "mobx-react-lite": "3.2.0",
     "postcss-normalize": "^10.0.1",

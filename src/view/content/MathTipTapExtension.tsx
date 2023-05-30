@@ -25,12 +25,12 @@ export const MathExtension = Mark.create({
   parseHTML() {
     return [
       {
-        tag: "math-live",
+        tag: "math-field",
       },
     ];
   },
   renderHTML({ HTMLAttributes }) {
-    return ["math-live", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+    return ["math-field", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
   },
   addInputRules() {
     return [
@@ -48,19 +48,13 @@ export const MathExtension = Mark.create({
       },
     }
   },
-  // Each type should have an extension that is a single react component, the component takes in the loupe and renders
-  // So basically
-  // MathExtension -> MathView -> n * MathLenses (each of which is its own component)
-  // javascript elements or react components, based on child.
-  // Need to get the content of the matched selection and pass it into Math too. 
-  // Can use NodeView Content for more basic things like code, as opposed to Math
   addNodeView() {
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
-          {/* <Math loupe={new MathsLoupeC()}> */}
+          <math-field>
             <NodeViewContent />
-          {/* </Math> */}
+          </math-field>
         </NodeViewWrapper>
       );
     });
