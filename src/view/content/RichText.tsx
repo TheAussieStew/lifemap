@@ -19,10 +19,12 @@ import js from 'highlight.js/lib/languages/javascript'
 import { QiC, QiT, TextSectionLens, RichTextT } from '../../core/Model'
 import { lowlight } from 'lowlight'
 import { GroupExtension } from '../structure/GroupTipTapExtension'
+import { MathExtension } from './MathTipTapExtension'
 import { Indent } from '../../utils/Indent'
 import TextAlign from '@tiptap/extension-text-align'
 import { FlowMenu } from '../structure/FlowMenu'
 import './styles.scss'
+import { Doc } from 'yjs'
 import { observer } from 'mobx-react-lite'
 import { QiStoreContext } from '../../backend/QiStore'
 import { FontSize } from './FontSizeTipTapExtension'
@@ -93,6 +95,7 @@ export const CustomisedEditor = (information: RichTextT) => {
     }),
     // Add our custom extensions below
     GroupExtension,
+    MathExtension,
     Indent
   ]
 
