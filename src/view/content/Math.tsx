@@ -1,14 +1,24 @@
-import React, { useCallback } from 'react'
-import MathView, { MathViewRef } from "react-math-view"
+import React, { DetailedHTMLProps, HTMLAttributes, useCallback } from 'react'
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
 import { MathsLoupe, MathsLoupeC, QiC, QiT } from '../../core/Model';
 import { RichText } from './RichText';
-import { convertLatexToAsciiMath} from 'mathlive';
+import { convertLatexToAsciiMath } from 'mathlive';
 import { JSONContent } from '@tiptap/react';
 import { Qi } from '../../core/Qi';
+import { DOMAttributes } from "react";
+import { MathfieldElementAttributes } from 'mathlive'
+
+type CustomElement<T> = Partial<T & DOMAttributes<T>>;
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ["math-field"]: CustomElement<MathfieldElementAttributes>;
+    }
+  }
+}
 
 export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
-    const ref = React.useRef<MathViewRef>(null)
     const text = props.qi.informationText
 
     const ce = new ComputeEngine();
@@ -75,21 +85,8 @@ export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoup
                             onChange={props.onChange}
                         />,
                     'natural': 
-                        <MathView
-                            readOnly={props.loupe.evaluationLenses[props.loupe.selectedEvaluationLens] !== "identity"}
-                            style={{
-                                fontSize: 25,
-                                fontFamily: "SF Pro",
-                                display: "inline-block",
-                            }}
-                            value={outputEquationString}
-                            onChange={(e: React.SyntheticEvent<any, any>) => {
-                                // console.log('value', e.currentTarget.getValue('spoken'), ref.current?.getValue('latex'));
-                                console.log(e.currentTarget.getValue('latex'))
-                                props.onChange(e.currentTarget.getValue('latex'))
-                            }}
-                            ref={ref}
-                        />,
+                        <></>
+                        ,
                     'linear': 
                         <RichText
                             text={outputEquationString}
@@ -105,6 +102,16 @@ export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoup
                 }[props.loupe.displayLenses[props.loupe.selectedDisplayLens]]
             }
         </>
+    )
+}
+
+export const MathsWithoutQi = () => {
+    return (
+        <div>
+            <math-live>
+                \frac{1}{2}
+            </math-live>
+        </div>
     )
 }
 
