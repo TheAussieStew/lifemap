@@ -4,6 +4,7 @@ import { SuggestionKeyDownProps, SuggestionProps } from "@tiptap/suggestion";
 import React from "react";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import tippy, { Instance as TippyInstance } from "tippy.js";
+import './MentionList.scss'
 
 export type MentionSuggestion = {
     id: string;
@@ -11,8 +12,10 @@ export type MentionSuggestion = {
 };
 
 export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
-    items: async ({ query }): Promise<MentionSuggestion[]> =>
+    char: "#",
+    items: ({ query }): MentionSuggestion[] =>
         [
+            query,
             "Lea Thompson",
             "Cyndi Lauper",
             "Tom Cruise",
@@ -44,7 +47,6 @@ export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
                 item.mentionLabel.toLowerCase().startsWith(query.toLowerCase())
             )
             .slice(0, 5),
-
     render: () => {
         let component: ReactRenderer<MentionRef> | undefined;
         let popup: TippyInstance | undefined;
@@ -56,7 +58,6 @@ export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
                     editor: props.editor,
                 });
 
-                // @ts-ignore
                 popup = tippy("body", {
                     getReferenceClientRect: props.clientRect,
                     appendTo: () => document.body,
@@ -72,7 +73,6 @@ export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
                 component?.updateProps(props);
 
                 popup?.setProps({
-                    // @ts-ignore
                     getReferenceClientRect: props.clientRect,
                 });
             },
@@ -184,7 +184,7 @@ const MentionList = forwardRef<MentionRef, MentionProps>((props, ref) => {
                     key={index}
                     onClick={() => selectItem(index)}
                 >
-                    {item}
+                    {item.mentionLabel}
                 </button>
             ))}
         </div>

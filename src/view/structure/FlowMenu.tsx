@@ -197,6 +197,16 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     placeholder="Size"
                     sx={{ width: 80 }}
                 >
+                    <Option value="30"
+                        onClick={() => props.editor!.chain().focus().setFontSize('30px').run()}
+                    >
+                       30 
+                    </Option>
+                    <Option value="24"
+                        onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}
+                    >
+                        24
+                    </Option>
                     <Option value="20"
                         onClick={() => props.editor!.chain().focus().setFontSize('20px').run()}
                     >
