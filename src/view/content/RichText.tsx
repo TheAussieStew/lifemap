@@ -6,8 +6,10 @@ import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import FontFamily from '@tiptap/extension-font-family'
+import Link from '@tiptap/extension-link'
 import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
+import Image from '@tiptap/extension-image'
 import Heading from '@tiptap/extension-heading'
 import Collaboration, { isChangeOrigin } from '@tiptap/extension-collaboration'
 import Mention from '@tiptap/extension-mention'
@@ -25,11 +27,13 @@ import { observer } from 'mobx-react-lite'
 import { QiStoreContext } from '../../backend/QiStore'
 import { FontSize } from './FontSizeTipTapExtension'
 import { mentionSuggestionOptions } from './TagTipTapExtension'
+import BubbleMenu from '@tiptap/extension-bubble-menu'
 
 lowlight.registerLanguage('js', js)
 
 export const CustomisedEditor = (information: RichTextT) => {
   let qi = React.useContext(QiStoreContext)
+  console.log("qiId", qi.id)
 
   const isYDoc = typeof information !== "string";
   const customExtensions: Extensions = [
@@ -41,7 +45,18 @@ export const CustomisedEditor = (information: RichTextT) => {
       // collaboration history doesn't take over...
       // history: isYDoc ? false : undefined
       history: false,
+      // Disable provided extensions so they don't load twice
+      heading: false,
+      codeBlock: false,
     }),
+    Link.configure({
+      openOnClick: true,
+    }),
+    BubbleMenu.configure({
+      pluginKey: `bubbleMenu${qi.id}`,
+      updateDelay: 100,
+    }),
+    Image,
     CodeBlockLowlight.configure({
       lowlight,
     }),
@@ -53,7 +68,10 @@ export const CustomisedEditor = (information: RichTextT) => {
       nested: true,
     }),
     Mention.configure({
-      mentionSuggestionOptions,
+      HTMLAttributes: {
+        class: 'mention',
+      },
+      suggestion: mentionSuggestionOptions,
     }),
     Heading.configure({
       levels: [1, 2, 3, 4],
@@ -127,12 +145,12 @@ export const RichText = observer((props: { qi?: QiT, text: RichTextT, lenses: [T
   }
 
   return (
-    <>
-      <div>
-      <FlowMenu editor={editor} />
+    <div key={props.qi?.id}>
+      <div key={`bubbleMenu${props.qi?.id}`}>
+        <FlowMenu editor={editor} />
       </div>
-        <EditorContent editor={editor} />
-    </>
+      <EditorContent editor={editor} />
+    </div>
   )
 })
 
