@@ -179,9 +179,9 @@ export const RichTextCodeExample = () => {
   <math>
    1 + 1 = 2
   </math>
-  <math-live>
-   1 + 1 = 2
-  </math-live>
+  <math-field>
+   x=\\frac{-b\\pm \\sqrt{b^2-4ac}}{2a}
+  </math-field>
 `
   return (<RichText qi={new QiC()} text={content} lenses={["code"]} onChange={() => {
   }} />)

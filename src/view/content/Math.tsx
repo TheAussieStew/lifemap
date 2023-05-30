@@ -85,7 +85,9 @@ export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoup
                             onChange={props.onChange}
                         />,
                     'natural': 
-                        <></>
+                        <math-field>
+                            {outputEquationString}
+                        </math-field>
                         ,
                     'linear': 
                         <RichText
@@ -108,9 +110,9 @@ export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoup
 export const MathsWithoutQi = () => {
     return (
         <div>
-            <math-live>
+            <math-field>
                 \frac{1}{2}
-            </math-live>
+            </math-field>
         </div>
     )
 }

@@ -8199,10 +8199,10 @@ markdown-it@^13.0.1:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
-mathlive@0.94.0:
-  version "0.94.0"
-  resolved "https://registry.yarnpkg.com/mathlive/-/mathlive-0.94.0.tgz#dabbde23e098b837457df0ce26f25049b5d09942"
-  integrity sha512-IPwleIduX2t6R0H5QowtYlD2KU6D0I4vlDtTdtTzavPisGHHvXFk/jgnegcJa3XvTMT6QmoZB+iyg364uqJ34w==
+mathlive@0.94.3:
+  version "0.94.3"
+  resolved "https://registry.yarnpkg.com/mathlive/-/mathlive-0.94.3.tgz#0dc27fb2e6a545d3da024b6bbbd2f0d423231b78"
+  integrity sha512-a8YdMpHbUKSRL/bSBx3Pj14eAF3t+lvvNIolQWCJI+he0VLmYwtrywXsUcT5g6DBUtHfiRjLrZyey7YtCVrm4Q==
   dependencies:
     "@cortex-js/compute-engine" "^0.12.2"
 
