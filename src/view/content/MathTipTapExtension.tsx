@@ -1,17 +1,10 @@
 import React from "react";
 import { Node, mergeAttributes, InputRule, wrappingInputRule, markInputRule, Mark } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule, NodeViewContent } from "@tiptap/react";
-import { DOMAttributes } from "react";
-import { MathfieldElementAttributes } from 'mathlive'
-import { Math } from './Math';
-import { MathsLoupeC } from "../../core/Model";
 
-export const regexMathsDollars: RegExp = /\$([^\$]*)\$/gi;
-export const inlineRegexMathsDollars: RegExp = /\$(.+)\$/; //new RegExp("\$(.+)\$", "i");
 export const REGEX_BLOCK_MATH_DOLLARS:RegExp = /\$\$\s+$/; //new RegExp("\$\$\s+$", "i");
+export const REGEX_INLINE_MATH_DOLLARS:RegExp = /\$(.+)\$/; //new RegExp("\$(.+)\$", "i");
 
-
-export const blockInputRegex = /^\s*~\s$/
 
 export const MathExtension = Mark.create({
   name: "math",
@@ -19,7 +12,7 @@ export const MathExtension = Mark.create({
   content: "text*",
   code: true,
   inline: true,
-  selectable: false,
+  selectable: true,
   atom: true,
   draggable: true,
   parseHTML() {
@@ -35,7 +28,7 @@ export const MathExtension = Mark.create({
   addInputRules() {
     return [
       markInputRule({
-        find: inlineRegexMathsDollars,
+        find: REGEX_INLINE_MATH_DOLLARS,
         type: this.type,
         getAttributes: ({ groups }) => groups,
       }),

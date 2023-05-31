@@ -18,11 +18,10 @@ declare global {
   }
 }
 
-export const Math = (props: { qi: QiT, equationString?: string, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
-    const text = props.qi.informationText
+export const Math = (props: { equationString: string, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
 
     const ce = new ComputeEngine();
-    const [equationString, setEquationString] = React.useState(text|| "");
+    const [equationString, setEquationString] = React.useState(props.equationString);
 
     let expression: BoxedExpression = ce.parse(equationString)
     let outputEquationString = ""

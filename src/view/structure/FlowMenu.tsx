@@ -167,7 +167,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                 <Select
                     placeholder="Type"
                     startDecorator={<InfoIcon />}
-                    sx={{ width: 140 }}
+                    sx={{ width: 160 }}
                     value={value}
                     onChange={handleChange}
                 >
@@ -195,7 +195,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                 </Select>
                 <Select
                     placeholder="Size"
-                    sx={{ width: 80 }}
+                    sx={{ width: 90 }}
                 >
                     <Option value="30"
                         onClick={() => props.editor!.chain().focus().setFontSize('30px').run()}

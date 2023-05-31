@@ -30,6 +30,7 @@ import { QiStoreContext } from '../../backend/QiStore'
 import { FontSize } from './FontSizeTipTapExtension'
 import { mentionSuggestionOptions } from './TagTipTapExtension'
 import BubbleMenu from '@tiptap/extension-bubble-menu'
+import { CalculationExtension } from './CalculationTipTapExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -96,6 +97,7 @@ export const CustomisedEditor = (information: RichTextT) => {
     // Add our custom extensions below
     GroupExtension,
     MathExtension,
+    CalculationExtension,
     Indent
   ]
 
