@@ -22,6 +22,7 @@ import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import { Tag } from "../content/Tag"
 import { black, highlightYellow } from "../Theme"
 import FormatColorFill from "@mui/icons-material/FormatColorFill"
+import { FlowSwitch } from "./FlowSwitch"
 
 export const FlowMenu = (props: { editor: Editor | null }) => {
     const [isFixed, setIsFixed] = React.useState(false);
@@ -164,15 +165,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     borderRadius: "10px",
                     border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
                 }}>
-                <Select
-                    placeholder="Type"
-                    startDecorator={<InfoIcon />}
-                    sx={{ width: 140 }}
-                    value={value}
-                    onChange={handleChange}
-                >
-                    <Option value="Rich Text">Rich Text</Option>
-                </Select>
+                <FlowSwitch />
                 <Select
                     placeholder="Font"
                     sx={{ width: 200 }}

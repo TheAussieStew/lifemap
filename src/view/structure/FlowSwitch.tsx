@@ -6,9 +6,9 @@ export const FlowSwitch = (props: {}) => {
 
     const flowSwitchContainerRef = React.useRef(null)
     const [selected, setSelected] = React.useState(0)
+    const [hasBeenChanged, setHasBeenChanged] = React.useState(false)
 
     const tickSound = new Audio("/tick.mp3")
-    tickSound.play()
 
     return (
         <motion.div ref={flowSwitchContainerRef} style={{
@@ -39,7 +39,10 @@ export const FlowSwitch = (props: {}) => {
                         viewport={{ root: flowSwitchContainerRef, margin: "-12px 0px -12px 0px" }}
                         onViewportEnter={(entry) => {
                             setSelected(item);
-                            tickSound.play()
+                            if (hasBeenChanged) { 
+                                tickSound.play() 
+                            }
+                            setHasBeenChanged(true)
                             console.log("selected", item)
                         }}
                         key={item}
