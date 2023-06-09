@@ -9,7 +9,7 @@ export const Tag = (props: { children: any }) => {
                 {
                     boxSizing: "border-box",
                     width: "fit-content",
-                    height: "fit-content",
+                    height: "27px",
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "center",
