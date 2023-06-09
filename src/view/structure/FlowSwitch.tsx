@@ -1,7 +1,6 @@
 import { motion } from "framer-motion"
 import { ExampleTypeTag } from "../content/Tag"
 import React from "react"
-import useSound from 'use-sound';
 
 export const FlowSwitch = (props: {}) => {
 
