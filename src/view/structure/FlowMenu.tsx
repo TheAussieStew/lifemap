@@ -2,7 +2,7 @@ import { Editor } from "@tiptap/core"
 import { BubbleMenu } from "@tiptap/react"
 import React from "react"
 import { RichTextCodeExample } from "../content/RichText"
-import { motion } from "framer-motion"
+import { motion, useScroll, useVelocity } from "framer-motion"
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import IconButton from '@mui/joy/IconButton';
