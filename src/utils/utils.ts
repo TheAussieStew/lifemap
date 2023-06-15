@@ -3,6 +3,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const generateUniqueID = () => uuidv4()
 
+export const clickElement = (ref: React.RefObject<HTMLDivElement>) => {
+  ref.current!.dispatchEvent(
+    new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+      buttons: 1,
+    }),
+  );
+};
+
 export function getActiveMarkCodes (view: EditorView) {
     const isEmpty = view.state.selection.empty;
     const state = view.state;

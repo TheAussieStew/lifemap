@@ -19,7 +19,7 @@ import FormatAlignRight from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustify from '@mui/icons-material/FormatAlignJustify';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
-import { Tag } from "../content/Tag"
+import { Tag, TypeTag } from "../content/Tag"
 import { black, highlightYellow } from "../Theme"
 import FormatColorFill from "@mui/icons-material/FormatColorFill"
 import { FlowSwitch } from "./FlowSwitch"
@@ -165,7 +165,20 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     borderRadius: "10px",
                     border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
                 }}>
-                <FlowSwitch />
+                <FlowSwitch>
+                    <TypeTag
+                        label={"EB Garamond"}
+                        onClick={() => { props.editor!.chain().focus().setFontFamily('EB Garamond').run(); console.log("clicked EB") }}
+                    />
+                    <TypeTag
+                        label={"Inter"}
+                        onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}
+                    />
+                    <TypeTag
+                        label={"Arial"}
+                        onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}
+                    />
+                </FlowSwitch>
                 <Select
                     placeholder="Font"
                     sx={{ width: 200 }}
@@ -173,7 +186,6 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     <Option value="EB Garamond"
                         onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}
                     >
-                        EB Garamond
                     </Option>
                     <Option value="Inter"
                         onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}
