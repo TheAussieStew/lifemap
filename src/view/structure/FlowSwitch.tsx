@@ -1,10 +1,10 @@
 import { motion, useScroll, useVelocity } from "framer-motion"
-import { ExampleTypeTag } from "../content/Tag"
+import { ExampleTypeTag, TypeTag } from "../content/Tag"
 import React from "react"
 import './styles.scss'
+import { clickElement } from "../../utils/utils"
 
-export const FlowSwitch = (props: {}) => {
-
+export const FlowSwitch = (props: { children: React.ReactElement[] }) => {
     const flowSwitchContainerRef = React.useRef(null)
     const [realTimeSelected, setRealTimeSelected] = React.useState(0)
     const [releaseSelected, setReleaseSelected] = React.useState(0)
@@ -18,14 +18,19 @@ export const FlowSwitch = (props: {}) => {
     let timer: NodeJS.Timeout | null = null
 
     return (
-        <motion.div className="flow-menu" ref={flowSwitchContainerRef}
+        <motion.div className="flow-menu"
+            ref={flowSwitchContainerRef}
             onScroll={
+                // TODO: In future, see if this can be replaced by onScrollEnd
                 () => {
                     if (timer !== null) {
                         clearTimeout(timer);
                     }
                     timer = setTimeout(function () {
                         setReleaseSelected(realTimeSelected)
+                        // TODO: This is mean to click the currently selected element, think of a better way.
+                        // Basically, find the currently selected element, and invoke its onClick
+                        clickElement(flowSwitchContainerRef)
                         console.log("updated")
                     }, 150);
                 }
@@ -34,12 +39,13 @@ export const FlowSwitch = (props: {}) => {
             style={{
                 boxSizing: "border-box",
                 flexShrink: 0,
-                width: "min-content",
+                width: "fit-content",
                 height: 40,
                 display: "flex",
                 flexDirection: "column",
                 // TODO: check the safe keyword works on other browsers
                 justifyContent: "center safe",
+                alignItems: "center",
                 padding: "5px 10px 5px 10px",
                 msOverflowStyle: "none",
                 scrollbarColor: "transparent transparent",
@@ -54,24 +60,22 @@ export const FlowSwitch = (props: {}) => {
                 border: "1px solid #BBBBBB"
             }}>
             {
-                [0, 1, 2, 3].map((item) => {
+                props.children.map((child) => {
                     return (<motion.div
                         initial={{ opacity: 0.2, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
+                        style={{ justifyItems: "center" }}
                         viewport={{ root: flowSwitchContainerRef, margin: "-12px 0px -12px 0px" }}
                         onViewportEnter={(entry) => {
+                            // The activation box is a thin line in the middle of the flow switch
+                            // and activates when a child element enters this thin line.
                             if (hasBeenChanged) {
                                 tickSound.play()
                             }
-                            if (scrollVelocity.get() === 0) {
-                                console.log("selected", item)
-                                setRealTimeSelected(item);
-                            }
                             setHasBeenChanged(true)
                         }}
-                        key={item}
                     >
-                        <ExampleTypeTag />
+                        {child}
                     </motion.div>)
                 }
                 )

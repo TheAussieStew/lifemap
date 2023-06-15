@@ -33,16 +33,23 @@ export const Tag = (props: { children: any }) => {
     )
 }
 
-export const TypeTag = (props: { icon?: string, label: string }) => {
+export const TypeTag = (props: { icon?: string, label: string, onClick?: () => void }) => {
     return (
-        <Tag>
-            {props.icon && <span>
-                {props.icon}
-            </span>}
-            <span>
-                {props.label}
-            </span>
-        </Tag>
+        <motion.div onClick={() => {
+            if (props.onClick) {
+                props.onClick();
+                console.log("tag clicked")
+            }
+        }}>
+            <Tag>
+                {props.icon && <span>
+                    {props.icon}
+                </span>}
+                <span>
+                    {props.label}
+                </span>
+            </Tag>
+        </motion.div>
     )
 }
 
