@@ -62,7 +62,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[] }) => {
                         initial={{ opacity: 0.2, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         style={{
-                            scrollSnapAlign: "center",
+                            scrollSnapAlign: "none",
                         }}
                         viewport={{ root: flowSwitchContainerRef, margin: "-12px 0px -12px 0px" }}
                         onViewportEnter={(entry) => {
