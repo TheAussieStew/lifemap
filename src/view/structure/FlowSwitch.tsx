@@ -38,7 +38,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[] }) => {
                 boxSizing: "border-box",
                 flexShrink: 0,
                 width: "fit-content",
-                height: 40,
+                height: 38,
                 display: "flex",
                 flexDirection: "column",
                 // TODO: check the safe keyword works on other browsers
@@ -52,7 +52,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[] }) => {
                 position: "relative",
                 alignContent: "start",
                 flexWrap: "nowrap",
-                gap: 2,
+                gap: 3,
                 borderRadius: 5,
                 border: "1px solid #BBBBBB"
             }}>

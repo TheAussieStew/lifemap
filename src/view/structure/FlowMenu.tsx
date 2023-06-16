@@ -143,6 +143,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                 ref={elementRef}
                 style={{
                     position: isFixed ? "fixed" : "relative",
+                    scale: 0.9,
                     top: isFixed ? 0 : undefined,
                     left: isFixed ? left : undefined,
                     boxSizing: "border-box",
@@ -166,18 +167,21 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
                 }}>
                 <FlowSwitch>
-                    <TypeTag
-                        label={"EB Garamond"}
-                        onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}
-                    />
-                    <TypeTag
-                        label={"Inter"}
-                        onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}
-                    />
-                    <TypeTag
-                        label={"Arial"}
-                        onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}
-                    />
+                    <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                        <span style={{fontFamily: 'EB Garamond'}}>
+                            EB Garamond
+                            </span>
+                    </button>
+                    <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                        <span style={{ fontFamily: 'Inter' }}>
+                            Inter
+                        </span>
+                    </button>
+                    <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                        <span style={{ fontFamily: 'Arial' }}>
+                            Arial
+                        </span>
+                    </button>
                 </FlowSwitch>
                 <FlowSwitch>
                     <button
@@ -207,6 +211,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     <IconButton
                         // @ts-ignore
                         onClick={() => props.editor!.chain().focus().setTextAlign('left').run()}
+                        size="sm"
                         className={props.editor.isActive('bold') ? 'is-active' : ''}
                         variant="plain">
                         <FormatAlignLeft />
@@ -214,6 +219,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     <IconButton
                         // @ts-ignore
                         onClick={() => props.editor!.chain().focus().setTextAlign('center').run()}
+                        size="sm"
                         className={props.editor.isActive('bold') ? 'is-active' : ''}
                         variant="plain">
                         <FormatAlignCentre />
@@ -221,6 +227,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     <IconButton
                         // @ts-ignore
                         onClick={() => props.editor!.chain().focus().setTextAlign('right').run()}
+                        size="sm"
                         className={props.editor.isActive('bold') ? 'is-active' : ''}
                         variant="plain">
                         <FormatAlignRight />
@@ -228,6 +235,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                     <IconButton
                         // @ts-ignore
                         onClick={() => props.editor!.chain().focus().setTextAlign('justify').run()}
+                        size="sm"
                         className={props.editor.isActive('bold') ? 'is-active' : ''}
                         variant="plain">
                         <FormatAlignJustify />
