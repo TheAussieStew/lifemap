@@ -168,7 +168,7 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                 <FlowSwitch>
                     <TypeTag
                         label={"EB Garamond"}
-                        onClick={() => { props.editor!.chain().focus().setFontFamily('EB Garamond').run(); console.log("clicked EB") }}
+                        onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}
                     />
                     <TypeTag
                         label={"Inter"}
@@ -179,105 +179,61 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                         onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}
                     />
                 </FlowSwitch>
-                <Select
-                    placeholder="Font"
-                    sx={{ width: 200 }}
-                >
-                    <Option value="EB Garamond"
-                        onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}
-                    >
-                    </Option>
-                    <Option value="Inter"
-                        onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}
-                    >
-                        Inter
-                    </Option>
-                    <Option value="Arial"
-                        onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}
-                    >
-                        Arial
-                    </Option>
-                </Select>
-                <Select
-                    placeholder="Size"
-                    sx={{ width: 80 }}
-                >
-                    <Option value="30"
+                <FlowSwitch>
+                    <button
                         onClick={() => props.editor!.chain().focus().setFontSize('30px').run()}
                     >
-                       30 
-                    </Option>
-                    <Option value="24"
+                        30
+                    </button>
+                    <button
                         onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}
                     >
                         24
-                    </Option>
-                    <Option value="20"
-                        onClick={() => props.editor!.chain().focus().setFontSize('20px').run()}
-                    >
+                    </button>
+                    <button onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}>
                         20
-                    </Option>
-                    <Option value="16"
-                        onClick={() => props.editor!.chain().focus().setFontSize('16px').run()}
-                    >
+                    </button>
+                    <button onClick={() => props.editor!.chain().focus().setFontSize('18px').run()}>
+                        18
+                    </button>
+                    <button onClick={() => props.editor!.chain().focus().setFontSize('16px').run()}>
                         16
-                    </Option>
-                    <Option value="14"
-                        onClick={() => props.editor!.chain().focus().setFontSize('14px').run()}
-                    >
+                    </button>
+                    <button onClick={() => props.editor!.chain().focus().setFontSize('14px').run()}>
                         14
-                    </Option>
-                    <Option value="12"
-                        onClick={() => props.editor!.chain().focus().setFontSize('12px').run()}
-                    >
-                        12
-                    </Option>
-                    <Option value="10"
-                        onClick={() => props.editor!.chain().focus().setFontSize('10px').run()}
-                    >
-                        10
-                    </Option>
-                </Select>
-                <Select
-                    sx={{ width: 60 }}
-                >
-                    <Option value="align-left">
-                        <IconButton
-                            // @ts-ignore
-                            onClick={() => props.editor!.chain().focus().setTextAlign('left').run()}
-                            className={props.editor.isActive('bold') ? 'is-active' : ''}
-                            variant="plain">
-                            <FormatAlignLeft />
-                        </IconButton>
-                    </Option>
-                    <Option value="align-centre">
-                        <IconButton
-                            // @ts-ignore
-                            onClick={() => props.editor!.chain().focus().setTextAlign('center').run()}
-                            className={props.editor.isActive('bold') ? 'is-active' : ''}
-                            variant="plain">
-                            <FormatAlignCentre />
-                        </IconButton>
-                    </Option>
-                    <Option value="align-right">
-                        <IconButton
-                            // @ts-ignore
-                            onClick={() => props.editor!.chain().focus().setTextAlign('right').run()}
-                            className={props.editor.isActive('bold') ? 'is-active' : ''}
-                            variant="plain">
-                            <FormatAlignRight />
-                        </IconButton>
-                    </Option>
-                    <Option value="align-justify">
-                        <IconButton
-                            // @ts-ignore
-                            onClick={() => props.editor!.chain().focus().setTextAlign('justify').run()}
-                            className={props.editor.isActive('bold') ? 'is-active' : ''}
-                            variant="plain">
-                            <FormatAlignJustify />
-                        </IconButton>
-                    </Option>
-                </Select>
+                    </button>
+                </FlowSwitch>
+                <FlowSwitch>
+                    <IconButton
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().setTextAlign('left').run()}
+                        className={props.editor.isActive('bold') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatAlignLeft />
+                    </IconButton>
+                    <IconButton
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().setTextAlign('center').run()}
+                        className={props.editor.isActive('bold') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatAlignCentre />
+                    </IconButton>
+                    <IconButton
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().setTextAlign('right').run()}
+                        className={props.editor.isActive('bold') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatAlignRight />
+                    </IconButton>
+                    <IconButton
+                        // @ts-ignore
+                        onClick={() => props.editor!.chain().focus().setTextAlign('justify').run()}
+                        className={props.editor.isActive('bold') ? 'is-active' : ''}
+                        variant="plain">
+                        <FormatAlignJustify />
+                    </IconButton>
+
+                </FlowSwitch>
                 <Tag>
                     <IconButton
                         style={{ color: black }}
