@@ -8185,6 +8185,13 @@ markdown-it@^13.0.1:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
+mathlive@0.94.3:
+  version "0.94.3"
+  resolved "https://registry.yarnpkg.com/mathlive/-/mathlive-0.94.3.tgz#0dc27fb2e6a545d3da024b6bbbd2f0d423231b78"
+  integrity sha512-a8YdMpHbUKSRL/bSBx3Pj14eAF3t+lvvNIolQWCJI+he0VLmYwtrywXsUcT5g6DBUtHfiRjLrZyey7YtCVrm4Q==
+  dependencies:
+    "@cortex-js/compute-engine" "^0.12.2"
+
 mdn-data@2.0.14:
   version "2.0.14"
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"
