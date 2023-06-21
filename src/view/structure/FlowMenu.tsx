@@ -24,6 +24,35 @@ import { black, highlightYellow } from "../Theme"
 import FormatColorFill from "@mui/icons-material/FormatColorFill"
 import { FlowSwitch } from "./FlowSwitch"
 
+const flowMenuStyle = (isFixed: boolean, left: number): React.CSSProperties => {
+    return {
+        position: isFixed ? "fixed" : "relative",
+        scale: 1,
+        top: isFixed ? 0 : undefined,
+        left: isFixed ? left : undefined,
+        boxSizing: "border-box",
+        flexShrink: 0,
+        width: "max-content",
+        height: "fit-content",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "5px 15px 5px 15px",
+        boxShadow:
+            "0px 0.6021873017743928px 3.010936508871964px -0.9166666666666666px rgba(0, 0, 0, 0.14), 0px 2.288533303243457px 11.442666516217285px -1.8333333333333333px rgba(0, 0, 0, 0.13178), 0px 10px 50px -2.75px rgba(0, 0, 0, 0.1125)",
+        backgroundColor: `rgba(217, 217, 217, 0.20)`,
+        backdropFilter: `blur(12px)`,
+        overflow: "scroll",
+        zIndex: 1,
+        alignContent: "center",
+        flexWrap: "nowrap",
+        gap: "10px",
+        borderRadius: "10px",
+        border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
+    }
+}
+
 export const FlowMenu = (props: { editor: Editor | null }) => {
     const [isFixed, setIsFixed] = React.useState(false);
     const [top, setTop] = React.useState(0);
@@ -141,165 +170,175 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
         <BubbleMenu editor={props.editor} tippyOptions={{ duration: 100 }}>
             <motion.div
                 ref={elementRef}
-                style={{
-                    position: isFixed ? "fixed" : "relative",
-                    scale: 0.9,
-                    top: isFixed ? 0 : undefined,
-                    left: isFixed ? left : undefined,
-                    boxSizing: "border-box",
-                    flexShrink: 0,
-                    width: "min-content",
-                    height: "min-content",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "5px 15px 5px 15px",
-                    boxShadow:
-                        "0px 0.6021873017743928px 3.010936508871964px -0.9166666666666666px rgba(0, 0, 0, 0.14), 0px 2.288533303243457px 11.442666516217285px -1.8333333333333333px rgba(0, 0, 0, 0.13178), 0px 10px 50px -2.75px rgba(0, 0, 0, 0.1125)",
-                    backgroundColor: "#ffffff",
-                    overflow: "visible",
-                    zIndex: 1,
-                    alignContent: "center",
-                    flexWrap: "nowrap",
-                    gap: "10px",
-                    borderRadius: "10px",
-                    border: "1px solid var(--Light_Grey, rgba(221,221,221,0.75))"
-                }}>
-                <FlowSwitch>
-                    <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
-                        <span style={{fontFamily: 'EB Garamond'}}>
-                            EB Garamond
-                            </span>
-                    </button>
-                    <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
-                        <span style={{ fontFamily: 'Inter' }}>
-                            Inter
-                        </span>
-                    </button>
-                    <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
-                        <span style={{ fontFamily: 'Arial' }}>
-                            Arial
-                        </span>
-                    </button>
+                style={flowMenuStyle(isFixed, left)}>
+                    <FlowSwitch>
+                        <button>
+                            Copy
+                        </button>
+                        <button>
+                            Copy Link
+                        </button>
+                        <button>
+                            Export
+                        </button>
+                        <button>
+                            Mark Done 
+                        </button>
+                        <button>
+                            Delete
+                        </button>
+                    </FlowSwitch>
+                <FlowSwitch isLens>
+                    {[
+                        <div
+                            style={{ display: "flex", gap: 5, height: "fit-content" }}>
+                            <FlowSwitch>
+                                <button>
+                                    Rich Text
+                                </button>
+                                <button>
+                                    Maths
+                                </button>
+                                <button>
+                                    Code
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <span style={{ fontFamily: 'EB Garamond' }}>
+                                        EB Garamond
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Inter
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                    <span style={{ fontFamily: 'Arial' }}>
+                                        Arial
+                                    </span>
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <button
+                                    onClick={() => props.editor!.chain().focus().setFontSize('30px').run()}
+                                >
+                                    30
+                                </button>
+                                <button
+                                    onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}
+                                >
+                                    24
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}>
+                                    20
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontSize('18px').run()}>
+                                    18
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontSize('16px').run()}>
+                                    16
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontSize('14px').run()}>
+                                    14
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <IconButton
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().setTextAlign('left').run()}
+                                    size="sm"
+                                    className={props.editor.isActive('bold') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatAlignLeft />
+                                </IconButton>
+                                <IconButton
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().setTextAlign('center').run()}
+                                    size="sm"
+                                    className={props.editor.isActive('bold') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatAlignCentre />
+                                </IconButton>
+                                <IconButton
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().setTextAlign('right').run()}
+                                    size="sm"
+                                    className={props.editor.isActive('bold') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatAlignRight />
+                                </IconButton>
+                                <IconButton
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().setTextAlign('justify').run()}
+                                    size="sm"
+                                    className={props.editor.isActive('bold') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatAlignJustify />
+                                </IconButton>
+                            </FlowSwitch>
+                            <Tag isLens>
+                                <IconButton
+                                    style={{ color: black }}
+                                    size="sm"
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().toggleBold().run()}
+                                    className={props.editor.isActive('bold') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatBoldIcon />
+                                </IconButton>
+                                <IconButton
+                                    style={{ color: black }}
+                                    size="sm"
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().toggleItalic().run()}
+                                    className={props.editor.isActive('italic') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatItalicIcon />
+                                </IconButton>
+                                <IconButton
+                                    style={{ color: black }}
+                                    size="sm"
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().toggleUnderline().run()}
+                                    className={props.editor.isActive('underline') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatUnderlinedIcon />
+                                </IconButton>
+                                <IconButton
+                                    style={{ color: black }}
+                                    size="sm"
+                                    // @ts-ignore
+                                    onClick={() => props.editor!.chain().focus().toggleStrike().run()}
+                                    className={props.editor.isActive('strike') ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatStrikethrough />
+                                </IconButton>
+                            </Tag>
+                            <Tag isLens>
+                                <IconButton
+                                    style={{ color: black }}
+                                    size="sm"
+                                    // @ts-ignore
+                                    onClick={() => props.editor.chain().focus().setColor('#958DF1').run()}
+                                    className={props.editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatColorTextIcon />
+                                </IconButton>
+                                <IconButton
+                                    style={{ color: black }}
+                                    size="sm"
+                                    // TODO: Highlight color is controlled by mark style in styles.css and not the color parameter here
+                                    onClick={() => props.editor!.chain().focus().toggleHighlight({ color: highlightYellow }).run()}
+                                    className={props.editor!.isActive('highlight', { color: highlightYellow }) ? 'is-active' : ''}
+                                    variant="plain">
+                                    <FormatColorFill />
+                                </IconButton>
+                            </Tag>
+                        </div>
+                    ]}
                 </FlowSwitch>
-                <FlowSwitch>
-                    <button
-                        onClick={() => props.editor!.chain().focus().setFontSize('30px').run()}
-                    >
-                        30
-                    </button>
-                    <button
-                        onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}
-                    >
-                        24
-                    </button>
-                    <button onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}>
-                        20
-                    </button>
-                    <button onClick={() => props.editor!.chain().focus().setFontSize('18px').run()}>
-                        18
-                    </button>
-                    <button onClick={() => props.editor!.chain().focus().setFontSize('16px').run()}>
-                        16
-                    </button>
-                    <button onClick={() => props.editor!.chain().focus().setFontSize('14px').run()}>
-                        14
-                    </button>
-                </FlowSwitch>
-                <FlowSwitch>
-                    <IconButton
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().setTextAlign('left').run()}
-                        size="sm"
-                        className={props.editor.isActive('bold') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatAlignLeft />
-                    </IconButton>
-                    <IconButton
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().setTextAlign('center').run()}
-                        size="sm"
-                        className={props.editor.isActive('bold') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatAlignCentre />
-                    </IconButton>
-                    <IconButton
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().setTextAlign('right').run()}
-                        size="sm"
-                        className={props.editor.isActive('bold') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatAlignRight />
-                    </IconButton>
-                    <IconButton
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().setTextAlign('justify').run()}
-                        size="sm"
-                        className={props.editor.isActive('bold') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatAlignJustify />
-                    </IconButton>
-
-                </FlowSwitch>
-                <Tag>
-                    <IconButton
-                        style={{ color: black }}
-                        size="sm"
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().toggleBold().run()}
-                        className={props.editor.isActive('bold') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatBoldIcon />
-                    </IconButton>
-                    <IconButton
-                        style={{ color: black }}
-                        size="sm"
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().toggleItalic().run()}
-                        className={props.editor.isActive('italic') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatItalicIcon />
-                    </IconButton>
-                    <IconButton
-                        style={{ color: black }}
-                        size="sm"
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().toggleUnderline().run()}
-                        className={props.editor.isActive('underline') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatUnderlinedIcon />
-                    </IconButton>
-                    <IconButton
-                        style={{ color: black }}
-                        size="sm"
-                        // @ts-ignore
-                        onClick={() => props.editor!.chain().focus().toggleStrike().run()}
-                        className={props.editor.isActive('strike') ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatStrikethrough />
-                    </IconButton>
-                </Tag>
-                <Tag>
-                    <IconButton
-                        style={{ color: black }}
-                        size="sm"
-                        // @ts-ignore
-                        onClick={() => props.editor.chain().focus().setColor('#958DF1').run()}
-                        className={props.editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatColorTextIcon />
-                    </IconButton>
-                    <IconButton
-                        style={{ color: black }}
-                        size="sm"
-                        // TODO: Highlight color is controlled by mark style in styles.css and not the color parameter here
-                        onClick={() => props.editor!.chain().focus().toggleHighlight({ color: highlightYellow}).run()}
-                        className={props.editor!.isActive('highlight', { color: highlightYellow }) ? 'is-active' : ''}
-                        variant="plain">
-                        <FormatColorFill />
-                    </IconButton>
-                </Tag>
             </motion.div>
         </BubbleMenu>
     )
