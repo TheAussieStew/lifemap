@@ -178,12 +178,23 @@ export const RichTextCodeExample = () => {
     else
       console.log(i);
   }</code></pre>
-  <math>
-   1 + 1 = 2
-  </math>
+  <group>
   <math-field>
-   x=\\frac{-b\\pm \\sqrt{b^2-4ac}}{2a}
+      x=\\frac{-b\\pm \\sqrt{b^2-4ac}}{2a}
   </math-field>
+  </group>
+  <group>
+  <div>
+  <math-field>
+  10 + 30
+  </math-field>
+  </div>
+  <div>
+  <math-field>
+  40
+  </math-field>
+  </div>
+  </group>
 `
   return (<RichText qi={new QiC()} text={content} lenses={["code"]} onChange={() => {
   }} />)

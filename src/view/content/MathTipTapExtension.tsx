@@ -45,6 +45,16 @@ export const MathExtension = Mark.create({
     return ReactNodeViewRenderer((props: any) => {
       return (
         <NodeViewWrapper>
+          {/* TODO: Have a global lens type as a component that wraps content, content will automatically retrieve
+          lenses in order to render
+          */}
+          {/* 
+          <Lens>
+            <Content loupe={['a','b','c']}>
+
+            </Content>
+          </Lens> 
+          */}
           <math-field>
             <NodeViewContent />
           </math-field>
