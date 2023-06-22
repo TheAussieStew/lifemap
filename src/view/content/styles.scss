@@ -129,10 +129,9 @@
 .mention {
   box-decoration-break: clone;
   box-sizing: border-box;
-  width: min-content;
+  width: max-content;
   /* 61px */
-  height: min-content;
-  /* 25px */
+  height: 25px;
   display: flex;
   flex-direction: row;
   justify-content: center;
