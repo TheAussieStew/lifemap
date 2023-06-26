@@ -1,5 +1,5 @@
 import React from "react";
-import { Node, wrappingInputRule } from "@tiptap/core";
+import { Node, NodeViewProps, wrappingInputRule } from "@tiptap/core";
 import { NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Group } from "./Group";
 import { Qi } from "../../core/Qi";
@@ -42,9 +42,7 @@ export const GroupExtension = Node.create({
     ]
   },
   addNodeView() {
-    // TODO: props should be typed
-    return ReactNodeViewRenderer((props: any) => {
-            console.log("qiId", props.node.attrs.qiId)
+    return ReactNodeViewRenderer((props: NodeViewProps) => {
       return (
         <NodeViewWrapper>
           <Group lens={"verticalArray"}>
