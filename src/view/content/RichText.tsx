@@ -31,6 +31,7 @@ import { FontSize } from './FontSizeTipTapExtension'
 import { mentionSuggestionOptions } from './TagTipTapExtension'
 import BubbleMenu from '@tiptap/extension-bubble-menu'
 import { CalculationExtension } from './CalculationTipTapExtension'
+import { FadeInParagraph } from './Paragraph'
 
 lowlight.registerLanguage('js', js)
 
@@ -51,7 +52,9 @@ export const CustomisedEditor = (information: RichTextT) => {
       // Disable provided extensions so they don't load twice
       heading: false,
       codeBlock: false,
+      paragraph: false,
     }),
+    FadeInParagraph,
     Link.configure({
       openOnClick: true,
     }),
@@ -119,18 +122,20 @@ export const CustomisedEditor = (information: RichTextT) => {
     },
     content: isYDoc ? null : information,
     onUpdate: ({ editor }) => {
-      console.log("JSON Output", editor.getJSON())
+      // console.log("JSON Output", editor.getJSON())
       console.log("HTML Output", editor.getHTML())
-      console.log("editor getText", editor.getText())
+      // console.log("editor getText", editor.getText())
     }
   })
 }
 
-export const RichText = observer((props: { qi?: QiT, text: RichTextT, lenses: [TextSectionLens], onChange: (change: string | JSONContent) => void }) => {
+export const RichText = observer((props: { qi?: QiT, text: RichTextT, lenses: [TextSectionLens], onChange?: (change: string | JSONContent) => void }) => {
+  let content = props.text
 
   switch (props.lenses[0]) {
     case "code":
-      // content = `<pre><code class="language-javascript">${props.text}</pre></code>`
+      // TODO: Reactivate code lens
+      // content = `<pre><code class="language-javascript">${props.text}</code></pre>`
 
       break;
     case "text":
@@ -141,7 +146,7 @@ export const RichText = observer((props: { qi?: QiT, text: RichTextT, lenses: [T
       break;
   }
 
-  let editor = CustomisedEditor(props.text)
+  let editor = CustomisedEditor(content)
 
   if (process.env.NODE_ENV === 'development') {
     if (editor) {
@@ -164,6 +169,7 @@ export const RichTextCodeExample = () => {
   <p>
     That’s a boring paragraph followed by a fenced code block:
   </p>
+  <span data-type="mention" data-id="🧱 blocked"></span><span data-type="mention" data-id="⭐️ important"></span>
   <p>
     Some more text is right here
   </p>
@@ -179,20 +185,20 @@ export const RichTextCodeExample = () => {
       console.log(i);
   }</code></pre>
   <group>
-  <math-field>
+  <math>
       x=\\frac{-b\\pm \\sqrt{b^2-4ac}}{2a}
-  </math-field>
+  </math>
   </group>
   <group>
   <div>
-  <math-field>
+  <math>
   10 + 30
-  </math-field>
+  </math>
   </div>
   <div>
-  <math-field>
+  <math>
   40
-  </math-field>
+  </math>
   </div>
   </group>
 `
