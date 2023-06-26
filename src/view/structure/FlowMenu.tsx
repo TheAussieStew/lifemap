@@ -189,20 +189,11 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                         </button>
                     </FlowSwitch>
                 <FlowSwitch isLens>
-                    {[
                         <div
-                            style={{ display: "flex", gap: 5, height: "fit-content" }}>
-                            <FlowSwitch>
-                                <button>
-                                    Rich Text
-                                </button>
-                                <button>
-                                    Maths
-                                </button>
-                                <button>
-                                    Code
-                                </button>
-                            </FlowSwitch>
+                            style={{ display: "flex", gap: 5, height: "fit-content", overflowX: "scroll" }}>
+                            <Tag>
+                                Rich Text
+                            </Tag>
                             <FlowSwitch isLens>
                                 <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
                                     <span style={{ fontFamily: 'EB Garamond' }}>
@@ -337,7 +328,114 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                                 </IconButton>
                             </Tag>
                         </div>
-                    ]}
+                        <div
+                            style={{ display: "flex", gap: 5, height: "fit-content" }}>
+                            <Tag>
+                                Math
+                            </Tag>
+                            <FlowSwitch isLens>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Natural
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Latex
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Linear
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        MathJSON
+                                    </span>
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Simplify
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Evaluate
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Numeric
+                                    </span>
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Scientific
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Engineering
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Decimal (Standard)
+                                    </span>
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        15 (Machine)
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        100 (Big Int)
+                                    </span>
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Simplified Fraction
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Mixed Fraction
+                                    </span>
+                                </button>
+                            </FlowSwitch>
+                            <FlowSwitch isLens>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Decimal
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Hexadecimal
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Binary
+                                    </span>
+                                </button>
+                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    <span style={{ fontFamily: 'Inter' }}>
+                                        Octal
+                                    </span>
+                                </button>
+                            </FlowSwitch>
+                        </div>
                 </FlowSwitch>
             </motion.div>
         </BubbleMenu>

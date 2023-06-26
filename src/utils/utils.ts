@@ -1,5 +1,7 @@
 import { EditorView } from '@tiptap/pm/view';
+import { Attrs } from 'prosemirror-model';
 import { v4 as uuidv4 } from 'uuid';
+import { MathsLoupeC } from '../core/Model';
 
 export const generateUniqueID = () => uuidv4()
 
@@ -13,6 +15,13 @@ export const clickElement = (ref: React.RefObject<HTMLDivElement>) => {
     }),
   );
 };
+
+export const getMathsLoupeFromAttributes = (attrs: Attrs) => {
+  let mathsLoupe = new MathsLoupeC()
+  mathsLoupe.selectedDisplayLens = mathsLoupe.displayLenses.findIndex((lens) => (lens === attrs.lensDisplay))
+  mathsLoupe.selectedEvaluationLens = mathsLoupe.evaluationLenses.findIndex((lens) => (lens === attrs.lensEvaluation))
+  return mathsLoupe;
+}
 
 export function getActiveMarkCodes (view: EditorView) {
     const isEmpty = view.state.selection.empty;

@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-export const Math = (props: { equationString: string, loupe: MathsLoupe, onChange: (change: string | JSONContent) => void }) => {
+export const Math = (props: { equationString: string, loupe: MathsLoupe, onChange?: (change: string | JSONContent) => void }) => {
 
     const ce = new ComputeEngine();
     const [equationString, setEquationString] = React.useState(props.equationString);
@@ -29,10 +29,12 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, onChang
     // Configure evaluation mode
     switch (props.loupe.evaluationLenses[props.loupe.selectedEvaluationLens]) {
         case "identity":
+            // Do nothing
+
             break;
         case "evaluate":
             // @ts-ignore
-            expression = expression.evaluate();
+            expression = expression.evaluate()
             break;
         case "simplify":
             // @ts-ignore
@@ -81,7 +83,6 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, onChang
                         <RichText
                             text={outputEquationString}
                             lenses={["text"]}
-                            onChange={props.onChange}
                         />,
                     'natural': 
                         <math-field>
@@ -92,13 +93,11 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, onChang
                         <RichText
                             text={outputEquationString}
                             lenses={["code"]}
-                            onChange={props.onChange}
                         />,
                     'mathjson':
                         <RichText
                             text={outputEquationString}
                             lenses={["code"]}
-                            onChange={props.onChange}
                         />,
                 }[props.loupe.displayLenses[props.loupe.selectedDisplayLens]]
             }
