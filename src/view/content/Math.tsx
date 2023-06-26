@@ -134,7 +134,7 @@ export const MathNaturalExample = () => {
     </math-live>
     `
     return (
-        <Math qi={qi} equationString={equationString} loupe={mathsLoupe} onChange={() => { return }} />
+        <Math equationString={equationString} loupe={mathsLoupe} onChange={() => { return }} />
     )
 }
 

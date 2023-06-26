@@ -28,9 +28,9 @@ export const QiView = observer((props: { qi: QiT | ShenT }) => {
       case 'math-live-boxed-json-expression':
       case 'latex':
         const loupe = new MathsLoupeC()
-        return <Math qi={props.qi} loupe={loupe} onChange={function (change: string | JSONContent): void {
+        return <Math loupe={loupe} onChange={function (change: string | JSONContent): void {
           //
-        }} />
+        } } equationString={""} />
       default:
         throw Error("Qi does not fall into any existing informationTypes")
     }
