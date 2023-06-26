@@ -142,3 +142,12 @@
   border-radius: 5px;
   border: 1px solid #BBBBBB;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
