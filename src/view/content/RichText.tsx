@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Color } from '@tiptap/extension-color'
 import { Highlight } from '@tiptap/extension-highlight'
 import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react'
@@ -31,7 +31,7 @@ import { FontSize } from './FontSizeTipTapExtension'
 import { mentionSuggestionOptions } from './TagTipTapExtension'
 import BubbleMenu from '@tiptap/extension-bubble-menu'
 import { CalculationExtension } from './CalculationTipTapExtension'
-import { FadeInParagraph } from './Paragraph'
+import { FadeIn } from './FadeInExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -52,9 +52,8 @@ export const CustomisedEditor = (information: RichTextT) => {
       // Disable provided extensions so they don't load twice
       heading: false,
       codeBlock: false,
-      paragraph: false,
     }),
-    FadeInParagraph,
+    FadeIn,
     Link.configure({
       openOnClick: true,
     }),
