@@ -1,6 +1,6 @@
 import React from "react";
 import { Node, mergeAttributes, InputRule, wrappingInputRule, markInputRule, Mark, JSONContent, nodeInputRule } from "@tiptap/core";
-import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
+import { NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import { Math } from "../content/Math"
 import { MathsLoupeC } from "../../core/Model";
 import { NodeViewProps } from '@tiptap/core'
@@ -117,7 +117,10 @@ export const MathExtension = Node.create({
             </div>
             <Math equationString={props.node.textContent} loupe={getMathsLoupeFromAttributes(props.node.attrs)} onChange={function (change: string | JSONContent): void {
               throw new Error("Function not implemented.");
-            }} />
+            }} >
+
+              <NodeViewContent/>
+            </Math>
           </>
         </NodeViewWrapper>
       );

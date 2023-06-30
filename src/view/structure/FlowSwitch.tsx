@@ -57,7 +57,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[], onChange?: (
                 flexShrink: 0,
                 width: "max-content",
                 maxWidth: 500,
-                height: 38,
+                height: 37,
                 display: "flex",
                 flexDirection: "column",
                 // TODO: check the safe keyword works on other browsers

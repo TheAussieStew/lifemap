@@ -1,4 +1,4 @@
-import React, { DetailedHTMLProps, HTMLAttributes, useCallback } from 'react'
+import React, { DetailedHTMLProps, HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
 import { MathsLoupe, MathsLoupeC, QiC, QiT } from '../../core/Model';
 import { RichText } from './RichText';
@@ -18,62 +18,59 @@ declare global {
   }
 }
 
-export const Math = (props: { equationString: string, loupe: MathsLoupe, onChange?: (change: string | JSONContent) => void }) => {
-
+export const Math = (props: { equationString: string, loupe: MathsLoupe, children?: any, onChange?: (change: string | JSONContent) => void }) => {
     const ce = new ComputeEngine();
-    const [equationString, setEquationString] = React.useState(props.equationString);
+    const [outputEquationString, setOutputEquationString] = useState("");
 
-    let expression: BoxedExpression = ce.parse(equationString)
-    let outputEquationString = ""
+    console.log("math child", props.children)
 
-    // Configure evaluation mode
-    switch (props.loupe.evaluationLenses[props.loupe.selectedEvaluationLens]) {
-        case "identity":
-            // Do nothing
+    useEffect(() => {
+        let expression: BoxedExpression = ce.parse(props.equationString);
 
-            break;
-        case "evaluate":
-            // @ts-ignore
-            expression = expression.evaluate()
-            break;
-        case "simplify":
-            // @ts-ignore
-            expression = expression.simplify();
-            break;
-        case "numeric":
-            // @ts-ignore
-            expression = expression.N();
-            break;
-    }
+        // Configure evaluation mode
+        switch (props.loupe.evaluationLenses[props.loupe.selectedEvaluationLens]) {
+            case "identity":
+                // Do nothing
+                break;
+            case "evaluate":
+                // @ts-ignore
+                expression = expression.evaluate();
+                break;
+            case "simplify":
+                // @ts-ignore
+                expression = expression.simplify();
+                break;
+            case "numeric":
+                // @ts-ignore
+                expression = expression.N();
+                break;
+        }
 
-    // Check display lens to determine which format to display output
-    // https://cortexjs.io/mathlive/guides/static/
-    // Convert to string
-    switch (props.loupe.displayLenses[props.loupe.selectedDisplayLens]) {
-        case "latex":
-            // Use props.equation and feed into RichText view
-            // Or try and activate latex editing mode
-            // @ts-ignore
-            outputEquationString = expression.latex;
-            
-            break;
-        case "linear":
-            // @ts-ignore
-            outputEquationString = convertLatexToAsciiMath(expression.latex)
-            break;
-        case "mathjson":
-            outputEquationString = expression.toString()
+        // Check display lens to determine which format to display output
+        let newOutputEquationString = "";
+        switch (props.loupe.displayLenses[props.loupe.selectedDisplayLens]) {
+            case "latex":
+                // @ts-ignore
+                newOutputEquationString = expression.latex;
+                break;
+            case "linear":
+                // @ts-ignore
+                newOutputEquationString = convertLatexToAsciiMath(expression.latex);
+                break;
+            case "mathjson":
+                newOutputEquationString = expression.toString();
+                break;
+            case "natural":
+                // N/A
+                // @ts-ignore
+                newOutputEquationString = expression.latex;
+                break;
+            default:
+                break;
+        }
 
-            break;
-        case "natural":
-            // N/A
-            // @ts-ignore
-            outputEquationString = expression.latex
-
-            break;
-        default:
-            break;
-    }
+        setOutputEquationString(newOutputEquationString);
+    }, [props.equationString, props.loupe]);
 
     return (
         <>

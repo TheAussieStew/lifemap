@@ -184,8 +184,8 @@ export const RichTextCodeExample = () => {
       console.log(i);
   }</code></pre>
   <group>
-  <math>
-      x=\\frac{-b\\pm \\sqrt{b^2-4ac}}{2a}
+  <math lensDisplay="natural" lensevaluation="identity">
+    \\frac{1}{2
   </math>
   </group>
   <group>
