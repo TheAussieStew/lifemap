@@ -16,6 +16,8 @@ export const clickElement = (ref: React.RefObject<HTMLDivElement>) => {
   );
 };
 
+export const generatePrompt = (text: string) => `You're an tutor that is teaching a student to speak at a HSK3 level. Complete the following chat conversation: ${text}`
+
 export const getMathsLoupeFromAttributes = (attrs: Attrs) => {
   let mathsLoupe = new MathsLoupeC()
   mathsLoupe.selectedDisplayLens = mathsLoupe.displayLenses.findIndex((lens) => (lens === attrs.lensDisplay))

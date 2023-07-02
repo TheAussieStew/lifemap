@@ -32,8 +32,21 @@ import { mentionSuggestionOptions } from './TagTipTapExtension'
 import BubbleMenu from '@tiptap/extension-bubble-menu'
 import { CalculationExtension } from './CalculationTipTapExtension'
 import { FadeIn } from './FadeInExtension'
+import { MessageExtension } from './MessageExtension'
+import { generatePrompt } from '../../utils/utils'
+
+const { Configuration, OpenAIApi } = require("openai");
 
 lowlight.registerLanguage('js', js)
+
+const configuration = new Configuration({
+  apiKey: "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",
+});
+delete configuration.baseOptions.headers['User-Agent'];
+const openai = new OpenAIApi(configuration);
+
+
+let timeout: ReturnType<typeof setTimeout>;
 
 export const CustomisedEditor = (information: RichTextT) => {
   let qi = React.useContext(QiStoreContext)
@@ -54,6 +67,7 @@ export const CustomisedEditor = (information: RichTextT) => {
       codeBlock: false,
     }),
     FadeIn,
+    // MessageExtension,
     Link.configure({
       openOnClick: true,
     }),
@@ -120,10 +134,28 @@ export const CustomisedEditor = (information: RichTextT) => {
       },
     },
     content: isYDoc ? null : information,
-    onUpdate: ({ editor }) => {
+    onUpdate: async ({ editor }) => {
       // console.log("JSON Output", editor.getJSON())
-      console.log("HTML Output", editor.getHTML())
+      const text = editor.getHTML()
+      console.log("HTML Output", text)
       // console.log("editor getText", editor.getText())
+
+      clearTimeout(timeout);
+
+      timeout = setTimeout(() => {
+        const html = editor.getHTML();
+        const text = editor.getText();
+        // send text to GPT-4
+        const completion = openai.createChatCompletion({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: text }],
+        }).then((response: any) => {
+          const text = response.data.choices[0].message.content
+          editor.commands.setContent(text)
+          console.log("text", text)
+        });
+
+      }, 2000);
     }
   })
 }
@@ -200,6 +232,16 @@ export const RichTextCodeExample = () => {
   </math>
   </div>
   </group>
+`
+  return (<RichText qi={new QiC()} text={content} lenses={["code"]} onChange={() => {
+  }} />)
+}
+
+export const AITutorExample = () => {
+  const content = `
+  <p>
+    Please type your message here...
+  </p>
 `
   return (<RichText qi={new QiC()} text={content} lenses={["code"]} onChange={() => {
   }} />)
