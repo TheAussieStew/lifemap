@@ -3,6 +3,7 @@ import { Color } from '@tiptap/extension-color'
 import { Highlight } from '@tiptap/extension-highlight'
 import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import GapCursor from '@tiptap/extension-gapcursor'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import FontFamily from '@tiptap/extension-font-family'
@@ -34,6 +35,7 @@ import { CalculationExtension } from './CalculationTipTapExtension'
 import { FadeIn } from './FadeInExtension'
 import { MessageExtension } from './MessageExtension'
 import { generatePrompt } from '../../utils/utils'
+import { TextSelection } from '@tiptap/pm/state'
 
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -47,6 +49,8 @@ const openai = new OpenAIApi(configuration);
 
 
 let timeout: ReturnType<typeof setTimeout>;
+let ignoreUpdate = false;
+
 
 export const CustomisedEditor = (information: RichTextT) => {
   let qi = React.useContext(QiStoreContext)
@@ -67,7 +71,8 @@ export const CustomisedEditor = (information: RichTextT) => {
       codeBlock: false,
     }),
     FadeIn,
-    // MessageExtension,
+    MessageExtension,
+    GapCursor,
     Link.configure({
       openOnClick: true,
     }),
@@ -134,25 +139,56 @@ export const CustomisedEditor = (information: RichTextT) => {
       },
     },
     content: isYDoc ? null : information,
-    onUpdate: async ({ editor }) => {
+    onUpdate: ({ editor, transaction }) => {
+      // Check if the update should be ignored
+      if (ignoreUpdate) {
+        // Reset the flag
+        ignoreUpdate = false;
+        // Ignore the update
+        return;
+      }
+
       // console.log("JSON Output", editor.getJSON())
-      const text = editor.getHTML()
-      console.log("HTML Output", text)
+      const html = editor.getHTML()
+      console.log("HTML Output", html)
       // console.log("editor getText", editor.getText())
+
+      // If only the cursor moved, then don't need a response
+      if (transaction.docChanged === false && transaction.steps.length === 0) {
+        // Ignore the update
+        return;
+      }
 
       clearTimeout(timeout);
 
       timeout = setTimeout(() => {
-        const html = editor.getHTML();
         const text = editor.getText();
-        // send text to GPT-4
-        const completion = openai.createChatCompletion({
+        // Set the flag to ignore the next update
+        ignoreUpdate = true;
+
+        openai.createChatCompletion({
           model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: text }],
+          messages: [{ role: "user", content: generatePrompt(text) }],
         }).then((response: any) => {
           const text = response.data.choices[0].message.content
-          editor.commands.setContent(text)
           console.log("text", text)
+          // @ts-ignore
+          editor.chain().insertContent({
+            type: 'message',
+            content: [
+              {
+                type: 'text',
+                text,
+              },
+            ],
+          })
+          .run();
+
+          // Move the cursor to the end of the inserted node
+          const { tr } = editor.state;
+          const selection = TextSelection.create(tr.doc, tr.selection.to);
+          tr.setSelection(selection);
+          editor.view.dispatch(tr);
         });
 
       }, 2000);

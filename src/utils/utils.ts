@@ -16,7 +16,11 @@ export const clickElement = (ref: React.RefObject<HTMLDivElement>) => {
   );
 };
 
-export const generatePrompt = (text: string) => `You're an tutor that is teaching a student to speak at a HSK3 level. Complete the following chat conversation: ${text}`
+export const generatePrompt = (text: string) => (
+    `You're a Mandarin language tutor that is teaching a student to speak at a HSK3 level. 
+    You generally speak in Mandarin, although for harder Mandarin words you substitute them for English.
+    Be concise, and remember that this is conversational, so no no winded responses.
+    ${text}`)
 
 export const getMathsLoupeFromAttributes = (attrs: Attrs) => {
   let mathsLoupe = new MathsLoupeC()
