@@ -32,6 +32,7 @@ import { mentionSuggestionOptions } from './TagTipTapExtension'
 import BubbleMenu from '@tiptap/extension-bubble-menu'
 import { CalculationExtension } from './CalculationTipTapExtension'
 import { FadeIn } from './FadeInExtension'
+import { CustomMention } from './Mention'
 
 lowlight.registerLanguage('js', js)
 
@@ -72,12 +73,14 @@ export const CustomisedEditor = (information: RichTextT) => {
     TaskItem.configure({
       nested: true,
     }),
-    Mention.configure({
-      HTMLAttributes: {
-        class: 'mention',
-      },
-      suggestion: mentionSuggestionOptions,
-    }),
+    CustomMention.configure(
+      {
+        HTMLAttributes: {
+          class: 'mention',
+        },
+        suggestion: mentionSuggestionOptions,
+      }
+    ),
     Heading.configure({
       levels: [1, 2, 3, 4],
     }),
@@ -121,7 +124,7 @@ export const CustomisedEditor = (information: RichTextT) => {
     },
     content: isYDoc ? null : information,
     onUpdate: ({ editor }) => {
-      // console.log("JSON Output", editor.getJSON())
+      console.log("JSON Output", editor.getJSON())
       console.log("HTML Output", editor.getHTML())
       // console.log("editor getText", editor.getText())
     }

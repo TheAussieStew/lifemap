@@ -15,7 +15,6 @@ export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
     char: "#",
     items: ({ query }): MentionSuggestion[] =>
         [
-            query,
             "Lea Thompson",
             "Cyndi Lauper",
             "Tom Cruise",
@@ -42,6 +41,7 @@ export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
             "Justine Bateman",
             "Lisa Bonet",
         ]
+            .concat(query.length > 0 ? [query] : [])
             .map((name, index) => ({ mentionLabel: name, id: index.toString() }))
             .filter((item) =>
                 item.mentionLabel.toLowerCase().startsWith(query.toLowerCase())
