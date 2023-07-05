@@ -7,7 +7,7 @@ import { group } from "console";
 
 export const tildeInputRegex = /~>$/
 // TODO: Match for brackets with text in between
-export const groupInputRegex = /\[([^\[\]]*)\]/
+export const groupInputRegex = /{([^{}]*)}/;
 
 export const GroupExtension = Node.create({
   name: "group",

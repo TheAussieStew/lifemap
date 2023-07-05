@@ -7,14 +7,14 @@ import { QiC, QiId, QiT } from "../core/Model";
 export const QiStoreContext = React.createContext<QiT>(new QiC());
 
 export const QiStore = (props: { qiId: QiId, userId: string, children: JSX.Element}) => {
-  // Initialise an empty ydoc to fill later with data from IndexedDB
+  // Initialise an empty ydoc to fill sync with data from TipTap Collab and IndexedDB
   const qi = new QiC()
 
   const roomName = props.qiId
 
   const appId = 'dy9wzo9x'
 
-  // Persist the document using the cloud provider
+  // Sync the document using the cloud provider
   new TiptapCollabProvider({ 
     appId: appId,// get this at collab.tiptap.dev
     name: roomName, // e.g. a uuid uuidv4();
@@ -22,7 +22,7 @@ export const QiStore = (props: { qiId: QiId, userId: string, children: JSX.Eleme
     document: qi.information
   });
 
-  //  Persist the document locally
+  //  Sync the document locally
   new IndexeddbPersistence(roomName, qi.information)
 
   return (
