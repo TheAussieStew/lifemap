@@ -13,6 +13,7 @@ export type MentionSuggestion = {
 
 export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
     char: "#",
+    allowSpaces: true,
     items: ({ query }): MentionSuggestion[] =>
         [
             "Lea Thompson",
