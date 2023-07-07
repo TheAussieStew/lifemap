@@ -57,6 +57,15 @@
       >div {
         flex: 1 1 auto;
       }
+
+      ul li,
+      ol li {
+        display: list-item;
+      }
+
+      ul[data-type="taskList"]>li {
+        display: flex;
+      }
     }
   }
 
@@ -149,6 +158,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
