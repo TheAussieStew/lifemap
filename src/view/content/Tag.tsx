@@ -28,6 +28,7 @@ export const Tag = (props: { children: any, isLens?: boolean }) => {
                     border: "1px solid #BBBBBB"
                 }
             }
+            data-drag-handle
         >
             {props.children}
         </motion.div>
