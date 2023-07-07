@@ -7,6 +7,7 @@ import { JSONContent } from '@tiptap/react';
 import { Qi } from '../../core/Qi';
 import { DOMAttributes } from "react";
 import { MathfieldElementAttributes } from 'mathlive'
+import { Group } from '../structure/Group';
 
 type CustomElement<T> = Partial<T & DOMAttributes<T>>;
 
@@ -73,7 +74,7 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, childre
     }, [props.equationString, props.loupe]);
 
     return (
-        <>
+        <Group lens={'verticalArray'}>
             {
                 {
                     'latex':
@@ -98,7 +99,7 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, childre
                         />,
                 }[props.loupe.displayLenses[props.loupe.selectedDisplayLens]]
             }
-        </>
+        </Group>
     )
 }
 
