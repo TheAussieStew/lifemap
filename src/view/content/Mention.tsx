@@ -8,4 +8,5 @@ export const CustomMention = Mention.extend({
       renderLabel: ({ node }: { node: ProsemirrorNode }) => node.attrs.label,
     };
   },
+  draggable: true
 });
