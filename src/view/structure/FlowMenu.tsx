@@ -172,21 +172,21 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                 ref={elementRef}
                 style={flowMenuStyle(isFixed, left)}>
                     <FlowSwitch>
-                        <button>
+                        <motion.div>
                             Copy
-                        </button>
-                        <button>
+                        </motion.div>
+                        <motion.div>
                             Copy Link
-                        </button>
-                        <button>
+                        </motion.div>
+                        <motion.div>
                             Export
-                        </button>
-                        <button>
+                        </motion.div>
+                        <motion.div>
                             Mark Done 
-                        </button>
-                        <button>
+                        </motion.div>
+                        <motion.div>
                             Delete
-                        </button>
+                        </motion.div>
                     </FlowSwitch>
                 <FlowSwitch isLens>
                         <div
@@ -195,45 +195,45 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                                 Rich Text
                             </Tag>
                             <FlowSwitch isLens>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
                                     <span style={{ fontFamily: 'EB Garamond' }}>
                                         EB Garamond
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Inter
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
                                     <span style={{ fontFamily: 'Arial' }}>
                                         Arial
                                     </span>
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                             <FlowSwitch isLens>
-                                <button
+                                <motion.div
                                     onClick={() => props.editor!.chain().focus().setFontSize('30px').run()}
                                 >
                                     30
-                                </button>
-                                <button
+                                </motion.div>
+                                <motion.div
                                     onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}
                                 >
                                     24
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontSize('24px').run()}>
                                     20
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontSize('18px').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontSize('18px').run()}>
                                     18
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontSize('16px').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontSize('16px').run()}>
                                     16
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontSize('14px').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontSize('14px').run()}>
                                     14
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                             <FlowSwitch isLens>
                                 <IconButton
@@ -334,106 +334,106 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                                 Math
                             </Tag>
                             <FlowSwitch isLens>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
-                                    <span style={{ fontFamily: 'Inter' }}>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                    <div style={{ fontFamily: 'Inter' }}>
                                         Natural
-                                    </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                    </div>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Latex
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Linear
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         MathJSON
                                     </span>
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                             <FlowSwitch isLens>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Simplify
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Evaluate
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Numeric
                                     </span>
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                             <FlowSwitch isLens>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Scientific
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Engineering
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Arial').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Decimal (Standard)
                                     </span>
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                             <FlowSwitch isLens>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         15 (Machine)
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         100 (Big Int)
                                     </span>
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                             <FlowSwitch isLens>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Simplified Fraction
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Mixed Fraction
                                     </span>
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                             <FlowSwitch isLens>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('EB Garamond').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Decimal
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Hexadecimal
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Binary
                                     </span>
-                                </button>
-                                <button onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
+                                </motion.div>
+                                <motion.div onClick={() => props.editor!.chain().focus().setFontFamily('Inter').run()}>
                                     <span style={{ fontFamily: 'Inter' }}>
                                         Octal
                                     </span>
-                                </button>
+                                </motion.div>
                             </FlowSwitch>
                         </div>
                 </FlowSwitch>

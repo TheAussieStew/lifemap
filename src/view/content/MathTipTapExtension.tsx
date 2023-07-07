@@ -7,6 +7,7 @@ import { NodeViewProps } from '@tiptap/core'
 import { getMathsLoupeFromAttributes } from "../../utils/utils";
 import { Tag } from "./Tag";
 import { FlowSwitch } from "../structure/FlowSwitch";
+import { motion } from "framer-motion";
 
 const REGEX_BLOCK_MATH_DOLLARS: RegExp = /\$\$\s+$/; //new RegExp("\$\$\s+$", "i");
 const REGEX_INLINE_MATH_DOLLARS: RegExp = /\$(.+)\$/; //new RegExp("\$(.+)\$", "i");
@@ -71,48 +72,48 @@ export const MathExtension = Node.create({
                 Math
               </Tag>
               <FlowSwitch isLens>
-                <button onClick={() => props.updateAttributes({ lensDisplay: 'natural' })}>
+                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'natural' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     Natural
                   </span>
-                </button>
-                <button onClick={() => props.updateAttributes({ lensDisplay: 'latex' })}>
+                </motion.div>
+                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'latex' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     Latex
                   </span>
-                </button>
-                <button onClick={() => props.updateAttributes({ lensDisplay: 'linear' })}>
+                </motion.div>
+                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'linear' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     Linear
                   </span>
-                </button>
-                <button onClick={() => props.updateAttributes({ lensDisplay: 'mathjson' })}>
+                </motion.div>
+                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'mathjson' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     MathJSON
                   </span>
-                </button>
+                </motion.div>
               </FlowSwitch>
               <FlowSwitch isLens>
-                <button onClick={() => props.updateAttributes({ lensEvaluation: 'identity' })}>
+                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'identity' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     Identity
                   </span>
-                </button>
-                <button onClick={() => props.updateAttributes({ lensEvaluation: 'simplify' })}>
+                </motion.div>
+                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'simplify' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     Simplify
                   </span>
-                </button>
-                <button onClick={() => props.updateAttributes({ lensEvaluation: 'evaluate' })}>
+                </motion.div>
+                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'evaluate' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     Evaluate
                   </span>
-                </button>
-                <button onClick={() => props.updateAttributes({ lensEvaluation: 'numeric' })}>
+                </motion.div>
+                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'numeric' })}>
                   <span style={{ fontFamily: 'Inter' }}>
                     Numeric
                   </span>
-                </button>
+                </motion.div>
               </FlowSwitch>
             </div>
             <Math equationString={props.node.textContent} loupe={getMathsLoupeFromAttributes(props.node.attrs)} onChange={function (change: string | JSONContent): void {

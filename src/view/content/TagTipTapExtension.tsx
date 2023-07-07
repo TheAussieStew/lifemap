@@ -5,6 +5,7 @@ import React from "react";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import tippy, { Instance as TippyInstance } from "tippy.js";
 import './MentionList.scss'
+import { motion } from "framer-motion";
 
 export type MentionSuggestion = {
     id: string;
@@ -180,13 +181,13 @@ const MentionList = forwardRef<MentionRef, MentionProps>((props, ref) => {
     return props.items.length > 0 ? (
         <div className="items">
             {props.items.map((item, index) => (
-                <button
+                <motion.div
                     className={`item ${index === selectedIndex ? "is-selected" : ""}`}
                     key={index}
                     onClick={() => selectItem(index)}
                 >
                     {item.mentionLabel}
-                </button>
+                </motion.div>
             ))}
         </div>
     ) : null;
