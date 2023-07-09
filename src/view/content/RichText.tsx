@@ -86,6 +86,11 @@ export const CustomisedEditor = (information: RichTextT) => {
     }),
     TextStyle,
     Underline,
+    UniqueID.configure({
+      attributeName: 'qid',
+      types: ['group'],
+      filterTransaction: transaction => !isChangeOrigin(transaction),
+    }),
     FontSize,
     Highlight,
     TextAlign.configure({
