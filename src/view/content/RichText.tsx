@@ -24,7 +24,6 @@ import { Indent } from '../../utils/Indent'
 import TextAlign from '@tiptap/extension-text-align'
 import { FlowMenu } from '../structure/FlowMenu'
 import './styles.scss'
-import { Doc } from 'yjs'
 import { observer } from 'mobx-react-lite'
 import { QiStoreContext } from '../../backend/QiStore'
 import { FontSize } from './FontSizeTipTapExtension'
@@ -33,6 +32,7 @@ import BubbleMenu from '@tiptap/extension-bubble-menu'
 import { CalculationExtension } from './CalculationTipTapExtension'
 import { FadeIn } from './FadeInExtension'
 import { CustomMention } from './Mention'
+import { CustomLink } from './Link'
 
 lowlight.registerLanguage('js', js)
 
@@ -55,7 +55,7 @@ export const CustomisedEditor = (information: RichTextT) => {
       codeBlock: false,
     }),
     FadeIn,
-    Link.configure({
+    CustomLink.configure({
       openOnClick: true,
     }),
     BubbleMenu.configure({
