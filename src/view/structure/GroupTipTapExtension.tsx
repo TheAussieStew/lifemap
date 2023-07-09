@@ -16,7 +16,6 @@ export const GroupExtension = Node.create({
   // TODO: Doesn't handle inline groups
   inline: false,
   selectable: false,
-  atom: true,
   parseHTML() {
     return [
       {

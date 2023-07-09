@@ -36,6 +36,7 @@ import { FadeIn } from './FadeInExtension'
 import { MessageExtension } from './MessageExtension'
 import { generatePrompt } from '../../utils/utils'
 import { TextSelection } from '@tiptap/pm/state'
+import { SophiaAI } from '../../agents/Sophia'
 
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -124,7 +125,9 @@ export const CustomisedEditor = (information: RichTextT) => {
     GroupExtension,
     MathExtension,
     CalculationExtension,
-    Indent
+    Indent,
+    // Add agents
+    SophiaAI
   ]
 
   if (isYDoc) {
@@ -166,37 +169,36 @@ export const CustomisedEditor = (information: RichTextT) => {
 
       clearTimeout(timeout);
 
-      timeout = setTimeout(() => {
-        const text = editor.getText();
-        // Set the flag to ignore the next update
-        ignoreUpdate = true;
+      // timeout = setTimeout(() => {
+      //   const text = editor.getText();
+      //   // Set the flag to ignore the next update
+      //   ignoreUpdate = true;
 
-        openai.createChatCompletion({
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: generatePrompt(text) }],
-        }).then((response: any) => {
-          const text = response.data.choices[0].message.content
-          console.log("text", text)
-          // @ts-ignore
-          editor.chain().insertContent({
-            type: 'message',
-            content: [
-              {
-                type: 'text',
-                text,
-              },
-            ],
-          })
-          .run();
+      //   openai.createChatCompletion({
+      //     model: "gpt-3.5-turbo",
+      //     messages: [{ role: "user", content: generatePrompt(text) }],
+      //   }).then((response: any) => {
+      //     const text = response.data.choices[0].message.content
+      //     console.log("text", text)
+      //     // @ts-ignore
+      //     editor.chain().insertContent({
+      //       type: 'message',
+      //       content: [
+      //         {
+      //           type: 'paragraph',
+      //           content: [
+      //             {
+      //               type: 'text',
+      //               text
+      //             }
+      //           ]
+      //         }
+      //       ]
+      //     })
+      //       .run();
+      //   });
 
-          // Move the cursor to the end of the inserted node
-          const { tr } = editor.state;
-          const selection = TextSelection.create(tr.doc, tr.selection.to);
-          tr.setSelection(selection);
-          editor.view.dispatch(tr);
-        });
-
-      }, 2000);
+      // }, 5000);
     }
   })
 }
