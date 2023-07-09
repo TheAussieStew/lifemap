@@ -1,8 +1,7 @@
 import React from 'react';
 
 interface MessageProps {
-  message: string;
-  self: boolean;
+  children: string;
 }
 
 interface ParsedMessage {
@@ -15,7 +14,7 @@ export const parseMessage = (message: string): ParsedMessage => {
   return { initials: initials.trim(), text: text.trim() };
 };
 
-export const Message: React.FC<MessageProps> = ({ message, self }) => {
+export const Message: React.FC<MessageProps> = (props: { children: string }) => {
 
   const bubbleStyles: React.CSSProperties = {
     position: 'relative',
@@ -24,19 +23,15 @@ export const Message: React.FC<MessageProps> = ({ message, self }) => {
     marginBottom: '10px',
   };
 
-  if (self) {
-    bubbleStyles.backgroundColor = '#0b93f6';
-    bubbleStyles.color = '#fff';
-    bubbleStyles.alignSelf = 'flex-end';
-  } else {
-    bubbleStyles.backgroundColor = '#e5e5ea';
-    bubbleStyles.color = '#000';
-    bubbleStyles.alignSelf = 'flex-start';
-  }
+  // TODO: Make it such that it uses a custom colour for each person. Not this self vs other format.
+
+  bubbleStyles.backgroundColor = '#0b93f6';
+  bubbleStyles.color = '#fff';
+  bubbleStyles.alignSelf = 'flex-end';
 
   return (
     <div style={bubbleStyles}>
-      {message}
+      {props.children}
     </div>
   );
 };

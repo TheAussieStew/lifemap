@@ -1,6 +1,7 @@
 import { Node, mergeAttributes, nodeInputRule } from '@tiptap/core';
 import { ReactNodeViewRenderer, NodeViewProps, NodeViewWrapper } from '@tiptap/react';
 import { Message, parseMessage } from './Message';
+import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
 import React from 'react';
 
 export const MessageExtension = Node.create({
@@ -14,45 +15,51 @@ export const MessageExtension = Node.create({
             },
         ];
     },
-    addAttributes() {
-        // Return an object with attribute configuration
-        return {
-            initials: {
-                default: '??',
-            },
-            text: {
-                default: "Enter text"
-            }
-        }
-    },
     renderHTML({ HTMLAttributes }) {
         return ['div', mergeAttributes(HTMLAttributes, { 'data-type': 'message' }), 0];
     },
     addNodeView() {
         return ReactNodeViewRenderer((props: NodeViewProps) => {
-            const { node } = props;
-            const message = node.textContent;
-
             return <NodeViewWrapper>
-                <Message message={message} self={false} />
+                <Message>
+                    {props.node.textContent}
+                </Message>
             </NodeViewWrapper>
         });
     },
     addInputRules() {
         return [
+            // TODO: make the Regex rule, "" which automatically converts to a single chat message
+            // Whoever, creates the message will automatically add a avatar assigning the message to them
             nodeInputRule({
-                find: /^[A-Z]{2}: .+\n$/,
+                find: /""/g, 
                 type: this.type,
-                getAttributes: (match) => {
-                    console.log('initial match:', match)
-                    const [fullMatch, initials, text] = match;
-                    // TODO: Why aren't these attributes there
-                    return {
-                        initials: initials,
-                        text: text
-                    }
-                },
             }),
         ];
     },
+    addProseMirrorPlugins() {
+        return [messageCursorPlugin];
+    },
+});
+
+
+const messageCursorPlugin = new Plugin({
+    key: new PluginKey('messageCursor'),
+    view: () => ({
+        update: (view) => {
+            const { state } = view;
+            const { selection } = state;
+            const messageNode = state.doc.nodeAt(selection.from);
+
+            if (messageNode && messageNode.type.name === 'message') {
+                // Set the cursor position to the end of the message node
+                const endPosition = selection.from + messageNode.nodeSize - 1;
+                view.dispatch(
+                    state.tr.setSelection(
+                        TextSelection.create(state.doc, endPosition)
+                    )
+                );
+            }
+        },
+    }),
 });
