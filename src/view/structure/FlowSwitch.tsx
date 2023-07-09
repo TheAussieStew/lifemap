@@ -92,6 +92,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[], onChange?: (
                             // The activation box is a thin line in the middle of the flow switch
                             // and activates when a child element enters this thin line.
                             if (hasBeenChanged) {
+                                // TODO: Find a way to play sound even when the page hasn't been interacted with
                                 tickSound.play().catch(function (error) {
                                     console.log("Chrome cannot play sound without user interaction first")
                                 });
