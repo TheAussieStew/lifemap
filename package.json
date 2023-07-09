@@ -23,7 +23,7 @@
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "12.1.10",
     "@tiptap-pro/extension-mathematics": "2.0.2",
-    "@tiptap-pro/extension-unique-id": "2.0.2",
+    "@tiptap-pro/extension-unique-id": "^2.0.2",
     "@tiptap/core": "2.0.3",
     "@tiptap/extension-bold": "2.0.3",
     "@tiptap/extension-bubble-menu": "^2.0.3",

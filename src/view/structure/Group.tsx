@@ -1,10 +1,11 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Qi } from '../../core/Qi';
+import { QiId } from '../../core/Model';
 
 export type GroupLenses = "verticalArray";
 
-export const Group = (props: { children: any, lens: GroupLenses }) => {
+export const Group = (props: { children: any, lens: GroupLenses, qid: QiId }) => {
 
     // TODO: Exit doesn't work
     // TODO: Fix stretchy border: https://github.com/framer/motion/issues/1249
@@ -12,7 +13,7 @@ export const Group = (props: { children: any, lens: GroupLenses }) => {
         <AnimatePresence>
             <motion.div
                 key="group"
-                layoutId="group"
+                layoutId={props.qid}
                 className="group"
                 initial={{
                     scale: 0,
@@ -38,6 +39,7 @@ export const Group = (props: { children: any, lens: GroupLenses }) => {
                     margin: `10px 0px 10px 0px`,
                 }}
             >
+                {console.log("qiId", props.qid)}
                 {props.children}
             </motion.div>
         </AnimatePresence>
@@ -46,7 +48,7 @@ export const Group = (props: { children: any, lens: GroupLenses }) => {
 
 export const GroupExample = () => {
     return (
-        <Group lens={"verticalArray"}>
+        <Group lens={"verticalArray"} qid={"000001"}>
             <Qi qiId={'000001'} userId={''} />
         </Group>
     )

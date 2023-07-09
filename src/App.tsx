@@ -8,7 +8,7 @@ const App = () => {
   return (
     <React.StrictMode>
       <motion.div style={{ margin: 10 }}>
-        <Group lens={'verticalArray'}>
+        <Group lens={'verticalArray'} qid={"000000"}>
           <Qi qiId={'000000'} userId={'000000'} />
         </Group>
       </motion.div>

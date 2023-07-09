@@ -2609,7 +2609,7 @@
   resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-mathematics/-/extension-mathematics-2.0.2.tgz#bce5e0de5ece2094fd1a2678b3863ae90aa2861c"
   integrity sha512-m+DaPaUpcJUfzay+TVwLxgERzdcKSoUvZZk8GrVJaIpnLCM6Uyutdkmyqtb0BYT65Ggs9jrXkObdOrowfkPyUg==
 
-"@tiptap-pro/extension-unique-id@2.0.2":
+"@tiptap-pro/extension-unique-id@^2.0.2":
   version "2.0.2"
   resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-unique-id/-/extension-unique-id-2.0.2.tgz#2289337fd62af5c03178a95e9903c53616c95ca2"
   integrity sha512-KLP0df8UyUBAq/bbDYF6QBY7jI5L/UWeho+ePm/7oqYHplXksLqbag7xGYn3h0N9xUg8ZfVM6fwzBcstpCiLMA==
