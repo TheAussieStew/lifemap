@@ -45,7 +45,7 @@ export const GroupExtension = Node.create({
     return ReactNodeViewRenderer((props: NodeViewProps) => {
       return (
         <NodeViewWrapper>
-          <Group lens={"verticalArray"}>
+          <Group lens={"verticalArray"} qid={props.node.attrs.qid}>
             {/* <Qi qiId={props.node.attrs.qiId} userId={""} /> */}
             <NodeViewContent />
           </Group>
