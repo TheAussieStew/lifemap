@@ -13,6 +13,9 @@ import Image from '@tiptap/extension-image'
 import Heading from '@tiptap/extension-heading'
 import Collaboration, { isChangeOrigin } from '@tiptap/extension-collaboration'
 import Mention from '@tiptap/extension-mention'
+import Details from '@tiptap-pro/extension-details'
+import DetailsSummary from '@tiptap-pro/extension-details-summary'
+import DetailsContent from '@tiptap-pro/extension-details-content'
 import UniqueID from '@tiptap-pro/extension-unique-id'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import js from 'highlight.js/lib/languages/javascript'
@@ -33,6 +36,7 @@ import { CalculationExtension } from './CalculationTipTapExtension'
 import { FadeIn } from './FadeInExtension'
 import { CustomMention } from './Mention'
 import { CustomLink } from './Link'
+import { QuoteExtension } from '../structure/QuoteTipTapExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -41,8 +45,36 @@ export const CustomisedEditor = (information: RichTextT) => {
   console.log("qiId", qi.id)
 
   const isYDoc = typeof information !== "string";
-  const customExtensions: Extensions = [
+
+  const officalExtensions: Extensions = [
     // Add official extensions
+    BubbleMenu.configure({
+      pluginKey: `bubbleMenu${qi.id}`,
+      updateDelay: 100,
+    }),
+    CodeBlockLowlight.configure({
+      lowlight,
+    }),
+    Color.configure({
+      types: ['textStyle'],
+    }),
+    Details.configure({
+      persist: true,
+      HTMLAttributes: {
+        class: 'details',
+      },
+    }),
+    DetailsContent,
+    DetailsSummary,
+    FontFamily.configure({
+      types: ['textStyle'],
+    }),
+    FontSize,
+    Heading.configure({
+      levels: [1, 2, 3, 4],
+    }),
+    Highlight,
+    Image,
     // @ts-ignore
     StarterKit.configure({
       // Here undefined is the equivalent of true
@@ -54,35 +86,12 @@ export const CustomisedEditor = (information: RichTextT) => {
       heading: false,
       codeBlock: false,
     }),
-    FadeIn,
-    CustomLink.configure({
-      openOnClick: true,
-    }),
-    BubbleMenu.configure({
-      pluginKey: `bubbleMenu${qi.id}`,
-      updateDelay: 100,
-    }),
-    Image,
-    CodeBlockLowlight.configure({
-      lowlight,
-    }),
-    Color.configure({
-      types: ['textStyle'],
-    }),
-    TaskList,
     TaskItem.configure({
       nested: true,
     }),
-    CustomMention.configure(
-      {
-        HTMLAttributes: {
-          class: 'mention',
-        },
-        suggestion: mentionSuggestionOptions,
-      }
-    ),
-    Heading.configure({
-      levels: [1, 2, 3, 4],
+    TaskList,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'],
     }),
     TextStyle,
     Underline,
@@ -91,28 +100,35 @@ export const CustomisedEditor = (information: RichTextT) => {
       types: ['group'],
       filterTransaction: transaction => !isChangeOrigin(transaction),
     }),
-    FontSize,
-    Highlight,
-    TextAlign.configure({
-      types: ['heading', 'paragraph'],
-    }),
-    FontFamily.configure({
-      types: ['textStyle'],
-    }),
-    UniqueID.configure({
-      types: ['group', 'paragraph'],
-      filterTransaction: transaction => !isChangeOrigin(transaction),
-      attributeName: 'qiId',
-    }),
-    // Add our custom extensions below
-    GroupExtension,
-    MathExtension,
-    CalculationExtension,
-    Indent
+     UniqueID.configure({
+       types: ['group', 'paragraph'],
+       filterTransaction: transaction => !isChangeOrigin(transaction),
+       attributeName: 'qiId',
+     }),
+  ]
+  
+  const customExtensions: Extensions = [
+   CalculationExtension,
+   CustomLink.configure({
+     openOnClick: true,
+   }),
+   CustomMention.configure(
+     {
+       HTMLAttributes: {
+         class: 'mention',
+       },
+       suggestion: mentionSuggestionOptions,
+     }
+   ),
+   FadeIn,
+   GroupExtension,
+   Indent,
+   MathExtension,
+   QuoteExtension,
   ]
 
   if (isYDoc) {
-    customExtensions.push(
+    officalExtensions.push(
       Collaboration.configure({
         document: qi.information,
         field: 'default',
@@ -121,7 +137,7 @@ export const CustomisedEditor = (information: RichTextT) => {
   }
 
   return useEditor({
-    extensions: customExtensions,
+    extensions: [...officalExtensions, ...customExtensions],
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',

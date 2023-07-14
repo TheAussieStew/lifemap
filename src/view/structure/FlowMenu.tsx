@@ -187,7 +187,21 @@ export const FlowMenu = (props: { editor: Editor | null }) => {
                         <motion.div>
                             Delete
                         </motion.div>
-                    </FlowSwitch>
+                </FlowSwitch>
+                <FlowSwitch>
+                    <motion.div onClick={() => props.editor!.chain().focus().setDetails().run()} >
+                        <span style={{ fontFamily: 'Inter' }}>
+                            Add details
+                        </span>
+                    </motion.div>
+                    {/* // TODO: Update this to add speech */}
+                    <motion.div onClick={() => props.editor!.chain().focus().setDetails().run()} >
+                        <span style={{ fontFamily: 'Inter' }}>
+                            Add speech direction
+                        </span>
+                    </motion.div>
+                </FlowSwitch>
+
                 <FlowSwitch isLens>
                         <div
                             style={{ display: "flex", gap: 5, height: "fit-content", overflowX: "scroll" }}>

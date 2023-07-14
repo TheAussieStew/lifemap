@@ -7,10 +7,8 @@ import '@fontsource/public-sans';
 const App = () => {
   return (
     <React.StrictMode>
-      <motion.div style={{ margin: 10 }}>
-        <Group lens={'verticalArray'} qid={"000000"}>
+      <motion.div style={{ margin: 10, padding: `10px 30px 0px 30px` }}>
           <Qi qiId={'000000'} userId={'000000'} />
-        </Group>
       </motion.div>
     </React.StrictMode>
   );
