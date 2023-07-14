@@ -15,7 +15,8 @@ export const GroupExtension = Node.create({
   content: "block*",
   // TODO: Doesn't handle inline groups
   inline: false,
-  selectable: false,
+  selectable: true,
+  draggable: true,
   atom: true,
   parseHTML() {
     return [
@@ -27,7 +28,6 @@ export const GroupExtension = Node.create({
   renderHTML({ HTMLAttributes }) {
     return ["group", HTMLAttributes, 0];
   },
-  draggable: true,
   addInputRules() {
     return [
       nodeInputRule({
