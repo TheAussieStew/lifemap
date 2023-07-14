@@ -16,7 +16,7 @@ export const MathExtension = Node.create({
   name: "math",
   group: "inline",
   inline: true,
-  content: "text*",
+  content: "block*",
   code: true,
   selectable: true,
   atom: true,
@@ -44,14 +44,14 @@ export const MathExtension = Node.create({
   },
   addInputRules() {
     return [
-      nodeInputRule({
+      wrappingInputRule({
         find: REGEX_INLINE_MATH_DOLLARS,
         type: this.type,
       }),
-      nodeInputRule({
-        find: REGEX_BLOCK_MATH_DOLLARS,
-        type: this.type,
-      }),
+      // wrappingInputRule({
+      //   find: REGEX_BLOCK_MATH_DOLLARS,
+      //   type: this.type,
+      // }),
     ];
   },
   addKeyboardShortcuts() {
@@ -65,64 +65,13 @@ export const MathExtension = Node.create({
     return ReactNodeViewRenderer((props: NodeViewProps) => {
       return (
         <NodeViewWrapper>
-          <>
-            <div
-              style={{ display: "flex", gap: 5, height: "fit-content" }}>
-              <Tag>
-                Math
-              </Tag>
-              <FlowSwitch isLens>
-                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'natural' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    Natural
-                  </span>
-                </motion.div>
-                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'latex' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    Latex
-                  </span>
-                </motion.div>
-                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'linear' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    Linear
-                  </span>
-                </motion.div>
-                <motion.div onClick={() => props.updateAttributes({ lensDisplay: 'mathjson' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    MathJSON
-                  </span>
-                </motion.div>
-              </FlowSwitch>
-              <FlowSwitch isLens>
-                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'identity' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    Identity
-                  </span>
-                </motion.div>
-                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'simplify' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    Simplify
-                  </span>
-                </motion.div>
-                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'evaluate' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    Evaluate
-                  </span>
-                </motion.div>
-                <motion.div onClick={() => props.updateAttributes({ lensEvaluation: 'numeric' })}>
-                  <span style={{ fontFamily: 'Inter' }}>
-                    Numeric
-                  </span>
-                </motion.div>
-              </FlowSwitch>
-            </div>
             <Math equationString={props.node.textContent} loupe={getMathsLoupeFromAttributes(props.node.attrs)} onChange={function (change: string | JSONContent): void {
               throw new Error("Function not implemented.");
             }} >
+              {console.log("nvc", <NodeViewContent/>)}
 
               <NodeViewContent/>
             </Math>
-          </>
         </NodeViewWrapper>
       );
     });

@@ -23,8 +23,6 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, childre
     const ce = new ComputeEngine();
     const [outputEquationString, setOutputEquationString] = useState("");
 
-    console.log("math child", props.children)
-
     useEffect(() => {
         let expression: BoxedExpression = ce.parse(props.equationString);
 
@@ -73,8 +71,9 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, childre
         setOutputEquationString(newOutputEquationString);
     }, [props.equationString, props.loupe]);
 
+
     return (
-        <Group lens={'verticalArray'}>
+        <>
             {
                 {
                     'latex':
@@ -83,8 +82,9 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, childre
                             lenses={["text"]}
                         />,
                     'natural': 
+                        // TODO: When I change this to Rich text, it shoes the entire lifemap root recursively
                         <math-field>
-                            {outputEquationString}
+                            {props.children}
                         </math-field>
                         ,
                     'linear': 
@@ -99,7 +99,7 @@ export const Math = (props: { equationString: string, loupe: MathsLoupe, childre
                         />,
                 }[props.loupe.displayLenses[props.loupe.selectedDisplayLens]]
             }
-        </Group>
+        </>
     )
 }
 
