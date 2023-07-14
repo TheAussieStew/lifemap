@@ -77,9 +77,17 @@ export const CustomisedEditor = (information: RichTextT) => {
     Highlight,
     Image,
     Placeholder.configure({
+      includeChildren: true,
+      showOnlyCurrent: true,
+      showOnlyWhenEditable: false,
       // Use different placeholders depending on the node type:
       placeholder: ({ node }) => {
-        return 'Write something...'
+        // TODO: This doesn't work because the group renders qi, which is a paragraph
+        if (node.type.name === "paragraph") {
+          return 'Write something...'
+        } else {
+          return ''
+        }
       },
     }),
     // @ts-ignore
