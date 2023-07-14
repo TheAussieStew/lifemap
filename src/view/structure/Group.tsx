@@ -1,16 +1,16 @@
-import React from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Qi } from '../../core/Qi';
 import { QiId } from '../../core/Model';
+import React from 'react'
+import { white } from '../Theme';
 
 export type GroupLenses = "verticalArray";
 
 export const Group = (props: { children: any, lens: GroupLenses, qid: QiId }) => {
 
-    // TODO: Exit doesn't work
+    // TODO: Exit animation doesn't work
     // TODO: Fix stretchy border: https://github.com/framer/motion/issues/1249
     return (
-        <AnimatePresence>
             <motion.div
                 key="group"
                 layoutId={props.qid}
@@ -31,6 +31,8 @@ export const Group = (props: { children: any, lens: GroupLenses, qid: QiId }) =>
                     duration: 0.4
                 }}
                 style={{
+                    position: "relative",
+                    backgroundColor: white,
                     minHeight: 20,
                     borderRadius: `10px`,
                     border: `2px solid var(--Light_Grey, #dddddd)`,
@@ -39,10 +41,24 @@ export const Group = (props: { children: any, lens: GroupLenses, qid: QiId }) =>
                     margin: `10px 0px 10px 0px`,
                 }}
             >
-                {console.log("qiId", props.qid)}
-                {props.children}
+            <motion.div data-drag-handle
+                onMouseLeave={(event) => {
+                    event.currentTarget.style.cursor = "grab";
+                }}
+                onMouseDown={(event) => {
+                    event.currentTarget.style.cursor = "grabbing";
+                }}
+                onMouseUp={(event) => {
+                    event.currentTarget.style.cursor = "grab";
+                }}
+                style={{ position: "absolute", right: -3, top: 10, display: "flex", flexDirection: "column", cursor: "grab" }} 
+                contentEditable="false" 
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}>
+                ⠿
             </motion.div>
-        </AnimatePresence>
+            {props.children}
+            </motion.div>
     )
 }
 
