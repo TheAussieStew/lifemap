@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import Placeholder from '@tiptap/extension-placeholder'
 import { Color } from '@tiptap/extension-color'
 import { Highlight } from '@tiptap/extension-highlight'
 import { EditorContent, Extensions, JSONContent, useEditor } from '@tiptap/react'
@@ -75,6 +76,12 @@ export const CustomisedEditor = (information: RichTextT) => {
     }),
     Highlight,
     Image,
+    Placeholder.configure({
+      // Use different placeholders depending on the node type:
+      placeholder: ({ node }) => {
+        return 'Write something...'
+      },
+    }),
     // @ts-ignore
     StarterKit.configure({
       // Here undefined is the equivalent of true
