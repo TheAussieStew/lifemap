@@ -37,6 +37,7 @@ import { CalculationExtension } from './CalculationTipTapExtension'
 import { FadeIn } from './FadeInExtension'
 import { CustomMention } from './Mention'
 import { CustomLink } from './Link'
+import { KeyValuePairExtension } from '../structure/KeyValuePairTipTapExtensions'
 import { QuoteExtension } from '../structure/QuoteTipTapExtension'
 
 lowlight.registerLanguage('js', js)
@@ -137,6 +138,7 @@ export const CustomisedEditor = (information: RichTextT) => {
    ),
    FadeIn,
    GroupExtension,
+   KeyValuePairExtension,
    Indent,
    MathExtension,
    QuoteExtension,

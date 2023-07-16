@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import React from "react"
+import { black } from "../Theme"
 
 export const Tag = (props: { children: any, isLens?: boolean }) => {
 
@@ -13,6 +14,7 @@ export const Tag = (props: { children: any, isLens?: boolean }) => {
                     height: "fit-content",
                     display: "flex",
                     flexDirection: "row",
+                    color: black,
                     justifyContent: "center",
                     alignItems: "center",
                     padding: "3px 10px 3px 10px",
