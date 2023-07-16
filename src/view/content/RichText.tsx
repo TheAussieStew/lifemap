@@ -39,6 +39,7 @@ import { CustomMention } from './Mention'
 import { CustomLink } from './Link'
 import { KeyValuePairExtension } from '../structure/KeyValuePairTipTapExtensions'
 import { QuoteExtension } from '../structure/QuoteTipTapExtension'
+import { MessageExtension } from './MessageExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -141,6 +142,7 @@ export const CustomisedEditor = (information: RichTextT) => {
    KeyValuePairExtension,
    Indent,
    MathExtension,
+   MessageExtension,
    QuoteExtension,
   ]
 
