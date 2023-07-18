@@ -3,7 +3,6 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'styles.scss';
 
-
 mapboxgl.accessToken = 'pk.eyJ1IjoidGhlYXVzc2llc3RldyIsImEiOiJjbGd1ZW1qaHowZmZsM3NudWdvYTY0c255In0.T7PzJ-D4ifBUDtbnRNbXFA';
 
 interface LocationProps { }
@@ -23,10 +22,6 @@ export const Location: React.FC<LocationProps> = () => {
             center: [lng, lat],
             zoom: zoom
         });
-    });
-
-    useEffect(() => {
-        if (map.current) return; // wait for map to initialize
         map.current!.on('move', () => {
             setLng(Number(map.current!.getCenter().lng.toFixed(4)));
             setLat(Number(map.current!.getCenter().lat.toFixed(4)));
