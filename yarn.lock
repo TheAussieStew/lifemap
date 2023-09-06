@@ -2721,6 +2721,15 @@ axios@^1.2.2:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
+axios@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.5.0.tgz#f02e4af823e2e46a9768cfc74691fdd0517ea267"
+  integrity sha512-D4DdjDo5CY50Qms0qGQTTw6Q44jl7zRwY7bthds06pUGfChBCTcQs+N743eFWGEd6pRTMd6A+I87aWyFV5wiZQ==
+  dependencies:
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 axobject-query@^3.1.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-3.2.1.tgz#39c378a6e3b06ca679f29138151e45b2b32da62a"
@@ -3134,6 +3143,11 @@ comment-json@^4.2.3:
     has-own-prop "^2.0.0"
     repeat-string "^1.6.1"
 
+complex.js@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.0.1.tgz#ea90c7a05aeceaf3a376d2c0f6a78421727d6879"
+  integrity sha512-zu2kFxCi8x66budGAEfHcLk0+dcT4EdtiwJ9oIFrvDq8ARJ4T4F3hC0qXc5tn+FzIOYaEOZfO6ew6t6wmGfwpg==
+
 complex.js@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.1.1.tgz#0675dac8e464ec431fb2ab7d30f41d889fb25c31"
@@ -3294,6 +3308,11 @@ decamelize@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-6.0.0.tgz#8cad4d916fde5c41a264a43d0ecc56fe3d31749e"
   integrity sha512-Fv96DCsdOgB6mdGl67MT5JaTNKRzrzill5OH5s8bjYJXVlcXyPYGyPsUkWyGV5p1TXI5esYIYMMeDJL0hEIwaA==
+
+decimal.js@7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-7.1.1.tgz#1adcad7d70d7a91c426d756f1eb6566c3be6cbcf"
+  integrity sha512-JAYTBScouq/tbesTv17VT4/Zf4kOguK6LRp9lK8IasQpzC1u4X5z+fNIasI3Le+kBXpo83hyTp6asVgTHIDlGw==
 
 decimal.js@^10.4.0:
   version "10.4.3"
@@ -4066,6 +4085,11 @@ format@^0.2.0:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/format/-/format-0.2.2.tgz#d6170107e9efdc4ed30c9dc39016df942b5cb58b"
   integrity sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==
+
+fraction.js@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.0.tgz#73974e2f8b51ef709536d624cc90782e2bb61274"
+  integrity sha512-VFj4e6g5arfi1iH4YOHao6Aq8ZB9e+R4mW8dUZA0qeLqVQWKMc4+4N/U1eTWPuddMsXd0MjwGRFRzBW2G7msBA==
 
 fraction.js@^4.2.0:
   version "4.2.0"
@@ -5350,12 +5374,31 @@ markdown-it@^13.0.1:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
+mathjs@3.11.2:
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-3.11.2.tgz#d2ca723d7e9254cc58d1421a5a61d8cfac8ff642"
+  integrity sha512-usttjbeFeA+ubBzc8KIIzDQyAbnBAXvQ9ZPZc7LYLZ1Blji7FaKdW+ATnSO5HIuCdybbII6zsGnen68FT026Gw==
+  dependencies:
+    complex.js "2.0.1"
+    decimal.js "7.1.1"
+    fraction.js "4.0.0"
+    seed-random "2.2.0"
+    tiny-emitter "1.0.2"
+    typed-function "0.10.5"
+
 mathlive@0.94.3:
   version "0.94.3"
   resolved "https://registry.yarnpkg.com/mathlive/-/mathlive-0.94.3.tgz#0dc27fb2e6a545d3da024b6bbbd2f0d423231b78"
   integrity sha512-a8YdMpHbUKSRL/bSBx3Pj14eAF3t+lvvNIolQWCJI+he0VLmYwtrywXsUcT5g6DBUtHfiRjLrZyey7YtCVrm4Q==
   dependencies:
     "@cortex-js/compute-engine" "^0.12.2"
+
+mathsteps@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/mathsteps/-/mathsteps-0.2.0.tgz#f874ef10c292565de7f9f4186bcb8f38916a7a96"
+  integrity sha512-x/BBVJ7n+RsUj4EOcKuCBCvrQWWvP8i6v5x8nr73qYU8yph6LZWT1ELPKnnUDEEqxe6lrncQB7HacknStMJJ5g==
+  dependencies:
+    mathjs "3.11.2"
 
 mdurl@^1.0.1:
   version "1.0.1"
@@ -6715,6 +6758,11 @@ scheduler@^0.23.0:
   dependencies:
     loose-envify "^1.1.0"
 
+seed-random@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/seed-random/-/seed-random-2.2.0.tgz#2a9b19e250a817099231a5b99a4daf80b7fbed54"
+  integrity sha512-34EQV6AAHQGhoc0tn/96a9Fsi6v2xdqe/dMUwljGRaFOzR3EgRmECvD0O8vi8X+/uQ50LGHfkNu/Eue5TPKZkQ==
+
 semver@7.x, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7:
   version "7.5.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.3.tgz#161ce8c2c6b4b3bdca6caadc9fa3317a4c4fe88e"
@@ -7211,6 +7259,11 @@ through@^2.3.6:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
 
+tiny-emitter@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-1.0.2.tgz#8e49470d3f55f89e247210368a6bb9fb51aa1601"
+  integrity sha512-y87VH5ncX+MzK2rqEF6v7Ad8gOdQDV1jiFT5bXUrWGBTFN9EFLrvufpWryNipgFDCzQ4fTOTPUCZGLYoQ2D9UA==
+
 tiny-warning@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
@@ -7396,6 +7449,11 @@ typed-array-length@^1.0.4:
     call-bind "^1.0.2"
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
+
+typed-function@0.10.5:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-0.10.5.tgz#2e0f18abd065219fab694a446a65c6d1981832c0"
+  integrity sha512-5BI8zKF/aZhsXJJKcRvcOuDCzBVY4R08Ok8ilRWHpQ5Np+LwzWeGzaIUNUw++d19Vvv8iqzvaN9/h5WDdY8cmg==
 
 typescript@5.1.6:
   version "5.1.6"

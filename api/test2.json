@@ -1,0 +1,193 @@
+{
+      "queryresult": {
+            "success": true,
+            "error": false,
+            "numpods": 4,
+            "datatypes": "",
+            "timedout": "",
+            "timedoutpods": "",
+            "timing": 0.983,
+            "parsetiming": 0.368,
+            "parsetimedout": false,
+            "recalculate": "",
+            "id": "MSP2670120a999950d39de600002153i636087g61fa",
+            "host": "https://www6b3.wolframalpha.com",
+            "server": "4",
+            "related": "https://www6b3.wolframalpha.com/api/v1/relatedQueries.jsp?id=MSPa2671120a999950d39de600003fg5697hg5a191fg6430556393126808734",
+            "version": "2.6",
+            "inputstring": "integral from 1 to 5 of xdx",
+            "pods": [
+                  {
+                        "title": "Definite integrals",
+                        "scanner": "Integral",
+                        "id": "Input",
+                        "position": 100,
+                        "error": false,
+                        "numsubpods": 2,
+                        "primary": true,
+                        "subpods": [
+                              {
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP2672120a999950d39de600001ed8ahi31dei5ici?MSPStoreType=image/gif&s=4",
+                                          "alt": "integral_1^5 x dx = 12",
+                                          "title": "integral_1^5 x dx = 12",
+                                          "width": 91,
+                                          "height": 38,
+                                          "type": "Default",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": "integral_1^5 x dx = 12"
+                              },
+                              {
+                                    "title": "Possible intermediate steps",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP2673120a999950d39de6000069hbh9acea6gi303?MSPStoreType=image/gif&s=4",
+                                          "alt": "Compute the definite integral:\n integral_1^5 x dx\nApply the fundamental theorem of calculus.\nThe antiderivative of x is x^2/2:\n = x^2/2 right bracketing bar _1^5\nEvaluate the antiderivative at the limits and subtract.\n x^2/2 right bracketing bar _1^5 = 5^2/2 - 1^2/2 = 12:\nAnswer: | \n | = 12",
+                                          "title": "Compute the definite integral:\n integral_1^5 x dx\nApply the fundamental theorem of calculus.\nThe antiderivative of x is x^2/2:\n = x^2/2 right bracketing bar _1^5\nEvaluate the antiderivative at the limits and subtract.\n x^2/2 right bracketing bar _1^5 = 5^2/2 - 1^2/2 = 12:\nAnswer: | \n | = 12",
+                                          "width": 346,
+                                          "height": 406,
+                                          "type": "Default",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": "Compute the definite integral:\n integral_1^5 x dx\nApply the fundamental theorem of calculus.\nThe antiderivative of x is x^2/2:\n = x^2/2 right bracketing bar _1^5\nEvaluate the antiderivative at the limits and subtract.\n x^2/2 right bracketing bar _1^5 = 5^2/2 - 1^2/2 = 12:\nAnswer: | \n | = 12"
+                              }
+                        ],
+                        "expressiontypes": [
+                              {
+                                    "name": "Default"
+                              },
+                              {
+                                    "name": "Default"
+                              }
+                        ],
+                        "states": [
+                              {
+                                    "name": "Hide steps",
+                                    "input": "Input__Hide steps"
+                              }
+                        ]
+                  },
+                  {
+                        "title": "Visual representation of the integral",
+                        "scanner": "Integral",
+                        "id": "VisualRepresentationOfTheIntegral",
+                        "position": 200,
+                        "error": false,
+                        "numsubpods": 1,
+                        "subpods": [
+                              {
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP2674120a999950d39de6000060914g49a4i74d77?MSPStoreType=image/gif&s=4",
+                                          "alt": "Visual representation of the integral",
+                                          "title": "",
+                                          "width": 220,
+                                          "height": 153,
+                                          "type": "2DMathPlotWithSignedArea",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": ""
+                              }
+                        ],
+                        "expressiontypes": {
+                              "name": "Default"
+                        }
+                  },
+                  {
+                        "title": "Riemann sums",
+                        "scanner": "Integral",
+                        "id": "RiemannSums",
+                        "position": 300,
+                        "error": false,
+                        "numsubpods": 1,
+                        "subpods": [
+                              {
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP2675120a999950d39de6000055fg8f920h2i7e20?MSPStoreType=image/gif&s=4",
+                                          "alt": "left sum | 12 - 8/n = 12 - 8/n + O((1/n)^2)\n(assuming subintervals of equal length)",
+                                          "title": "left sum | 12 - 8/n = 12 - 8/n + O((1/n)^2)\n(assuming subintervals of equal length)",
+                                          "width": 270,
+                                          "height": 65,
+                                          "type": "Grid",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": "left sum | 12 - 8/n = 12 - 8/n + O((1/n)^2)\n(assuming subintervals of equal length)"
+                              }
+                        ],
+                        "expressiontypes": {
+                              "name": "Grid"
+                        },
+                        "states": [
+                              {
+                                    "name": "More cases",
+                                    "input": "RiemannSums__More cases"
+                              }
+                        ]
+                  },
+                  {
+                        "title": "Indefinite integrals",
+                        "scanner": "Integral",
+                        "id": "IndefiniteIntegral",
+                        "position": 400,
+                        "error": false,
+                        "numsubpods": 2,
+                        "subpods": [
+                              {
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP2676120a999950d39de6000043ghag4c5f12ehci?MSPStoreType=image/gif&s=4",
+                                          "alt": "integral x dx = x^2/2 + constant",
+                                          "title": "integral x dx = x^2/2 + constant",
+                                          "width": 161,
+                                          "height": 43,
+                                          "type": "Default",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": "integral x dx = x^2/2 + constant"
+                              },
+                              {
+                                    "title": "Possible intermediate steps",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP2677120a999950d39de600001g87dd5f35e2f05e?MSPStoreType=image/gif&s=4",
+                                          "alt": "Take the integral:\n integral x dx\nThe integral of x is x^2/2:\nAnswer: | \n | = x^2/2 + constant",
+                                          "title": "Take the integral:\n integral x dx\nThe integral of x is x^2/2:\nAnswer: | \n | = x^2/2 + constant",
+                                          "width": 172,
+                                          "height": 242,
+                                          "type": "Default",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": "Take the integral:\n integral x dx\nThe integral of x is x^2/2:\nAnswer: | \n | = x^2/2 + constant"
+                              }
+                        ],
+                        "expressiontypes": [
+                              {
+                                    "name": "Default"
+                              },
+                              {
+                                    "name": "Default"
+                              }
+                        ],
+                        "states": [
+                              {
+                                    "name": "Hide steps",
+                                    "input": "IndefiniteIntegral__Hide steps"
+                              }
+                        ]
+                  }
+            ]
+      }
+}

@@ -34,7 +34,8 @@
     "src",
     "bugs",
     "types/*",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "mathsteps.d.ts"
   ],
   "exclude": [
     "node_modules"
