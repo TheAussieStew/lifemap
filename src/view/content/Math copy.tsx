@@ -15,7 +15,6 @@ import { getMathsLoupeFromAttributes } from '../../utils/utils';
 import { simplifyExpression, Step, ChangeTypes, solveEquation} from 'mathsteps';
 import axios from 'axios';
 import { error } from 'console';
-import exp from 'constants';
 
 type CustomElement<T> = Partial<T & DOMAttributes<T>>;
 
@@ -34,17 +33,16 @@ export const Math = (props: { equationString: string, nodeAttributes: Attrs, len
     // let [outputEquationString, setOutputEquationString] = React.useState<string>(props.equationString)
     let [stepsArray, setStepsArray] = React.useState<string[]>([""])
     const [isDropdownVisible, setDropdownVisibility] = useState(false);
+    let expression: BoxedExpression = ce.parse(props.equationString);
     const [showingSteps, setShowingSteps] = React.useState<boolean>(false)
 
-    // const hasSimplified = React.useRef(false);
-    // const hasEvaluated = React.useRef(false);
+    const hasSimplified = React.useRef(false);
+    const hasEvaluated = React.useRef(false);
 
-    // const useWolfram = React.useRef(false)
-    // let teststring = ""
+    const useWolfram = React.useRef(false)
+    let teststring = ""
 
     const [inputValue, setInputValue] = useState<string>('');
-
-    const[equationString, setEquationString] = useState<string>(props.equationString)
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (event.key === 'Enter') {
@@ -56,7 +54,7 @@ export const Math = (props: { equationString: string, nodeAttributes: Attrs, len
                     .then(response => {
                         console.log(response.data.explanation)
                         setStepsArray(response.data.explanation.split('\n'));
-                        setEquationString(response.data.result)
+                        
                         setShowingSteps(true)
 
                     }).catch(error => {
@@ -69,27 +67,126 @@ export const Math = (props: { equationString: string, nodeAttributes: Attrs, len
         }
     };
 
-   
-    let expression: BoxedExpression = ce.parse(equationString);
+    const outputEquationString = useMemo(() => {
+        switch (props.lensEvaluation) {
+            case "identity":
+                break;
+            case "evaluate":
+                if (!hasEvaluated.current) {
+                    console.log("Checking which format to use")
+                    axios.post('http://127.0.0.1:8000/check_expr', { tex: expression.latex})
+                        .then(response => {
+                            useWolfram.current = response.data.use_wolfram // or however you'd like to handle the response
+                        })
+                        .catch(error => {
+                            console.log('Wolfram test failed', error);
+                        });
+                    console.log(useWolfram)
 
-    let outputEquationString = ""
+                    if(!useWolfram.current){
+                        const out = convertLatexToAsciiMath(expression.latex);
+                        const stepsList: string[] = [];
+                        const steps = solveEquation(out);
+                        steps.forEach(step => {
+                            let stepString = `Before change: ${step.oldEquation.ascii() }\n` +
+                                `Change: ${step.changeType}\n` +
+                                `After change: ${step.newEquation.ascii() }\n` +
+                                `# of substeps: ${step.substeps.length}\n`;
+                            stepsList.push(stepString); // Append the step string to the list
+                        });
+                        setStepsArray(stepsList);
+                        hasEvaluated.current = true;
 
-    switch (props.lensDisplay) {
-        case "latex":
-            outputEquationString = expression.latex;
-            break;
-        case "linear":
-            outputEquationString = convertLatexToAsciiMath(expression.latex);
-            break;
-        case "mathjson":
-            outputEquationString = expression.toString();
-            break;
-        case "natural":
-            outputEquationString = expression.latex.toString();
-            break;
-        default:
-            break;
-    }
+                    }else{
+                        console.log('mathsteps did not work, trying FastAPI');
+                        console.log('Sending:', { tex: expression.latex, method: "solve" });
+
+                        axios.post('http://127.0.0.1:8000/solve', { tex: expression.latex, method: "solve for x" })
+                            .then(response => {
+                                setStepsArray(response.data.explanation.split('\n')); // or however you'd like to handle the response
+                            })
+                            .catch(error => {
+                                console.log('FastAPI also failed', error);
+                            });
+
+                    }
+                }
+                expression = expression.evaluate();
+                break;
+            case "simplify":
+                if (!hasSimplified.current) {
+                    console.log("Checking which format to use")
+                    axios.post('http://127.0.0.1:8000/check_expr', { tex: expression.latex })
+                        .then(response => {
+                            useWolfram.current = response.data.use_wolfram // or however you'd like to handle the response
+                        })
+                        .catch(error => {
+                            console.log('Wolfram test failed', error);
+                        });
+                    console.log(useWolfram)
+                    if (!useWolfram.current) {
+                        const out = convertLatexToAsciiMath(expression.latex);
+                        const steps = simplifyExpression(out);
+                        const stepsList: string[] = [];
+                        steps.forEach((step) => {
+                            let stepString = `Before change: ${step.oldNode.toString()}\n` +
+                                `Change: ${step.changeType}\n` +
+                                `After change: ${step.newNode.toString()}\n` +
+                                `# of substeps: ${step.substeps.length}\n`;
+                            stepsList.push(stepString); // Append the step string to the list
+                        });
+                        hasSimplified.current = true;
+                        axios.post('http://127.0.0.1:8000/solveMathSteps', { stepsString:stepsList.join('\n'), tex:expression.latex, method:'simplify'})
+                            .then(response => {
+                                setStepsArray(response.data.explanation.split('\n')); // or however you'd like to handle the response
+                            })
+                            .catch(error => {
+                                console.log('FastAPI also failed', error);
+                            });
+                    } else {
+                        console.log('mathsteps did not work, trying FastAPI');
+                        console.log('Sending:', { tex: expression.latex, method: "simplify" });
+
+                        axios.post('http://127.0.0.1:8000/solve', { tex: expression.latex, method: "simplify" })
+                            .then(response => {
+                                setStepsArray(response.data.explanation.split('\n')); // or however you'd like to handle the response
+                            })
+                            .catch(error => {
+                                console.log('FastAPI also failed', error);
+                            });
+                    }
+                }
+                expression = expression.simplify();
+                break;
+            case "numeric":
+                expression = expression.N();
+                break;
+        }
+
+
+        let nonStateOutputEquationString = ""
+
+        switch (props.lensDisplay) {
+            case "latex":
+                nonStateOutputEquationString = expression.latex;
+                break;
+            case "linear":
+                nonStateOutputEquationString = convertLatexToAsciiMath(expression.latex);
+                break;
+            case "mathjson":
+                nonStateOutputEquationString = expression.toString();
+                break;
+            case "natural":
+                nonStateOutputEquationString = expression.latex.toString();
+                break;
+            default:
+                break;
+        }
+
+        // setOutputEquationString(nonStateOutputEquationString);
+        return nonStateOutputEquationString
+
+    }, [props.equationString, props.lensEvaluation, props.lensDisplay]);
 
 
     // useEffect(() => {
