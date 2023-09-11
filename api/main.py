@@ -74,9 +74,12 @@ async def solve(payload: SolvePayload, response: Response):
     # Prepare a dictionary to hold the results
     steps = []
     result = ""
+    liststep = []
     for pod in pods:
         for subpod in pod['subpods']:
             steps.append(subpod['plaintext'])
+            if subpod['title'] == "Possible intermediate steps":
+                liststep.append(subpod['plaintext'])
         
         if pod['id'] == "Result":
             for subpod in pod['subpods']:
@@ -84,21 +87,24 @@ async def solve(payload: SolvePayload, response: Response):
                     result = subpod['plaintext']
             
             
+            
 
     # Ask OpenAI to format and explain the result
-    prompt = f"Explain this question: {query} to the user step by step with the following information {steps}. STEP BY STEP is key. Never put math and text on the same line, alternate. Format the response so all latex math equations start with  $ and end with $. Don't make up stuff."
-    print(prompt)
-    openai_response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=300)
+    # prompt = f"Explain this question: {query} to the user step by step with the following information {steps}. STEP BY STEP is key. Never put math and text on the same line, alternate. Format the response so all latex math equations start with  $ and end with $. Don't make up stuff."
+    # print(prompt)
+    # openai_response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=300)
 
-    # print(openai_response)    
+    # # print(openai_response)    
     
-    # Extracting the answer from OpenAI's response
-    explanation = openai_response.choices[0].text.strip()
+    # # Extracting the answer from OpenAI's response
+    # explanation = openai_response.choices[0].text.strip()
 
     # Return the result and its explanation as JSON
+    
+    print(liststep)
     return {
         "pods": pods,
-        "explanation": explanation,
+        "explanation": liststep[0],
         'result': result
     }
     

@@ -48,6 +48,7 @@ export const Math = (props: { equationString: string, nodeAttributes: Attrs, len
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (event.key === 'Enter') {
+            console.log(expression.latex)
             axios.post('http://127.0.0.1:8000/createWolframQuery', {userQuery:inputValue, tex: expression.latex })
                 .then(response => {
                     console.log(response.data.query)

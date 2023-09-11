@@ -2,26 +2,54 @@
       "queryresult": {
             "success": true,
             "error": false,
-            "numpods": 4,
-            "datatypes": "",
+            "numpods": 3,
+            "datatypes": "Solve",
             "timedout": "",
             "timedoutpods": "",
-            "timing": 0.966,
-            "parsetiming": 0.429,
+            "timing": 0.777,
+            "parsetiming": 0.386,
             "parsetimedout": false,
             "recalculate": "",
-            "id": "MSP1771d3hb5bah1eg8ec20000462d4h7fddagf770",
+            "id": "MSP29871h8dcf85517gc67000003i4gcf17b723664d",
             "host": "https://www6b3.wolframalpha.com",
-            "server": "19",
-            "related": "https://www6b3.wolframalpha.com/api/v1/relatedQueries.jsp?id=MSPa1781d3hb5bah1eg8ec2000015887adhicb99fg17179915770051379692",
+            "server": "9",
+            "related": "https://www6b3.wolframalpha.com/api/v1/relatedQueries.jsp?id=MSPa29881h8dcf85517gc67000002ddci7f4f27g10d11494138648170584556",
             "version": "2.6",
-            "inputstring": "Integrate x from 1 to 5, show steps",
+            "inputstring": "solve 10 \u2264 3x, show steps",
             "pods": [
                   {
-                        "title": "Definite integrals",
-                        "scanner": "Integral",
+                        "title": "Input interpretation",
+                        "scanner": "Identity",
                         "id": "Input",
                         "position": 100,
+                        "error": false,
+                        "numsubpods": 1,
+                        "subpods": [
+                              {
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29891h8dcf85517gc670000039g1f041f995h8i6?MSPStoreType=image/gif&s=9",
+                                          "alt": "step-by-step solution | solve 10<=3 x",
+                                          "title": "step-by-step solution | solve 10<=3 x",
+                                          "width": 337,
+                                          "height": 50,
+                                          "type": "Grid",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": "step-by-step solution | solve 10<=3 x"
+                              }
+                        ],
+                        "expressiontypes": {
+                              "name": "Default"
+                        }
+                  },
+                  {
+                        "title": "Results",
+                        "scanner": "Solve",
+                        "id": "Result",
+                        "position": 200,
                         "error": false,
                         "numsubpods": 2,
                         "primary": true,
@@ -29,32 +57,32 @@
                               {
                                     "title": "",
                                     "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1791d3hb5bah1eg8ec20000485794270d33bbf1?MSPStoreType=image/gif&s=19",
-                                          "alt": "integral_1^5 x dx = 12",
-                                          "title": "integral_1^5 x dx = 12",
-                                          "width": 91,
-                                          "height": 38,
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29901h8dcf85517gc67000005247feg12dh12ggi?MSPStoreType=image/gif&s=9",
+                                          "alt": "x>=10/3",
+                                          "title": "x>=10/3",
+                                          "width": 48,
+                                          "height": 37,
                                           "type": "Default",
                                           "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
                                           "colorinvertable": true,
                                           "contenttype": "image/gif"
                                     },
-                                    "plaintext": "integral_1^5 x dx = 12"
+                                    "plaintext": "x>=10/3"
                               },
                               {
                                     "title": "Possible intermediate steps",
                                     "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1801d3hb5bah1eg8ec200000ef5fg986hf8610e?MSPStoreType=image/gif&s=19",
-                                          "alt": "Compute the definite integral:\n integral_1^5 x dx\nApply the fundamental theorem of calculus.\nThe antiderivative of x is x^2/2:\n = x^2/2 right bracketing bar _1^5\nEvaluate the antiderivative at the limits and subtract.\n x^2/2 right bracketing bar _1^5 = 5^2/2 - 1^2/2 = 12:\nAnswer: | \n | = 12",
-                                          "title": "Compute the definite integral:\n integral_1^5 x dx\nApply the fundamental theorem of calculus.\nThe antiderivative of x is x^2/2:\n = x^2/2 right bracketing bar _1^5\nEvaluate the antiderivative at the limits and subtract.\n x^2/2 right bracketing bar _1^5 = 5^2/2 - 1^2/2 = 12:\nAnswer: | \n | = 12",
-                                          "width": 346,
-                                          "height": 406,
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29911h8dcf85517gc670000016dgfgcf282e2c8e?MSPStoreType=image/gif&s=9",
+                                          "alt": "Solve for x:\n10<=3 x\n10<=3 x is equivalent to 3 x = 10:\n3 x<=10\nMultiply both sides of 3 x<=10 by 1/3:\nAnswer: | \n | x<=10/3",
+                                          "title": "Solve for x:\n10<=3 x\n10<=3 x is equivalent to 3 x = 10:\n3 x<=10\nMultiply both sides of 3 x<=10 by 1/3:\nAnswer: | \n | x<=10/3",
+                                          "width": 242,
+                                          "height": 292,
                                           "type": "Default",
                                           "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
                                           "colorinvertable": true,
                                           "contenttype": "image/gif"
                                     },
-                                    "plaintext": "Compute the definite integral:\n integral_1^5 x dx\nApply the fundamental theorem of calculus.\nThe antiderivative of x is x^2/2:\n = x^2/2 right bracketing bar _1^5\nEvaluate the antiderivative at the limits and subtract.\n x^2/2 right bracketing bar _1^5 = 5^2/2 - 1^2/2 = 12:\nAnswer: | \n | = 12"
+                                    "plaintext": "Solve for x:\n10<=3 x\n10<=3 x is equivalent to 3 x = 10:\n3 x<=10\nMultiply both sides of 3 x<=10 by 1/3:\nAnswer: | \n | x<=10/3"
                               }
                         ],
                         "expressiontypes": [
@@ -67,28 +95,32 @@
                         ],
                         "states": [
                               {
+                                    "name": "Approximate form",
+                                    "input": "Result__Approximate form"
+                              },
+                              {
                                     "name": "Hide steps",
-                                    "input": "Input__Hide steps"
+                                    "input": "Result__Hide steps"
                               }
                         ]
                   },
                   {
-                        "title": "Visual representation of the integral",
-                        "scanner": "Integral",
-                        "id": "VisualRepresentationOfTheIntegral",
-                        "position": 200,
+                        "title": "Number line",
+                        "scanner": "Solve",
+                        "id": "NumberLine",
+                        "position": 300,
                         "error": false,
                         "numsubpods": 1,
                         "subpods": [
                               {
                                     "title": "",
                                     "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1811d3hb5bah1eg8ec20000247dfgbge0gf95a7?MSPStoreType=image/gif&s=19",
-                                          "alt": "Visual representation of the integral",
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29921h8dcf85517gc67000004f5gie71192abei6?MSPStoreType=image/gif&s=9",
+                                          "alt": "Number line",
                                           "title": "",
-                                          "width": 220,
-                                          "height": 153,
-                                          "type": "2DMathPlotWithSignedArea",
+                                          "width": 360,
+                                          "height": 39,
+                                          "type": "Default",
                                           "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
                                           "colorinvertable": true,
                                           "contenttype": "image/gif"
@@ -99,115 +131,7 @@
                         "expressiontypes": {
                               "name": "Default"
                         }
-                  },
-                  {
-                        "title": "Riemann sums",
-                        "scanner": "Integral",
-                        "id": "RiemannSums",
-                        "position": 300,
-                        "error": false,
-                        "numsubpods": 1,
-                        "subpods": [
-                              {
-                                    "title": "",
-                                    "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1821d3hb5bah1eg8ec2000021ei54ga658ccc0d?MSPStoreType=image/gif&s=19",
-                                          "alt": "left sum | 12 - 8/n = 12 - 8/n + O((1/n)^2)\n(assuming subintervals of equal length)",
-                                          "title": "left sum | 12 - 8/n = 12 - 8/n + O((1/n)^2)\n(assuming subintervals of equal length)",
-                                          "width": 270,
-                                          "height": 65,
-                                          "type": "Grid",
-                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
-                                          "colorinvertable": true,
-                                          "contenttype": "image/gif"
-                                    },
-                                    "plaintext": "left sum | 12 - 8/n = 12 - 8/n + O((1/n)^2)\n(assuming subintervals of equal length)"
-                              }
-                        ],
-                        "expressiontypes": {
-                              "name": "Grid"
-                        },
-                        "states": [
-                              {
-                                    "name": "More cases",
-                                    "input": "RiemannSums__More cases"
-                              }
-                        ]
-                  },
-                  {
-                        "title": "Indefinite integrals",
-                        "scanner": "Integral",
-                        "id": "IndefiniteIntegral",
-                        "position": 400,
-                        "error": false,
-                        "numsubpods": 2,
-                        "subpods": [
-                              {
-                                    "title": "",
-                                    "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1831d3hb5bah1eg8ec2000058ahc1b5gb44f3d1?MSPStoreType=image/gif&s=19",
-                                          "alt": "integral x dx = x^2/2 + constant",
-                                          "title": "integral x dx = x^2/2 + constant",
-                                          "width": 161,
-                                          "height": 43,
-                                          "type": "Default",
-                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
-                                          "colorinvertable": true,
-                                          "contenttype": "image/gif"
-                                    },
-                                    "plaintext": "integral x dx = x^2/2 + constant"
-                              },
-                              {
-                                    "title": "Possible intermediate steps",
-                                    "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1841d3hb5bah1eg8ec200000d5h58cgf8ed72c1?MSPStoreType=image/gif&s=19",
-                                          "alt": "Take the integral:\n integral x dx\nThe integral of x is x^2/2:\nAnswer: | \n | = x^2/2 + constant",
-                                          "title": "Take the integral:\n integral x dx\nThe integral of x is x^2/2:\nAnswer: | \n | = x^2/2 + constant",
-                                          "width": 172,
-                                          "height": 242,
-                                          "type": "Default",
-                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
-                                          "colorinvertable": true,
-                                          "contenttype": "image/gif"
-                                    },
-                                    "plaintext": "Take the integral:\n integral x dx\nThe integral of x is x^2/2:\nAnswer: | \n | = x^2/2 + constant"
-                              }
-                        ],
-                        "expressiontypes": [
-                              {
-                                    "name": "Default"
-                              },
-                              {
-                                    "name": "Default"
-                              }
-                        ],
-                        "states": [
-                              {
-                                    "name": "Hide steps",
-                                    "input": "IndefiniteIntegral__Hide steps"
-                              }
-                        ]
                   }
-            ],
-            "assumptions": {
-                  "type": "MultiClash",
-                  "word": "",
-                  "template": "Assuming ${word1} is referring to ${desc1}. Use \"${word2}\" as ${desc2}.",
-                  "count": 2,
-                  "values": [
-                        {
-                              "name": "VariableRange",
-                              "word": "from 1 to 5",
-                              "desc": " referring to variable ranges",
-                              "input": "*MC.from+1+to+5-_*VariableRange-"
-                        },
-                        {
-                              "name": "EnglishWord",
-                              "word": "from",
-                              "desc": "a word",
-                              "input": "*MC.from+1+to+5-_*EnglishWord-"
-                        }
-                  ]
-            }
+            ]
       }
 }
