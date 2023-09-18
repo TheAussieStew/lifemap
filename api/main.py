@@ -137,8 +137,8 @@ async def createWolframQuery(payload: WolframQueryPayload, response: Response):
     
     response.headers["Allow"] = "POST, OPTIONS"
     
-    
-    prompt = f"Based on the user query: {user_query} and this math they wrote {tex}, write a wolfram alpha query to do what the user asked and show steps. format the query in quotes"
+    print(f"tex:{tex}")
+    prompt = f"Based on the following, write a wolfram alpha query to execute the users math request. format in quotes. query:{user_query}, tex:{tex}"
     print(prompt)
     openai_response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=50)
     explanation = openai_response.choices[0].text.strip()
