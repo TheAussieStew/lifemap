@@ -2,20 +2,20 @@
       "queryresult": {
             "success": true,
             "error": false,
-            "numpods": 2,
-            "datatypes": "Math",
+            "numpods": 4,
+            "datatypes": "Factor",
             "timedout": "",
             "timedoutpods": "",
-            "timing": 1.153,
-            "parsetiming": 0.626,
+            "timing": 1.042,
+            "parsetiming": 0.325,
             "parsetimedout": false,
             "recalculate": "",
-            "id": "MSP49491h8f930gi48d19h700004c72h5e31014e1fb",
+            "id": "MSP375222b656c9h2i09i4i00003ghf0170a7ib0c1i",
             "host": "https://www6b3.wolframalpha.com",
-            "server": "9",
-            "related": "https://www6b3.wolframalpha.com/api/v1/relatedQueries.jsp?id=MSPa49501h8f930gi48d19h70000561e89g050g75c9c1494138648170584556",
+            "server": "15",
+            "related": "https://www6b3.wolframalpha.com/api/v1/relatedQueries.jsp?id=MSPa375322b656c9h2i09i4i00004c66b1iba640fc018884920455003441207",
             "version": "2.6",
-            "inputstring": "-2  \"derive (x = 4 - 2)\"",
+            "inputstring": "Factor x^2 - 4x + 4",
             "pods": [
                   {
                         "title": "Input interpretation",
@@ -28,17 +28,17 @@
                               {
                                     "title": "",
                                     "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP49511h8f930gi48d19h700005dgbc04b452f63e0?MSPStoreType=image/gif&s=9",
-                                          "alt": "-2 inches\u00d7(x = 4 - 2) inches",
-                                          "title": "-2 inches\u00d7(x = 4 - 2) inches",
-                                          "width": 190,
-                                          "height": 19,
-                                          "type": "Default",
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP375422b656c9h2i09i4i00006497d54aabf37c9h?MSPStoreType=image/gif&s=15",
+                                          "alt": "factor | x^2 - 4 x + 4",
+                                          "title": "factor | x^2 - 4 x + 4",
+                                          "width": 175,
+                                          "height": 38,
+                                          "type": "Grid",
                                           "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
                                           "colorinvertable": true,
                                           "contenttype": "image/gif"
                                     },
-                                    "plaintext": "-2 inches\u00d7(x = 4 - 2) inches"
+                                    "plaintext": "factor | x^2 - 4 x + 4"
                               }
                         ],
                         "expressiontypes": {
@@ -47,7 +47,7 @@
                   },
                   {
                         "title": "Results",
-                        "scanner": "Unit",
+                        "scanner": "Factor",
                         "id": "Result",
                         "position": 200,
                         "error": false,
@@ -57,32 +57,32 @@
                               {
                                     "title": "",
                                     "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP49521h8f930gi48d19h700004d6db38ff19achh5?MSPStoreType=image/gif&s=9",
-                                          "alt": "-2 (x = 2) in^2 (square inches)",
-                                          "title": "-2 (x = 2) in^2 (square inches)",
-                                          "width": 190,
-                                          "height": 19,
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP375522b656c9h2i09i4i00002bfice7fcccabf48?MSPStoreType=image/gif&s=15",
+                                          "alt": "(x - 2)^2",
+                                          "title": "(x - 2)^2",
+                                          "width": 50,
+                                          "height": 21,
                                           "type": "Default",
                                           "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
                                           "colorinvertable": true,
                                           "contenttype": "image/gif"
                                     },
-                                    "plaintext": "-2 (x = 2) in^2 (square inches)"
+                                    "plaintext": "(x - 2)^2"
                               },
                               {
                                     "title": "Possible intermediate steps",
                                     "img": {
-                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP49531h8f930gi48d19h700003f47534f25gh27di?MSPStoreType=image/gif&s=9",
-                                          "alt": "Multiply the quantities:\n(-2 in)\u00d7(x = 2) in\n(-2)\u00d7x = 2 = -2 (x = 2):\n-2 (x = 2) (in\u00d7in)\nin (inch)\u00d7in (inch) = in^2 (square inch):\nAnswer: | \n | -2 (x = 2) in^2",
-                                          "title": "Multiply the quantities:\n(-2 in)\u00d7(x = 2) in\n(-2)\u00d7x = 2 = -2 (x = 2):\n-2 (x = 2) (in\u00d7in)\nin (inch)\u00d7in (inch) = in^2 (square inch):\nAnswer: | \n | -2 (x = 2) in^2",
-                                          "width": 245,
-                                          "height": 262,
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP375622b656c9h2i09i4i0000318613ai6ba42d5c?MSPStoreType=image/gif&s=15",
+                                          "alt": "Factor the following:\nx^2 - 4 x + 4\nThe factors of 4 that sum to -4 are -2 and -2. So, x^2 - 4 x + 4 = (x - 2) (x - 2):\n(x - 2) (x - 2)\n(x - 2) (x - 2) = (x - 2)^2:\nAnswer: | \n | (x - 2)^2",
+                                          "title": "Factor the following:\nx^2 - 4 x + 4\nThe factors of 4 that sum to -4 are -2 and -2. So, x^2 - 4 x + 4 = (x - 2) (x - 2):\n(x - 2) (x - 2)\n(x - 2) (x - 2) = (x - 2)^2:\nAnswer: | \n | (x - 2)^2",
+                                          "width": 531,
+                                          "height": 272,
                                           "type": "Default",
                                           "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
                                           "colorinvertable": true,
                                           "contenttype": "image/gif"
                                     },
-                                    "plaintext": "Multiply the quantities:\n(-2 in)\u00d7(x = 2) in\n(-2)\u00d7x = 2 = -2 (x = 2):\n-2 (x = 2) (in\u00d7in)\nin (inch)\u00d7in (inch) = in^2 (square inch):\nAnswer: | \n | -2 (x = 2) in^2"
+                                    "plaintext": "Factor the following:\nx^2 - 4 x + 4\nThe factors of 4 that sum to -4 are -2 and -2. So, x^2 - 4 x + 4 = (x - 2) (x - 2):\n(x - 2) (x - 2)\n(x - 2) (x - 2) = (x - 2)^2:\nAnswer: | \n | (x - 2)^2"
                               }
                         ],
                         "expressiontypes": [
@@ -99,41 +99,86 @@
                                     "input": "Result__Hide steps"
                               }
                         ]
-                  }
-            ],
-            "assumptions": [
+                  },
                   {
-                        "type": "Unit",
-                        "word": "\"",
-                        "template": "Assuming ${desc1} for \"${word}\". Use ${desc2} instead",
-                        "count": 2,
-                        "values": [
+                        "title": "Plots",
+                        "scanner": "Plotter",
+                        "id": "Plot",
+                        "position": 300,
+                        "error": false,
+                        "numsubpods": 2,
+                        "subpods": [
                               {
-                                    "name": "Inches",
-                                    "desc": "inches",
-                                    "input": "UnitClash_*%22.*Inches--"
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP375722b656c9h2i09i4i000033a8g269g8ebb58d?MSPStoreType=image/gif&s=15",
+                                          "alt": "Plots",
+                                          "title": "",
+                                          "width": 329,
+                                          "height": 154,
+                                          "type": "2DMathPlot_1",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": ""
                               },
                               {
-                                    "name": "Arcseconds",
-                                    "desc": "seconds of arc",
-                                    "input": "UnitClash_*%22.*Arcseconds--"
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP375822b656c9h2i09i4i000063b9i7bd91a2d8c7?MSPStoreType=image/gif&s=15",
+                                          "alt": "Plots",
+                                          "title": "",
+                                          "width": 317,
+                                          "height": 154,
+                                          "type": "2DMathPlot_1",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": ""
+                              }
+                        ],
+                        "expressiontypes": [
+                              {
+                                    "name": "Default"
+                              },
+                              {
+                                    "name": "Default"
                               }
                         ]
                   },
                   {
-                        "type": "ListOrTimes",
-                        "template": "Assuming ${desc1}. Use ${desc2} instead",
-                        "count": 2,
-                        "values": [
+                        "title": "Factorizations over finite fields",
+                        "scanner": "Factor",
+                        "id": "FactorizationsOverFiniteFields",
+                        "position": 400,
+                        "error": false,
+                        "numsubpods": 1,
+                        "subpods": [
                               {
-                                    "name": "Times",
-                                    "desc": "multiplication",
-                                    "input": "ListOrTimes_Times"
-                              },
+                                    "title": "",
+                                    "img": {
+                                          "src": "https://www6b3.wolframalpha.com/Calculate/MSP/MSP375922b656c9h2i09i4i000058fgccbb59b96g6d?MSPStoreType=image/gif&s=15",
+                                          "alt": "GF(2) | x^2",
+                                          "title": "GF(2) | x^2",
+                                          "width": 100,
+                                          "height": 38,
+                                          "type": "Grid",
+                                          "themes": "1,2,3,4,5,6,7,8,9,10,11,12",
+                                          "colorinvertable": true,
+                                          "contenttype": "image/gif"
+                                    },
+                                    "plaintext": "GF(2) | x^2"
+                              }
+                        ],
+                        "expressiontypes": {
+                              "name": "Grid"
+                        },
+                        "states": [
                               {
-                                    "name": "List",
-                                    "desc": "a list",
-                                    "input": "ListOrTimes_List"
+                                    "name": "More",
+                                    "input": "FactorizationsOverFiniteFields__More"
                               }
                         ]
                   }

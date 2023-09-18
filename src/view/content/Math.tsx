@@ -45,13 +45,15 @@ export const Math = (props: { equationString: string, nodeAttributes: Attrs, len
     const [inputValue, setInputValue] = useState<string>('');
 
     const[equationString, setEquationString] = useState<string>(props.equationString)
+    const[outputEquationString, setOutputEquationString] = useState<string>(equationString)
+
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (event.key === 'Enter') {
-            console.log(expression.latex)
-            axios.post('http://127.0.0.1:8000/createWolframQuery', {userQuery:inputValue, tex: expression.latex })
+            console.log("equationString: " + equationString)
+            axios.post('http://127.0.0.1:8000/createWolframQuery', { userQuery: inputValue, tex: equationString })
                 .then(response => {
-                    console.log(response.data.query)
+                    console.log("response:" + response.data.query)
                     let query = response.data.query
                     axios.post('http://127.0.0.1:8000/solve', { query: query})
                     .then(response => {
@@ -70,27 +72,32 @@ export const Math = (props: { equationString: string, nodeAttributes: Attrs, len
         }
     };
 
+    useEffect(() => {
+        setEquationString(props.equationString)
+    }, [props.equationString]);
    
-    let expression: BoxedExpression = ce.parse(equationString);
+    useEffect(() => {
+        let expression: BoxedExpression = ce.parse(equationString)
+        console.log(equationString)
+        switch (props.lensDisplay) {
+            case "latex":
+                setOutputEquationString(expression.latex)
+                break;
+            case "linear":
+                setOutputEquationString(convertLatexToAsciiMath(expression.latex));
+                break;
+            case "mathjson":
+                setOutputEquationString(expression.toString());
+                break;
+            case "natural":
+                setOutputEquationString(expression.latex.toString());
+                break;
+            default:
+                break;
+        }
+    }, [props.lensDisplay, props.lensEvaluation, equationString]);
 
-    let outputEquationString = ""
 
-    switch (props.lensDisplay) {
-        case "latex":
-            outputEquationString = expression.latex;
-            break;
-        case "linear":
-            outputEquationString = convertLatexToAsciiMath(expression.latex);
-            break;
-        case "mathjson":
-            outputEquationString = expression.toString();
-            break;
-        case "natural":
-            outputEquationString = expression.latex.toString();
-            break;
-        default:
-            break;
-    }
 
 
     // useEffect(() => {
