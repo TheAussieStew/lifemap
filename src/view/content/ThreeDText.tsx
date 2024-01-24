@@ -11,6 +11,7 @@ interface ThreeDTextProps {
 
 // @ts-ignore
 function Text({ children, config, ...props }) {
+  // @ts-ignore
   const texture = useLoader(RGBELoader, 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr')
   return (
     <>
@@ -71,8 +72,7 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
   }
 
   return (
-    <Canvas style={{width: "100%", height: 300}} shadows orthographic camera={{ position: [10, 20, 20], zoom: 80 }} gl={{ preserveDrawingBuffer: true }}>
-      <color attach="background" args={['#f2f2f5']} />
+    <Canvas style={{ width: "100%", height: 300 }} shadows orthographic camera={{ position: [10, 20, 20], zoom: 80 }} gl={{ alpha: true, preserveDrawingBuffer: true }}>
       <Text config={config} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 2.25]}>
         {text}
       </Text>
