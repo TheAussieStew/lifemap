@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer, wrappingInputRule } from '@tiptap/react'
 import { Node } from '@tiptap/react'
-import ThreeDText from './ThreeDText'
+import { ThreeDText } from './ThreeDText'
 
 const threeThreesRegex = /333/;
 
@@ -43,16 +43,16 @@ export const ThreeDTextExtension = Node.create({
     },
     addNodeView() {
         return ReactNodeViewRenderer((props: NodeViewProps) => {
-            const [text, setText] = useState(props.node.attrs.src);
+            const [text, setText] = useState(props.node.attrs.text);
 
-            const handleSrcChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 setText(event.target.value);
-                props.updateAttributes({ src: event.target.value });
+                props.updateAttributes({ text: event.target.value });
             };
 
             return (
                 <NodeViewWrapper>
-                    <input type="text" value={text} onChange={handleSrcChange} style={{ border: '1.5px solid #34343430', borderRadius: 5, outline: 'none', backgroundColor: 'transparent', width: `80px`, position: "absolute" }} />
+                    <input type="text" value={text} onChange={handleTextChange} style={{ border: '1.5px solid #34343430', borderRadius: 5, outline: 'none', backgroundColor: 'transparent', width: `80px`, position: "absolute", zIndex: 10 }} />
                     <ThreeDText text={text} />
                 </NodeViewWrapper>
             );
