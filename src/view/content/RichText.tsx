@@ -25,7 +25,6 @@ import DetailsContent from '@tiptap-pro/extension-details-content'
 import UniqueID from '@tiptap-pro/extension-unique-id'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import js from 'highlight.js/lib/languages/javascript'
-import { debounce } from 'lodash'
 import { QuantaClass, QuantaType, TextSectionLens, RichTextT } from '../../core/Model'
 import { lowlight } from 'lowlight'
 import { GroupExtension } from '../structure/GroupTipTapExtension'
@@ -50,18 +49,18 @@ import { ConversationExtension } from '../structure/ConversationExtension'
 import { LocationExtension } from './LocationTipTapExtension'
 import { CommentExtension } from '../structure/CommentTipTapExtension'
 import { PortalExtension } from '../structure/PortalExtension'
-import { backup, generateUniqueID, renderDate } from '../../utils/utils'
+import { generateUniqueID, renderDate } from '../../utils/utils'
 import { ThreeDExtension } from './ThreeDExtension'
 import { issue123DocumentState } from '../../../bugs/issue-123'
 import { ExperimentalPortalExtension } from '../structure/ExperimentalPortalExtension'
 import { WarningExtension } from '../structure/WarningTipTapExtension'
 import { driver } from 'driver.js'
 import { TwoDGraphExtension } from '../structure/TwoDGraphTipTapExtension'
-import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
+import { ThreeDTextExtension } from './ThreeDTextExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -180,6 +179,7 @@ export const customExtensions: Extensions = [
   QuoteExtension,
   TwoDGraphExtension,
   ThreeDExtension,
+  ThreeDTextExtension,
   WarningExtension
 ]
 
