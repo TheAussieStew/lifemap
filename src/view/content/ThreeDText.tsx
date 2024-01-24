@@ -22,7 +22,7 @@ function Text({ children, config, ...props }) {
             bevelEnabled
             // @ts-ignore
             font={Inter}
-            scale={2}
+            scale={1.5}
             letterSpacing={-0.05}
             height={0.25}
             bevelSize={0.01}
