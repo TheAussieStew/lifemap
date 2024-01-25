@@ -103,6 +103,7 @@
     "sass": "^1.59.2",
     "string-similarity": "^4.0.4",
     "three": "0.151.3",
+    "three-stdlib": "^2.29.4",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.2",
     "typescript": "5.1.6",
