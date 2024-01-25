@@ -1,8 +1,10 @@
 import React from 'react'
-import { RGBELoader } from 'three-stdlib'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { AccumulativeShadows, Environment, OrbitControls, Lightformer, RandomizedLight, Text3D, Center, MeshTransmissionMaterial } from '@react-three/drei'
-import { button, useControls } from 'leva'
+import { button } from 'leva'
+import { RGBELoader } from 'three-stdlib'
+// This is the old style import, may improve compatibility, but not written in TypeScript
+// import {RGBELoader} from "three/examples/jsm/loaders/RGBELoader";
 import Inter from './Inter_Medium_Regular.json';
 
 interface ThreeDTextProps {
@@ -11,7 +13,16 @@ interface ThreeDTextProps {
 
 // @ts-ignore
 function Text({ children, config, ...props }) {
-  const texture = useLoader(RGBELoader, 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr')
+  let envTexture
+
+  try {
+    // Action this: https://github.com/pmndrs/react-three-fiber/issues/2668#issuecomment-1445832081
+    envTexture = useLoader(RGBELoader, '/textures/aerodynamics_workshop_1k.hdr')
+  }
+  catch (err) {
+    console.error(err)
+  }
+
   return (
     <>
       <group>
@@ -29,7 +40,7 @@ function Text({ children, config, ...props }) {
             curveSegments={128}
             bevelThickness={0.01}>
             {children}
-            <MeshTransmissionMaterial {...config} background={texture} />
+            <MeshTransmissionMaterial {...config} background={envTexture} />
           </Text3D>
         </Center>
       </group>

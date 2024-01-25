@@ -2053,14 +2053,14 @@
     utility-types "^3.10.0"
     zustand "^3.5.13"
 
-"@react-three/fiber@8.12.2":
-  version "8.12.2"
-  resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-8.12.2.tgz#7bdcd1064cb8405d905d1d74d9f739d801d3c22a"
-  integrity sha512-CIjSK02ffXnT6q+/7HJ1JTX9dDS4N67OAs/yYYtUKK5qkO2WUFVt6ymQDAp7yLPRFA+frvYfAHSIIYwQ48dmDQ==
+"@react-three/fiber@9.0.0-alpha.22":
+  version "9.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-9.0.0-alpha.2.tgz#39d6b77944b99674c76f7dffa8902f2afbc6926e"
+  integrity sha512-jryO08fF/2o8JrWt/s1zPi+D2pGZt7jrVCw0OLVNIvBbCplWApuj0amNMhFYf3VwPXqTyUaz5XsgAX56SdyE+g==
   dependencies:
     "@babel/runtime" "^7.17.8"
     "@types/react-reconciler" "^0.26.7"
-    its-fine "^1.0.6"
+    its-fine "^1.0.0"
     react-reconciler "^0.27.0"
     react-use-measure "^2.1.1"
     scheduler "^0.21.0"
@@ -5919,7 +5919,7 @@ isomorphic.js@^0.2.4:
   resolved "https://registry.yarnpkg.com/isomorphic.js/-/isomorphic.js-0.2.5.tgz#13eecf36f2dba53e85d355e11bf9d4208c6f7f88"
   integrity sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==
 
-its-fine@^1.0.6:
+its-fine@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/its-fine/-/its-fine-1.1.1.tgz#e74b93fddd487441f978a50f64f0f5af4d2fc38e"
   integrity sha512-v1Ia1xl20KbuSGlwoaGsW0oxsw8Be+TrXweidxD9oT/1lAh6O3K3/GIM95Tt6WCiv6W+h2M7RB1TwdoAjQyyKw==
