@@ -2,11 +2,8 @@ import React from "react";
 import { Node, NodeViewProps, wrappingInputRule } from "@tiptap/core";
 import { NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Group } from "./Group";
-import { Quanta } from "../../core/Quanta";
-import { group } from "console";
-import { Message } from "../content/Message";
 
-export const tildeInputRegex = /~>$/
+export const exclamationQuoteInputRegex = /!\\"$/;
 
 export const ConversationExtension = Node.create({
   name: "conversation",
@@ -31,7 +28,7 @@ export const ConversationExtension = Node.create({
   addInputRules() {
     return [
       wrappingInputRule({
-        find: tildeInputRegex,
+        find: exclamationQuoteInputRegex,
         type: this.type,
       }),
     ]
@@ -40,11 +37,11 @@ export const ConversationExtension = Node.create({
     return ReactNodeViewRenderer((props: NodeViewProps) => {
       return (
         <NodeViewWrapper>
-          <>
-          </>
           <Group lens={"verticalArray"} quantaId={props.node.attrs.qid}>
-            <div style={{fontFamily: "EB Garamond", fontSize: 30}}>
+            <div style={{ fontFamily: "EB Garamond", fontSize: 30 }}>
               Group Chat
+              <br/> 
+              <br/> 
             </div>
             <NodeViewContent/>
           </Group>
