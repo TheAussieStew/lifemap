@@ -3,12 +3,12 @@ import { Node, NodeViewProps, wrappingInputRule } from "@tiptap/core";
 import { NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
 import { Group } from "./Group";
 
-export const exclamationQuoteInputRegex = /!\\"$/;
+export const ellipsisQuote = /^'\.\.\.'$/
 
 export const ConversationExtension = Node.create({
   name: "conversation",
   group: "block",
-  // TODO: Technically this should only accept message nodes
+  // TODO: Technically this should only accept message nodes, but when I change it to message nodes a schema error occurs
   content: "block*",
   // TODO: Doesn't handle inline groups
   inline: false,
@@ -28,7 +28,7 @@ export const ConversationExtension = Node.create({
   addInputRules() {
     return [
       wrappingInputRule({
-        find: exclamationQuoteInputRegex,
+        find: ellipsisQuote,
         type: this.type,
       }),
     ]
