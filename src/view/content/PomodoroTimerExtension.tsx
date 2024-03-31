@@ -54,7 +54,7 @@ export const PomodoroTimerExtension = Node.create({
                 default: "5"
             },
             pomodoros: {
-                default: mockAttrPomodoros
+                default: []
             }
         }
     },
