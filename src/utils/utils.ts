@@ -8,6 +8,11 @@ var stringSimilarity = require("string-similarity");
 
 export const generateUniqueID = () => uuidv4()
 
+export const singleTickAudio = new Audio("/singleTick.mp3");
+export const kitchenTimerStartAudio = new Audio("/kitchenTimerStart.mp3");
+export const dingAudio = new Audio("/ding.mp3");
+export const rubbishingAudio = new Audio("/rubbishing.mp3");
+
 export const getMathsLoupeFromAttributes = (attrs: Attrs) => {
   let mathsLoupe = new MathsLoupeC()
   mathsLoupe.selectedDisplayLens = mathsLoupe.displayLenses.findIndex((lens) => (lens === attrs.lensDisplay))

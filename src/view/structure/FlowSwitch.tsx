@@ -1,13 +1,13 @@
 import './styles.scss'
 import { motion } from "framer-motion"
 import React from "react"
+import { singleTickAudio } from '../../utils/utils'
 
 export const FlowSwitch = (props: { children: React.ReactElement[], value: string, onChange?: (selectedIndex: number) => void, isLens?: boolean }) => {
     const flowSwitchContainerRef = React.useRef<HTMLDivElement>(null)
     const [releaseSelected, setReleaseSelected] = React.useState<number>(0)
     const [hasBeenChanged, setHasBeenChanged] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
-    const tickSound = new Audio("/tick.mp3");
     let timer: NodeJS.Timeout | null = null;
     const refs = props.children.map(() => React.createRef<HTMLDivElement>());
 
@@ -32,8 +32,8 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
                 // The activation box is a thin line in the middle of the flow switch
                 // and activates when a child element enters this thin line.
                 if (hasBeenChanged) {
-                    // TODO: Find a way to play sound even when the page hasn't been interacted with
-                    tickSound.play().catch(function (error) {
+                    // TODO: Find a way to play sound even when the page hasn't really been interacted with
+                    singleTickAudio.play().catch((_) => {
                         console.log("Chrome cannot play sound without user interaction first")
                     });
                 } else {
