@@ -310,7 +310,6 @@ export const PomodoroTimer = (props: {
             </IconButton>
             {
                 pomodoros.map((pomodoro) => {
-                    console.log("mapping pomodoros")
                     return (
                         <Tag key={pomodoro.start.toString()}>
                             <motion.div style={{opacity: pomodoro.startStatus === "realised" ? 1 : 0.5}}>
