@@ -4,5 +4,56 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"better-comments.tags": [
+
+			{
+				"tag": "!",
+				"color": "#FF2D00",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": false,
+				"italic": false
+			},
+			{
+				"tag": "?",
+				"color": "#EFEFEF",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "#ABABAB",
+				"bold": false,
+				"italic": false
+			},
+			{
+				"tag": "//",
+				"color": "#474747",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": false,
+				"italic": false
+			},
+			{
+				"tag": "todo",
+				"color": "#121212",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "#FFCC9920",
+				"highlight": true,
+				"bold": false,
+				"italic": false
+			},
+			{
+				"tag": "*",
+				"color": "#98C379",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": false,
+				"italic": false
+			}
+		],
+		"better-comments.highlightPlainText": true
+	}
 }

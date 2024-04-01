@@ -44,6 +44,8 @@ import { Tag, TypeTag } from "./Tag"
 // This pomodoro is designed to be resilient to the document closing. That is, if the website is closed, and then re-opened
 // then the pomodoro will immediately start running again. This means there is minimal use of state to store the status of the pomodoro
 // Instead, the status of the pomodoros and the timer is embedded in the document itself, which will sync immediately to whatever local or cloud store it's using
+// However, the update frequency of the local state is faster than the document store, so the tight inner loop is the local react state
+// And the less tight outer loop is the document store in node attributes of the pomodoro timer 
 
 type Pomodoro = {
     start: DateTime,
@@ -51,6 +53,10 @@ type Pomodoro = {
     end: DateTime,
     endStatus: "realised" | "unrealised",
 }
+
+const kitchenTimerStartAudio = new Audio("/kitchenTimerStart.mp3");
+const dingAudio = new Audio("/ding.mp3");
+const rubbishingAudio = new Audio("/rubbishing.mp3");
 
 const getPomodoroStatus = (pomodoro: Pomodoro) => {
     // Must have both an actual start time and planned end time at initialisation
@@ -82,6 +88,15 @@ const getPomodoroStatus = (pomodoro: Pomodoro) => {
     }
 }
 
+const createNewPomodoro = (withBreak: boolean, pomodoroBreakDuration: number, pomodoroDuration: number) => {
+    const start = withBreak ? DateTime.now().plus({ minutes: pomodoroBreakDuration }) : DateTime.now();
+    const end = start.plus({ minutes: pomodoroDuration });
+
+    // Instead of pushing to the original array, return the new pomodoro
+    const newPomodoro: Pomodoro = { start, startStatus: "realised", end, endStatus: "unrealised" };
+    return newPomodoro;
+};
+
 const getAllPomodorosStatus = (pomodoros: Pomodoro[]) => {
     const latestPomodoro = pomodoros[pomodoros.length - 1];
     if (latestPomodoro) {
@@ -94,35 +109,56 @@ const getAllPomodorosStatus = (pomodoros: Pomodoro[]) => {
 }
 
 // Every second, check and possibly update the pomodoros
-const updatePomodoroTick = (pomodoros: Pomodoro[]) => {
+// This also handles sound effects and automatic creation of new pomodoros after the current one is complete
+const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number, pomodoroDuration: number) => {
     const now = DateTime.now();
     return pomodoros.map(pomodoro => {
+        // Sweep the now (I) demarcation across both the start and end times of the pomodoro
         if (pomodoro.start < now) {
             pomodoro.startStatus = "realised";
         }
         if (pomodoro.end < now) {
             pomodoro.endStatus = "realised";
         }
+
+        if (getPomodoroStatus(pomodoro) === "inProgress" && now.hasSame(pomodoro.start, "second")) {
+            // Pause all existing sounds
+            dingAudio.pause()
+            kitchenTimerStartAudio.pause()
+
+            // It's just started, so we need to play the wind up sound
+            kitchenTimerStartAudio.play()
+
+            setTimeout(() => {
+                kitchenTimerStartAudio.pause();
+                kitchenTimerStartAudio.currentTime = 0;
+            }, 3000);
+        } else if (getPomodoroStatus(pomodoro) === "complete" && now.hasSame(pomodoro.end, "second")) {
+            // Pause all existing sounds
+            dingAudio.pause()
+            kitchenTimerStartAudio.pause()
+
+            // The pomodoro has just ended so we need to play the ding sound
+            dingAudio.play()
+            dingAudio.currentTime = 0
+
+            // The pomodoro just ended, so we need to create a planned pomodoro after a break interval
+            const newPomodoro = createNewPomodoro(true, pomodoroBreakDuration, pomodoroDuration);
+            pomodoros.push(newPomodoro);
+        }
+
         return pomodoro;
     });
 }
 
 // Change the pomodoros based on an action
-// TODO: Need to mutate actual pomodoros, not a copy
 const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration: number, pomodoroBreakDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
-    const createNewPomodoro = (withBreak: boolean) => {
-        const start = withBreak ? DateTime.now().plus({ minutes: pomodoroBreakDuration }) : DateTime.now();
-        const end = start.plus({ minutes: pomodoroDuration });
-
-        // Instead of pushing to the original array, return the new pomodoro
-        const newPomodoro: Pomodoro = { start, startStatus: "realised", end, endStatus: "unrealised" };
-        return newPomodoro;
-    };
+    
 
     let newPomodoros: Pomodoro[] = []; // This will hold the new state
     if (pomodoros.length === 0) {
         // Create a new pomodoro that is in progress and add it to the array
-        newPomodoros = [createNewPomodoro(false)];
+        newPomodoros = [createNewPomodoro(false, pomodoroBreakDuration, pomodoroDuration)];
     } else {
         // Copy the existing pomodoros to a new array
         newPomodoros = [...pomodoros];
@@ -139,7 +175,7 @@ const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration:
             // Problem: Subtle logic bug here. If the timer is stopped prematurely, then then pomodoro is complete and another one should not start
             // However it does currently start.
             // Then the button starts another pomodoro immediately
-            // newPomodoros.push(createNewPomodoro(false));
+            newPomodoros.push(createNewPomodoro(false, pomodoroBreakDuration, pomodoroDuration));
         } else if (getPomodoroStatus(latestPomodoro) === "planned") {
             // Then we're currently in a break, and the pomodoro timer is running, give the user the option to stop the timer
 
@@ -187,9 +223,6 @@ export const PomodoroTimer = (props: {
     updateAttrsPomodoros: (attrsPomodoros: AttrPomodoro[]) => void
 }) => {
 
-    const kitchenTimerStartAudio = new Audio("/kitchenTimerStart.mp3");
-    const dingAudio = new Audio("/ding.mp3");
-    const rubbishingAudio = new Audio("/rubbishing.mp3");
 
     // Always keep the node attrs pomodoros synced with the local component state
     React.useEffect(() => {
@@ -200,6 +233,12 @@ export const PomodoroTimer = (props: {
 
     const [pomodoros, setPomodoros] = React.useState<Pomodoro[]>(convertAttrsPomodoros(props.attrsPomodoros))
 
+    // Similarly, always keep the local state pomodoros synced with the node attrs
+    React.useEffect(() => {
+        props.updateAttrsPomodoros(convertPomodoros(pomodoros))
+
+    }, [pomodoros])
+
     // Duration in minutes
     const [selectedPomodoroDuration, setSelectedPomodoroDuration] = React.useState<string>(`${props.attrsPomodoroDuration} minutes`)
     const [selectedPomodoroBreakDuration, setSelectedPomodoroBreakDuration] = React.useState<string>(`${props.attrsPomodoroBreakDuration} minutes`)
@@ -209,16 +248,25 @@ export const PomodoroTimer = (props: {
         // Timer Interval
         const updatePomodoroStatusesTimer = setInterval(() => {
 
-            const updatedPomodoros = updatePomodoroTick(convertAttrsPomodoros(props.attrsPomodoros))
+            const updatedPomodoros = updatePomodoroTick(pomodoros, Number(props.attrsPomodoroDuration), Number(props.attrsPomodoroBreakDuration))
 
             const attrsPomodoros = convertPomodoros(updatedPomodoros)
             // Update attrs stored within the node, inside the document
             props.updateAttrsPomodoros(attrsPomodoros)
 
-        }, 1000)
+        }, 100)
 
         return () => clearInterval(updatePomodoroStatusesTimer)
     })
+
+    // Scroll to the latest pomodoros
+    const containerRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+    }
+  }, [pomodoros]);
 
 
     return (
@@ -254,7 +302,7 @@ export const PomodoroTimer = (props: {
             <FlowSwitch value={selectedPomodoroBreakDuration} isLens>
                 <Option
                     value={"5"}
-                    onClick={() => { setSelectedPomodoroDuration("5") }}
+                    onClick={() => { setSelectedPomodoroBreakDuration("5") }}
                 >
                     <motion.div>
                         <span style={{}}>
@@ -264,7 +312,7 @@ export const PomodoroTimer = (props: {
                 </Option>
                 <Option
                     value={"10"}
-                    onClick={() => { setSelectedPomodoroDuration("50") }}
+                    onClick={() => { setSelectedPomodoroBreakDuration("10") }}
                 >
                     <motion.div>
                         <span style={{}}>
@@ -277,21 +325,7 @@ export const PomodoroTimer = (props: {
                 aria-label={getAllPomodorosStatus(pomodoros) === "stop" ? "Stop timer" : "Start timer"}
                 size="small"
                 onClick={() => {
-                    console.log("pomodoros in component", pomodoros)
                     handlePomodoroTimerButtonClick(pomodoros, Number(props.attrsPomodoroDuration), Number(props.attrsPomodoroBreakDuration), setPomodoros)
-
-                    // Play sound effects
-                    if (getAllPomodorosStatus(pomodoros) === "start") {
-                        kitchenTimerStartAudio.play();
-
-                        // Pause the audio after 5 seconds
-                        setTimeout(() => {
-                            kitchenTimerStartAudio.pause();
-                            kitchenTimerStartAudio.currentTime = 0;
-                        }, 5000); 
-                    } else {
-                        dingAudio.play();
-                    }
                 }}
             >
                 {getAllPomodorosStatus(pomodoros) === "stop"? <StopIcon fontSize="medium" /> : <PlayArrow fontSize="medium" />}
@@ -308,21 +342,24 @@ export const PomodoroTimer = (props: {
             >
                 <DeleteIcon fontSize="small" />
             </IconButton>
-            {
-                pomodoros.map((pomodoro) => {
-                    return (
-                        <Tag key={pomodoro.start.toString()}>
-                            <motion.div style={{opacity: pomodoro.startStatus === "realised" ? 1 : 0.5}}>
-                                <TypeTag icon={"🕕"} label={pomodoro.start.toLocaleString(DateTime.TIME_24_SIMPLE)} />
+            <motion.div
+                ref={containerRef}
+                style={{ overflowX: 'scroll', display: 'flex', width: '400px', gap: 4 }}
+            >
+                {pomodoros.map((pomodoro) => (
+                    <motion.div key={pomodoro.start.toString()} style={{ width: 'fit-content', overflow: "visible" }}>
+                        <Tag>
+                            <motion.div style={{ opacity: pomodoro.startStatus === 'realised' ? 1 : 0.5 }}>
+                                <TypeTag icon={'🕕'} label={pomodoro.start.toLocaleString(DateTime.TIME_24_SIMPLE)} />
                             </motion.div>
-                            {"-"}
-                            <motion.div style={{opacity: pomodoro.endStatus === "realised" ? 1 : 0.5}}>
-                                <TypeTag icon={"🕕"} label={pomodoro.end.toLocaleString(DateTime.TIME_24_SIMPLE)} />
+                            {'-'}
+                            <motion.div style={{ opacity: pomodoro.endStatus === 'realised' ? 1 : 0.5 }}>
+                                <TypeTag icon={'🕕'} label={pomodoro.end.toLocaleString(DateTime.TIME_24_SIMPLE)} />
                             </motion.div>
                         </Tag>
-                    )
-                })
-            }
+                    </motion.div>
+                ))}
+            </motion.div>
         </motion.div>
     )
 }
