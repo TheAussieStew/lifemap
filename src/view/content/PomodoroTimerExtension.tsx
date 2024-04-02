@@ -13,6 +13,7 @@ export type AttrPomodoro = {
     endStatus: "realised" | "unrealised",
 }
 
+// Used in addAttributes
 const mockAttrPomodoros: AttrPomodoro[] = [
     {
         start: "2024-02-15T05:50:51.000Z",
@@ -97,6 +98,21 @@ export const PomodoroTimerExtension = Node.create({
                 props.updateAttributes({ pomodoros: pomodoros});
             }
 
+            const handleDelete = () => {
+                const { state, dispatch } = props.editor.view;
+                const { tr } = state;
+                const pos = props.getPos();
+
+                const resolvedPos = state.doc.resolve(pos)
+                const node = resolvedPos.nodeAfter
+
+                if (node && node.type.name === 'pomodoroTimer') {
+                    // Delete the PomodoroTimer node
+                    const transaction = tr.delete(pos, pos + node.nodeSize)
+                    dispatch(transaction)
+                }
+            }
+
             return (
                 <NodeViewWrapper>
                     <PomodoroTimer 
@@ -105,7 +121,9 @@ export const PomodoroTimerExtension = Node.create({
                         handlePomodoroDurationChange={handlePomodoroDurationChange}
                         handlePomodoroBreakDurationChange={handlePomodoroBreakDurationChange}
                         updateAttrsPomodoros={updatePomodoros} 
-                        attrsPomodoros={props.node.attrs.pomodoros}                    />
+                        attrsPomodoros={props.node.attrs.pomodoros}                    
+                        handleDelete={handleDelete}
+                    />
                 </NodeViewWrapper>
             );
         });
