@@ -48,8 +48,9 @@ export const PomodoroTimerExtension = Node.create({
     atom: true,
     addAttributes() {
         return {
+            // TODO: Change this back to 25 when debugging is finished
             pomodoroDuration: {
-                default: "25"
+                default: "1"
             },
             pomodoroBreakDuration: {
                 default: "5"

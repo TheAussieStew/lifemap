@@ -10,6 +10,8 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { AttrPomodoro } from './PomodoroTimerExtension'
 import { DateTime } from 'ts-luxon'
 import { Tag, TypeTag } from "./Tag"
+import { useInterval } from "react-use"
+import _ from "lodash"
 
 // These edge cases need to be handled
 //
@@ -43,10 +45,12 @@ import { Tag, TypeTag } from "./Tag"
 
 // State design choices
 // This pomodoro is designed to be resilient to the document closing. That is, if the website is closed, and then re-opened
-// then the pomodoro will immediately start running again. This means there is minimal use of state to store the status of the pomodoro
-// Instead, the status of the pomodoros and the timer is embedded in the document itself, which will sync immediately to whatever local or cloud store it's using
-// However, the update frequency of the local state is faster than the document store, so the tight inner loop is the local react state
-// And the less tight outer loop is the document store in node attributes of the pomodoro timer 
+// then the pomodoro will immediately start running again.
+// So this means the pomodoro data is stateless, and the client having the website open makes it stateful by operating per tick on it
+// Local react state is mutated by various handlers
+// This local react state is then synchronised with the node attributes, which also hold state, but this time at the document level
+// This document level state is then continually synced using the QuantaStore, which uses a combination of 
+// TipTap Cloud Collab (Y.js) and storage in the LocalStorage web db
 
 type Pomodoro = {
     start: DateTime,
@@ -90,6 +94,7 @@ const getPomodoroStatus = (pomodoro: Pomodoro) => {
 }
 
 const createNewPomodoro = (withBreak: boolean, pomodoroBreakDuration: number, pomodoroDuration: number) => {
+    // TODO: Current problem is that when one pomodoro ends, then next pomodoro has a start duration of 1 minute into the future, not the break duration
     const start = withBreak ? DateTime.now().plus({ minutes: pomodoroBreakDuration }) : DateTime.now();
     const end = start.plus({ minutes: pomodoroDuration });
 
@@ -112,73 +117,84 @@ const getAllPomodorosStatus = (pomodoros: Pomodoro[]) => {
 // Regularly, check and possibly update the pomodoros
 // This also handles sound effects and automatic creation of new pomodoros after the current one is complete
 // We use a closure to maintain the previouslyCheckedPomodoroEndTime state across multiple function invocations
-const createPomodoroTick = () => {
-    let previouslyCheckedPomodoroEndTime: DateTime | null = null
 
-    return (pomodoros: Pomodoro[], pomodoroBreakDuration: number, pomodoroDuration: number) => {
-        const now = DateTime.now();
+const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number, pomodoroDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
+    const now = DateTime.now();
 
-        // Let's imagine a timeline that goes from left to right with pomodoros and their times. 
-        // There is an imaginary "now" bar that runs from left to right, where everything that has happened before is realised and everything after is unrealised
-        return pomodoros.map(pomodoro => {
-            // Sweep the now (I) demarcation across both the start and end times of the pomodoro to update this specific pomodoro's realisation status
-            if (pomodoro.start < now) {
-                pomodoro.startStatus = "realised";
+    // Let's imagine a timeline that goes from left to right with pomodoros and their times. 
+    // There is an imaginary "now" bar that runs from left to right, where everything that has happened before is realised and everything after is unrealised
+    const updatedPomodoros = pomodoros.map(pomodoro => {
+        // Sweep the now (I) demarcation across both the start and end times of the pomodoro to update this specific pomodoro's realisation status
+        if (pomodoro.start < now) {
+            pomodoro.startStatus = "realised";
+        }
+        if (pomodoro.end < now) {
+            pomodoro.endStatus = "realised";
+        }
+
+        // Now, we determine whether we should play sound effects
+
+        // Visually, we can imagine this condition as the now bar, hitting the first pomodoro and its start time
+        if (getPomodoroStatus(pomodoro) === "inProgress" && now.hasSame(pomodoro.start, "second")) {
+            // Pause all existing sounds
+            dingAudio.pause()
+            kitchenTimerStartAudio.pause()
+
+            // It's just started, so we need to play the wind up sound
+            kitchenTimerStartAudio.play()
+
+            // The timer should stop shortly after starting (unless in future there's an option to have a constant ticking sound)
+            setTimeout(() => {
+                kitchenTimerStartAudio.pause();
+                kitchenTimerStartAudio.currentTime = 0;
+            }, 5000);
+            // Visually, we can imagine this condition as the now bar, hitting the the end pomodoro and its end time
+        } else if (getPomodoroStatus(pomodoro) === "complete" && (pomodoro.end.minus({ seconds: 1 }) <= now && now <= pomodoro.end.plus({ seconds: 1 }))) {
+            // Pause all existing sounds
+            dingAudio.pause()
+            kitchenTimerStartAudio.pause()
+
+            // The pomodoro has just ended so we need to play the ding sound
+            dingAudio.play()
+            dingAudio.currentTime = 0
+        }
+
+        // Now we handle creating a new pomodoro when the current one has just ended
+        // Similar to the else if above...
+        if (getPomodoroStatus(pomodoro) === "complete" && (pomodoro.end.minus({ seconds: 1 }) <= now && now <= pomodoro.end.plus({ seconds: 1 }))) {
+            // We check whether in the last second, whether we have already added a pomodoro in order to not create duplicates
+
+            // The pomodoro just ended, so we need to create a planned pomodoro after a break interval
+            const newPomodoro = createNewPomodoro(true, pomodoroBreakDuration, pomodoroDuration);
+
+            // If the new pomodoro is not a duplicate
+            if (!_.isEqual(pomodoros[pomodoros.length - 1], newPomodoro)) {
+                pomodoros.push(newPomodoro);
+                console.log("created new pomodoro, break duration:", pomodoroBreakDuration, "pomodoro duration:", pomodoroDuration)
+                console.log("is not duplicate pomodoro")
+            } else {
+                console.log("is duplicate pomodoro")
             }
-            if (pomodoro.end < now) {
-                pomodoro.endStatus = "realised";
-            }
+        }
 
-            // Now, we determine whether we should play sound effects
+        return pomodoro;
+    });
 
-            // Visually, we can imagine this condition as the now bar, hitting the first pomodoro and its start time
-            if (getPomodoroStatus(pomodoro) === "inProgress" && now.hasSame(pomodoro.start, "second")) {
-                // Pause all existing sounds
-                dingAudio.pause()
-                kitchenTimerStartAudio.pause()
+    // If the pomodoros have actually changed, which is rare considering this tick runs multiple times a second
+    // and key events for pomodoros only happen every ~30 minutes if not more
+    if (!_.isEqual(updatedPomodoros, pomodoros)) {
+        console.log("not equal, pomodoros:", pomodoros)
 
-                // It's just started, so we need to play the wind up sound
-                kitchenTimerStartAudio.play()
-
-                // The timer should stop shortly after starting (unless in future there's an option to have a constant ticking sound)
-                setTimeout(() => {
-                    kitchenTimerStartAudio.pause();
-                    kitchenTimerStartAudio.currentTime = 0;
-                }, 3000);
-                // Visually, we can imagine this condition as the now bar, hitting the the end pomodoro and its end time
-            } else if (getPomodoroStatus(pomodoro) === "complete" && now.hasSame(pomodoro.end, "second")) {
-                // Pause all existing sounds
-                dingAudio.pause()
-                kitchenTimerStartAudio.pause()
-
-                // The pomodoro has just ended so we need to play the ding sound
-                dingAudio.play()
-                dingAudio.currentTime = 0
-            }
-
-            // Now we handle creating a new pomodoro when the current one has just ended
-            // Similar to the else if above...
-            if (getPomodoroStatus(pomodoro) === "complete" && now.hasSame(pomodoro.end, "second")) {
-                // We check whether in the last second, whether we have already added a pomodoro in order to not create duplicates
-                if (previouslyCheckedPomodoroEndTime === null || !previouslyCheckedPomodoroEndTime.equals(pomodoro.end)) {
-                    // The pomodoro just ended, so we need to create a planned pomodoro after a break interval
-                    const newPomodoro = createNewPomodoro(true, pomodoroBreakDuration, pomodoroDuration);
-                    pomodoros.push(newPomodoro);
-                }
-            }
-
-            return pomodoro;
-        });
+        // Update state
+        setPomodoros(updatedPomodoros);
     }
-}
-const updatePomodoroTick = createPomodoroTick()
+};
 
 // Change the pomodoros based on an action
 const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration: number, pomodoroBreakDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
-
     let newPomodoros: Pomodoro[] = []; // This will hold the new state
     if (pomodoros.length === 0) {
-        // Create a new pomodoro that is in progress and add it to the array
+        // Create a new pomodoro that has no break that is in progress and add it to the array
         newPomodoros = [createNewPomodoro(false, pomodoroBreakDuration, pomodoroDuration)];
     } else {
         // Copy the existing pomodoros to a new array
@@ -197,17 +213,19 @@ const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration:
             // However it does currently start.
             // Then the button starts another pomodoro immediately
             const latestPomodoroDuration = latestPomodoro.end.diff(latestPomodoro.start).as('minutes');
+            console.log("latestPomodoroDuration", latestPomodoroDuration)
 
             // If we completed a whole pomodoro, create a new one after the break
             // If the pomodoro was interrupted, then don't create any further pomodoros
-            if (latestPomodoroDuration === 25 || latestPomodoroDuration === 50) {
+            // TODO: Remove the 1 minute duration when debugging is complete
+            if (latestPomodoroDuration === 25 || latestPomodoroDuration === 50 || latestPomodoroDuration === 1) {
                 newPomodoros.push(createNewPomodoro(true, pomodoroBreakDuration, pomodoroDuration));
             }
         } else if (getPomodoroStatus(latestPomodoro) === "planned") {
             // Then we're currently in a break, and the pomodoro timer is running
             // The user is given the option to stop the timer
             // If they stop the timer, then we need to remove the planned pomodoro
-            newPomodoros.pop();
+            // newPomodoros.pop();
         }
     }
 
@@ -215,8 +233,8 @@ const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration:
     setPomodoros(newPomodoros);
 };
 
-const deleteAllPomodorosFromAttrs = (updateAttrsPomodoros: (attrsPomodoros: AttrPomodoro[]) => void) => {
-    updateAttrsPomodoros([])
+const deleteAllPomodorosFromAttrs = (setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
+    setPomodoros([])
 }
 
 const convertAttrsPomodoros = (attrsPomodoros: AttrPomodoro[]) => {
@@ -255,17 +273,23 @@ export const PomodoroTimer = (props: {
 
 
     // Always keep the node attrs pomodoros synced with the local component state
-    React.useEffect(() => {
-        setPomodoros(convertAttrsPomodoros(props.attrsPomodoros))
-        console.log("pomodoros", pomodoros)
+    // React.useEffect(() => {
+    //     if (!_.isEqual(props.attrsPomodoros, pomodoros)) {
+    //         setPomodoros(convertAttrsPomodoros(props.attrsPomodoros))
+    //         console.log("pomodoros", pomodoros)
+    //     }
+    // }, [props.attrsPomodoros])
 
-    }, [props.attrsPomodoros])
 
+    // Push local state to node attrs
     const [pomodoros, setPomodoros] = React.useState<Pomodoro[]>(convertAttrsPomodoros(props.attrsPomodoros))
-
-    // Similarly, always keep the local state pomodoros synced with the node attrs
     React.useEffect(() => {
-        props.updateAttrsPomodoros(convertPomodoros(pomodoros))
+        if (!_.isEqual(pomodoros, convertAttrsPomodoros(props.attrsPomodoros))) {
+            console.log("updating node attrs, pomodoros:", pomodoros)
+            setTimeout(() => {
+                props.updateAttrsPomodoros(convertPomodoros(pomodoros))
+            }, 5000)
+        }
 
     }, [pomodoros])
 
@@ -273,32 +297,25 @@ export const PomodoroTimer = (props: {
     const [selectedPomodoroDuration, setSelectedPomodoroDuration] = React.useState<string>(`${props.attrsPomodoroDuration} minutes`)
     const [selectedPomodoroBreakDuration, setSelectedPomodoroBreakDuration] = React.useState<string>(`${props.attrsPomodoroBreakDuration} minutes`)
 
-    // Update the pomodoros' statuses every second
-    React.useEffect(() => {
-        // Timer Interval
-        const updatePomodoroStatusesTimer = setInterval(() => {
-
-            // TODO: Updating multiple times a second is causing multiple pomodoros to be created on timer stop
-            const updatedPomodoros = updatePomodoroTick(pomodoros, Number(props.attrsPomodoroDuration), Number(props.attrsPomodoroBreakDuration))
-
-            const attrsPomodoros = convertPomodoros(updatedPomodoros)
-            // Update attrs stored within the node, inside the document
-            props.updateAttrsPomodoros(attrsPomodoros)
-
-        // TODO: The temporary solution is to set the timer to duration that's not too short, such that multiple pomodoros would be created
-        }, 400)
-
-        return () => clearInterval(updatePomodoroStatusesTimer)
-    })
+    // Update the pomodoros' statuses at least once every second
+    // Refresh rate is higher because 1000ms is not enough to guarantee that this will fire at least once in every second
+    useInterval(() => {
+        updatePomodoroTick(
+          pomodoros,
+          Number(props.attrsPomodoroBreakDuration),
+          Number(props.attrsPomodoroDuration),
+          setPomodoros
+        );
+      }, 200);
 
     // Scroll to the latest pomodoros
     const containerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
-    }
-  }, [pomodoros]);
+        if (containerRef.current) {
+            containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+        }
+    }, [pomodoros]);
 
 
     return (
@@ -366,7 +383,7 @@ export const PomodoroTimer = (props: {
                 aria-label="delete all pomodoros"
                 size="small"
                 onClick={() => {
-                    deleteAllPomodorosFromAttrs(props.updateAttrsPomodoros)
+                    deleteAllPomodorosFromAttrs(setPomodoros)
 
                     // Play sound effects
                     rubbishingAudio.play();
