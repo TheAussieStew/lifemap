@@ -7,9 +7,13 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
     const flowSwitchContainerRef = React.useRef<HTMLDivElement>(null)
     const [releaseSelected, setReleaseSelected] = React.useState<number>(0)
     const [hasBeenChanged, setHasBeenChanged] = React.useState(false);
-    const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
     let timer: NodeJS.Timeout | null = null;
     const refs = props.children.map(() => React.createRef<HTMLDivElement>());
+
+    const [selectedIndex, setSelectedIndex] = React.useState<number>(() => {
+        // Find the index of the child with the matching value prop
+        return props.children.findIndex(child => child.props.value === props.value);
+      });
 
     const switchElements = props.children.map((child, index) => 
         (<motion.div
@@ -55,35 +59,37 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
         const index = props.children.findIndex(child => {
             return child.props.value === props.value
         })
-        console.log("attempting to find element with key", props.value)
-        console.log("refs", refs)
+        if (props.value === "25") {
+            console.log("attempting to find element with key", props.value)
+            console.log("refs", refs)
+        }
 
         if (index !== -1 && refs[index].current) {
             console.log("found, and scrolling to", refs[index].current)
-            // refs[index].current!.scrollIntoView({ behavior: 'smooth' });
+            refs[index].current!.scrollIntoView({ behavior: 'smooth' });
 
-            // Scroll to the element
-            const container = flowSwitchContainerRef.current;
-            const element = refs[index].current;
+            // // Scroll to the element
+            // const container = flowSwitchContainerRef.current;
+            // const element = refs[index].current;
 
-            if (container && element) {
-                const containerRect = container.getBoundingClientRect();
-                const elementRect = element.getBoundingClientRect();
+            // if (container && element) {
+            //     const containerRect = container.getBoundingClientRect();
+            //     const elementRect = element.getBoundingClientRect();
 
-                const scrollTop = elementRect.top - containerRect.top - (containerRect.height / 2) + (elementRect.height / 2);
+            //     const scrollTop = elementRect.top - containerRect.top - (containerRect.height / 2) + (elementRect.height / 2);
 
-                container.scrollTo({
-                    top: scrollTop,
-                    left: 0,
-                    behavior: 'smooth'
-                });
-            }
+            //     container.scrollTo({
+            //         top: scrollTop,
+            //         left: 0,
+            //         behavior: 'smooth'
+            //     });
+            // }
 
         } else {
             console.log("not found key")
         }
 
-    }, [refs])
+    }, [refs, props.value])
 
     // Eventually use this scrollend event instead of a scroll timeout when more browsers support it
     // React.useEffect(() => {

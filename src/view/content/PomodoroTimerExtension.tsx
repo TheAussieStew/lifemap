@@ -48,9 +48,8 @@ export const PomodoroTimerExtension = Node.create({
     atom: true,
     addAttributes() {
         return {
-            // TODO: Change this back to 25 when debugging is finished
             pomodoroDuration: {
-                default: "1"
+                default: "25"
             },
             pomodoroBreakDuration: {
                 default: "5"
@@ -88,11 +87,11 @@ export const PomodoroTimerExtension = Node.create({
         return ReactNodeViewRenderer((props: NodeViewProps) => {
 
             const handlePomodoroDurationChange = (duration: string) => {
-                props.updateAttributes({ pomodoroDuration: duration});
+                props.updateAttributes({ pomodoroDuration: duration });
             }
 
             const handlePomodoroBreakDurationChange = (duration: string) => {
-                props.updateAttributes({ pomodoroBreakDuration: duration});
+                props.updateAttributes({ pomodoroBreakDuration: duration });
             }
 
             const updatePomodoros = (pomodoros: AttrPomodoro[]) => {
