@@ -29,7 +29,6 @@ const findNode = (referencedQuantaId: string, editor: Editor) => {
 
 const Portal = (props: { editor: Editor, referencedQuantaId: QuantaId }) => {
     const [transclusionEditor, setEditor] = React.useState(TransclusionEditor("Content has not been updated to match the referenced node.", true, true))
-    const [referencedNode, setReferencedNode] = React.useState<ProseMirrorNode>()
 
     const updateContent = () => {
         if (transclusionEditor) {
@@ -55,14 +54,22 @@ const Portal = (props: { editor: Editor, referencedQuantaId: QuantaId }) => {
     }
 
     useEffect(() => {
-        // Update the content initially
-        updateContent()
+        if (transclusionEditor) {
+            // Update the content initially
+            setTimeout(updateContent, 1000);
 
-        // Subscribe to changes in the editor state and update the content whenever the state changes
-        const debouncedUpdateContent = debounce(updateContent, 1000)
-        props.editor.on('update', debouncedUpdateContent)
+            // If the node changes, we want this transclusion to update
+            // The closest way to do this is to check whenever the entire document updates at all
+            // A future improvement would be to track at the individual node level
+            const debouncedUpdateContent = debounce(updateContent, 1000);
+            props.editor.on('update', debouncedUpdateContent);
 
-    }, [props.editor, props.referencedQuantaId])
+            // Clean up the subscription when the component unmounts
+            return () => {
+                props.editor.off('update', debouncedUpdateContent);
+            };
+        }
+    }, [transclusionEditor, props.editor, props.referencedQuantaId]);
 
     return (
         <div style={{
