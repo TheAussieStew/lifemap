@@ -162,6 +162,7 @@ const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number
         // Now we handle creating a new pomodoro when the current one has just ended
         // Similar to the else if above...
         if (getPomodoroStatus(pomodoro) === "complete" && (pomodoro.end.minus({ seconds: 1 }) <= now && now <= pomodoro.end.plus({ seconds: 1 }))) {
+            console.log("creating new pomodoro")
             // We check whether in the last second, whether we have already added a pomodoro in order to not create duplicates
 
             // The pomodoro just ended, so we need to create a planned pomodoro after a break interval
@@ -183,9 +184,8 @@ const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number
     // If the pomodoros have actually changed, which is rare considering this tick runs multiple times a second
     // and key events for pomodoros only happen every ~30 minutes if not more
     if (!_.isEqual(updatedPomodoros, pomodoros)) {
-        console.log("not equal, pomodoros:", pomodoros)
-
         // Update state
+        console.log("updating pomodoro states", updatedPomodoros)
         setPomodoros(updatedPomodoros);
     }
 };
@@ -218,9 +218,9 @@ const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration:
             // If we completed a whole pomodoro, create a new one after the break
             // If the pomodoro was interrupted, then don't create any further pomodoros
             // TODO: Remove the 1 minute duration when debugging is complete
-            if (latestPomodoroDuration === 25 || latestPomodoroDuration === 50 || latestPomodoroDuration === 1) {
+            // if (latestPomodoroDuration === 25 || latestPomodoroDuration === 50 || latestPomodoroDuration === 1) {
                 newPomodoros.push(createNewPomodoro(true, pomodoroBreakDuration, pomodoroDuration));
-            }
+            // }
         } else if (getPomodoroStatus(latestPomodoro) === "planned") {
             // Then we're currently in a break, and the pomodoro timer is running
             // The user is given the option to stop the timer
@@ -396,19 +396,21 @@ export const PomodoroTimer = (props: {
                 ref={containerRef}
                 style={{ overflowX: 'scroll', display: 'flex', width: '400px', gap: 4 }}
             >
-                {pomodoros.map((pomodoro) => (
-                    <motion.div key={pomodoro.start.toString()} style={{ width: 'fit-content', overflow: "visible" }}>
-                        <Tag>
-                            <motion.div style={{ opacity: pomodoro.startStatus === 'realised' ? 1 : 0.5 }}>
-                                <TypeTag icon={'🕕'} label={pomodoro.start.toLocaleString(DateTime.TIME_24_SIMPLE)} />
-                            </motion.div>
-                            {'-'}
-                            <motion.div style={{ opacity: pomodoro.endStatus === 'realised' ? 1 : 0.5 }}>
-                                <TypeTag icon={'🕕'} label={pomodoro.end.toLocaleString(DateTime.TIME_24_SIMPLE)} />
-                            </motion.div>
-                        </Tag>
-                    </motion.div>
-                ))}
+                {pomodoros.map((pomodoro) => {
+                    return (
+                        <motion.div key={pomodoro.start.toString()} style={{ width: 'fit-content', overflow: "visible" }}>
+                            <Tag>
+                                <motion.div style={{ opacity: pomodoro.startStatus === 'realised' ? 1 : 0.5 }}>
+                                    <TypeTag icon={'🕕'} label={pomodoro.start.toLocaleString(DateTime.TIME_24_SIMPLE)} />
+                                </motion.div>
+                                {'-'}
+                                <motion.div style={{ opacity: pomodoro.endStatus === 'realised' ? 1 : 0.5 }}>
+                                    <TypeTag icon={'🕕'} label={pomodoro.end.toLocaleString(DateTime.TIME_24_SIMPLE)} />
+                                </motion.div>
+                            </Tag>
+                        </motion.div>
+                    )
+                })}
             </motion.div>
             <motion.div style={{ opacity: 0, position: "absolute", top: -15, right: -15 }} whileHover={{ opacity: 1 }}>
                 <IconButton
