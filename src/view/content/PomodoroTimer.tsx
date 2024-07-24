@@ -120,72 +120,68 @@ const getAllPomodorosStatus = (pomodoros: Pomodoro[]) => {
 
 const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number, pomodoroDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
     const now = DateTime.now();
+    let updatedPomodoros = [...pomodoros];
+    let shouldUpdateState = false;
 
-    // Let's imagine a timeline that goes from left to right with pomodoros and their times. 
-    // There is an imaginary "now" bar that runs from left to right, where everything that has happened before is realised and everything after is unrealised
-    const updatedPomodoros = pomodoros.map(pomodoro => {
-        // Sweep the now (I) demarcation across both the start and end times of the pomodoro to update this specific pomodoro's realisation status
-        if (pomodoro.start < now) {
+    updatedPomodoros = updatedPomodoros.map(pomodoro => {
+        const prevStatus = getPomodoroStatus(pomodoro);
+        
+        if (pomodoro.start <= now && pomodoro.startStatus === "unrealised") {
             pomodoro.startStatus = "realised";
+            shouldUpdateState = true;
         }
-        if (pomodoro.end < now) {
+        if (pomodoro.end <= now && pomodoro.endStatus === "unrealised") {
             pomodoro.endStatus = "realised";
+            shouldUpdateState = true;
         }
 
-        // Now, we determine whether we should play sound effects
+        const newStatus = getPomodoroStatus(pomodoro);
 
-        // Visually, we can imagine this condition as the now bar, hitting the first pomodoro and its start time
-        if (getPomodoroStatus(pomodoro) === "inProgress" && now.hasSame(pomodoro.start, "second")) {
-            // Pause all existing sounds
-            dingAudio.pause()
-            kitchenTimerStartAudio.pause()
-
-            // It's just started, so we need to play the wind up sound
-            kitchenTimerStartAudio.play()
-
-            // The timer should stop shortly after starting (unless in future there's an option to have a constant ticking sound)
-            setTimeout(() => {
+        // Handle sound effects
+        if (prevStatus !== newStatus) {
+            if (newStatus === "inProgress") {
                 kitchenTimerStartAudio.pause();
                 kitchenTimerStartAudio.currentTime = 0;
-            }, 5000);
-            // Visually, we can imagine this condition as the now bar, hitting the the end pomodoro and its end time
-        } else if (getPomodoroStatus(pomodoro) === "complete" && (pomodoro.end.minus({ seconds: 1 }) <= now && now <= pomodoro.end.plus({ seconds: 1 }))) {
-            // Pause all existing sounds
-            dingAudio.pause()
-            kitchenTimerStartAudio.pause()
+                kitchenTimerStartAudio.play();
 
-            // The pomodoro has just ended so we need to play the ding sound
-            dingAudio.play()
-            dingAudio.currentTime = 0
-        }
-
-        // Now we handle creating a new pomodoro when the current one has just ended
-        // Similar to the else if above...
-        if (getPomodoroStatus(pomodoro) === "complete" && (pomodoro.end.minus({ seconds: 1 }) <= now && now <= pomodoro.end.plus({ seconds: 1 }))) {
-            console.log("creating new pomodoro")
-            // We check whether in the last second, whether we have already added a pomodoro in order to not create duplicates
-
-            // The pomodoro just ended, so we need to create a planned pomodoro after a break interval
-            const newPomodoro = createNewPomodoro(true, pomodoroBreakDuration, pomodoroDuration);
-
-            // If the new pomodoro is not a duplicate
-            if (!_.isEqual(pomodoros[pomodoros.length - 1], newPomodoro)) {
-                pomodoros.push(newPomodoro);
-                console.log("created new pomodoro, break duration:", pomodoroBreakDuration, "pomodoro duration:", pomodoroDuration)
-                console.log("is not duplicate pomodoro")
-            } else {
-                console.log("is duplicate pomodoro")
+                // Set a timeout to pause the audio after 5 seconds
+                setTimeout(() => {
+                    kitchenTimerStartAudio.pause();
+                    kitchenTimerStartAudio.currentTime = 0;
+                }, 5000);
+                
+            } else if (newStatus === "complete") {
+                kitchenTimerStartAudio.pause();
+                kitchenTimerStartAudio.currentTime = 0;
+                dingAudio.pause();
+                dingAudio.currentTime = 0;
+                dingAudio.play();
             }
         }
 
         return pomodoro;
     });
 
-    // If the pomodoros have actually changed, which is rare considering this tick runs multiple times a second
-    // and key events for pomodoros only happen every ~30 minutes if not more
-    if (!_.isEqual(updatedPomodoros, pomodoros)) {
-        // Update state
-        console.log("updating pomodoro states", updatedPomodoros)
+    // Check if we need to create a new planned Pomodoro
+    const latestPomodoro = updatedPomodoros[updatedPomodoros.length - 1];
+    if (latestPomodoro && getPomodoroStatus(latestPomodoro) === "complete") {
+        const nextPomodoroStart = latestPomodoro.end.plus({ minutes: pomodoroBreakDuration });
+        if (now < nextPomodoroStart && !updatedPomodoros.some(p => getPomodoroStatus(p) === "planned")) {
+            const newEnd = nextPomodoroStart.plus({ minutes: pomodoroDuration });
+            const newPomodoro: Pomodoro = {
+                start: nextPomodoroStart,
+                startStatus: "unrealised",
+                end: newEnd,
+                endStatus: "unrealised"
+            };
+            updatedPomodoros.push(newPomodoro);
+            shouldUpdateState = true;
+            console.log("Created new planned Pomodoro:", newPomodoro);
+        }
+    }
+
+    if (shouldUpdateState) {
+        console.log("Updating pomodoro states:", updatedPomodoros);
         setPomodoros(updatedPomodoros);
     }
 };
@@ -194,8 +190,26 @@ const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number
 const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration: number, pomodoroBreakDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
     let newPomodoros: Pomodoro[] = []; // This will hold the new state
     if (pomodoros.length === 0) {
-        // Create a new pomodoro that has no break that is in progress and add it to the array
-        newPomodoros = [createNewPomodoro(false, pomodoroBreakDuration, pomodoroDuration)];
+        // Create a new pomodoro that is in progress
+        const start = DateTime.now();
+        const end = start.plus({ minutes: pomodoroDuration });
+        newPomodoros = [{
+            start,
+            startStatus: "realised",
+            end,
+            endStatus: "unrealised"
+        }];
+
+        // Play start audio
+        kitchenTimerStartAudio.pause();
+        kitchenTimerStartAudio.currentTime = 0;
+        kitchenTimerStartAudio.play();
+
+        // Set a timeout to pause the audio after 5 seconds
+        setTimeout(() => {
+            kitchenTimerStartAudio.pause();
+            kitchenTimerStartAudio.currentTime = 0;
+        }, 5000);
     } else {
         // Copy the existing pomodoros to a new array
         newPomodoros = [...pomodoros];
@@ -317,6 +331,15 @@ export const PomodoroTimer = (props: {
             containerRef.current.scrollLeft = containerRef.current.scrollWidth;
         }
     }, [pomodoros]);
+
+    React.useEffect(() => {
+        return () => {
+            kitchenTimerStartAudio.pause();
+            kitchenTimerStartAudio.currentTime = 0;
+            dingAudio.pause();
+            dingAudio.currentTime = 0;
+        };
+    }, []);
 
 
     return (
