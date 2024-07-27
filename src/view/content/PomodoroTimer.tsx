@@ -301,9 +301,10 @@ export const PomodoroTimer = (props: {
         if (!_.isEqual(pomodoros, convertAttrsPomodoros(props.attrsPomodoros))) {
             console.log("updating node attrs, pomodoros:", pomodoros)
             // This prevents the flush sync React error
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
                 props.updateAttrsPomodoros(convertPomodoros(pomodoros))
             }, 5000)
+            return () => clearTimeout(timeoutId)
         }
 
     }, [pomodoros])
