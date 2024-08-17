@@ -50,7 +50,6 @@ import { LocationExtension } from './LocationTipTapExtension'
 import { CommentExtension } from '../structure/CommentTipTapExtension'
 import { PortalExtension } from '../structure/PortalExtension'
 import { generateUniqueID, renderDate } from '../../utils/utils'
-import { ThreeDExtension } from './ThreeDExtension'
 import { issue123DocumentState } from '../../../bugs/issue-123'
 import { ExperimentalPortalExtension } from '../structure/ExperimentalPortalExtension'
 import { WarningExtension } from '../structure/WarningTipTapExtension'
@@ -60,7 +59,6 @@ import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
-import { ThreeDTextExtension } from './ThreeDTextExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -178,8 +176,6 @@ export const customExtensions: Extensions = [
   ExperimentalPortalExtension,
   QuoteExtension,
   TwoDGraphExtension,
-  ThreeDExtension,
-  ThreeDTextExtension,
   WarningExtension
 ]
 
