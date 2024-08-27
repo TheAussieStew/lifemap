@@ -36,13 +36,14 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
                 // The activation box is a thin line in the middle of the flow switch
                 // and activates when a child element enters this thin line.
                 if (hasBeenChanged) {
-                    // ? I'm not quite sure about this...
-                    // TODO: Find a way to play sound even when the page hasn't really been interacted with
-                    singleTickAudio.play().catch((_) => {
-                        console.log("Chrome cannot play sound without user interaction first")
-                    });
+                    // Play sound if audio is available and page has been interacted with
+                    if (singleTickAudio) {
+                        singleTickAudio.play().catch((error) => {
+                            console.log("Failed to play audio:", error.message);
+                        });
+                    }
                 } else {
-                    setHasBeenChanged(true)
+                    setHasBeenChanged(true);
                 }
                 console.log("setting selected index to ", index)
                 setSelectedIndex(index)

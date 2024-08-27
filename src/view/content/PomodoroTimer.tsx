@@ -12,6 +12,7 @@ import { DateTime } from 'ts-luxon'
 import { Tag, TypeTag } from "./Tag"
 import { useInterval } from "react-use"
 import _ from "lodash"
+import { kitchenTimerStartAudio, dingAudio, rubbishingAudio } from "../../utils/utils"
 
 // These edge cases need to be handled
 //
@@ -58,10 +59,6 @@ type Pomodoro = {
     end: DateTime,
     endStatus: "realised" | "unrealised",
 }
-
-const kitchenTimerStartAudio = new Audio("/kitchenTimerStart.mp3");
-const dingAudio = new Audio("/ding.mp3");
-const rubbishingAudio = new Audio("/rubbishing.mp3");
 
 const getPomodoroStatus = (pomodoro: Pomodoro) => {
     // Must have both an actual start time and planned end time at initialisation
@@ -139,23 +136,28 @@ const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number
 
         // Handle sound effects
         if (prevStatus !== newStatus) {
-            if (newStatus === "inProgress") {
+            if (newStatus === "inProgress" && kitchenTimerStartAudio) {
                 kitchenTimerStartAudio.pause();
                 kitchenTimerStartAudio.currentTime = 0;
-                kitchenTimerStartAudio.play();
+                kitchenTimerStartAudio.play().catch(error => console.error('Error playing audio:', error));
 
                 // Set a timeout to pause the audio after 5 seconds
                 setTimeout(() => {
+                    if (kitchenTimerStartAudio) {
+                        kitchenTimerStartAudio.pause();
+                        kitchenTimerStartAudio.currentTime = 0;
+                    }
+                }, 5000);
+            } else if (newStatus === "complete") {
+                if (kitchenTimerStartAudio) {
                     kitchenTimerStartAudio.pause();
                     kitchenTimerStartAudio.currentTime = 0;
-                }, 5000);
-                
-            } else if (newStatus === "complete") {
-                kitchenTimerStartAudio.pause();
-                kitchenTimerStartAudio.currentTime = 0;
-                dingAudio.pause();
-                dingAudio.currentTime = 0;
-                dingAudio.play();
+                }
+                if (dingAudio) {
+                    dingAudio.pause();
+                    dingAudio.currentTime = 0;
+                    dingAudio.play().catch(error => console.error('Error playing audio:', error));
+                }
             }
         }
 
@@ -199,16 +201,19 @@ const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration:
             end,
             endStatus: "unrealised"
         }];
-
         // Play start audio
-        kitchenTimerStartAudio.pause();
-        kitchenTimerStartAudio.currentTime = 0;
-        kitchenTimerStartAudio.play();
+        if (kitchenTimerStartAudio) {
+            kitchenTimerStartAudio.pause();
+            kitchenTimerStartAudio.currentTime = 0;
+            kitchenTimerStartAudio.play().catch(error => console.error('Error playing audio:', error));
+        }
 
         // Set a timeout to pause the audio after 5 seconds
         setTimeout(() => {
-            kitchenTimerStartAudio.pause();
-            kitchenTimerStartAudio.currentTime = 0;
+            if (kitchenTimerStartAudio) {
+                kitchenTimerStartAudio.pause();
+                kitchenTimerStartAudio.currentTime = 0;
+            }
         }, 5000);
     } else {
         // Copy the existing pomodoros to a new array
@@ -335,10 +340,14 @@ export const PomodoroTimer = (props: {
 
     React.useEffect(() => {
         return () => {
-            kitchenTimerStartAudio.pause();
-            kitchenTimerStartAudio.currentTime = 0;
-            dingAudio.pause();
-            dingAudio.currentTime = 0;
+            if (kitchenTimerStartAudio) {
+                kitchenTimerStartAudio.pause();
+                kitchenTimerStartAudio.currentTime = 0;
+            }
+            if (dingAudio) {
+                dingAudio.pause();
+                dingAudio.currentTime = 0;
+            }
         };
     }, []);
 
@@ -409,9 +418,10 @@ export const PomodoroTimer = (props: {
                 size="small"
                 onClick={() => {
                     deleteAllPomodorosFromAttrs(setPomodoros)
-
                     // Play sound effects
-                    rubbishingAudio.play();
+                    if (rubbishingAudio) {
+                        rubbishingAudio.play();
+                    }
                 }}
             >
                 <DeleteIcon fontSize="small" />
