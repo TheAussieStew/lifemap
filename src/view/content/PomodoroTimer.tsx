@@ -58,34 +58,23 @@ type Pomodoro = {
     startStatus: "realised" | "unrealised"
     end: DateTime,
     endStatus: "realised" | "unrealised",
+    completionType: "natural" | "manual" | "incomplete"
 }
 
 const getPomodoroStatus = (pomodoro: Pomodoro) => {
-    // Must have both an actual start time and planned end time at initialisation
     switch (pomodoro.endStatus) {
         case "unrealised":
             if (pomodoro.startStatus === "unrealised") {
-                // This state occurs when the previous pomodoro has finished
-                // And a break begins. The moment the previous pomodoro has finished,
-                // We add a new pomodoro which is completely unrealised, that will
-                // automatically start after the break
                 return "planned"
             } else if (pomodoro.startStatus === "realised") {
-                // This occurs when the pomodoro has started, and we've not completed the full duration
                 return "inProgress"
             }
             break;
         case "realised":
             if (pomodoro.startStatus === "unrealised") {
-                // This is because it's impossible for a later time to be realised
-                // But an earlier time to not be realised
                 return "invalid"
             } else if (pomodoro.startStatus === "realised") {
-                // This occurs when the pomodoro is complete
-                // The pomodoro can either be complete according to the 
-                // original duration of the planned pomodoro, or 
-                // it can be complete because it was interrupted and stopped
-                return "complete"
+                return pomodoro.completionType === "natural" ? "complete" : "stopped"
             }
     }
 }
@@ -96,7 +85,7 @@ const createNewPomodoro = (withBreak: boolean, pomodoroBreakDuration: number, po
     const end = start.plus({ minutes: pomodoroDuration });
 
     // Instead of pushing to the original array, return the new pomodoro
-    const newPomodoro: Pomodoro = { start, startStatus: "realised", end, endStatus: "unrealised" };
+    const newPomodoro: Pomodoro = { start, startStatus: "realised", end, endStatus: "unrealised", completionType: "incomplete" };
     return newPomodoro;
 };
 
@@ -104,9 +93,8 @@ const getAllPomodorosStatus = (pomodoros: Pomodoro[]) => {
     const latestPomodoro = pomodoros[pomodoros.length - 1];
     if (latestPomodoro) {
         const status = getPomodoroStatus(latestPomodoro);
-        if (status === "inProgress" || status === "planned") {
-            return "stop";
-        }
+        console.log("Latest pomodoro status:", status);
+        return status === "inProgress" ? "stop" : "start";
     }
     return "start";
 }
@@ -115,32 +103,14 @@ const getAllPomodorosStatus = (pomodoros: Pomodoro[]) => {
 // This also handles sound effects and automatic creation of new pomodoros after the current one is complete
 // We use a closure to maintain the previouslyCheckedPomodoroEndTime state across multiple function invocations
 
-const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number, pomodoroDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
-    const now = DateTime.now();
-    let updatedPomodoros = [...pomodoros];
-    let shouldUpdateState = false;
-
-    updatedPomodoros = updatedPomodoros.map(pomodoro => {
-        const prevStatus = getPomodoroStatus(pomodoro);
-        
-        if (pomodoro.start <= now && pomodoro.startStatus === "unrealised") {
-            pomodoro.startStatus = "realised";
-            shouldUpdateState = true;
-        }
-        if (pomodoro.end <= now && pomodoro.endStatus === "unrealised") {
-            pomodoro.endStatus = "realised";
-            shouldUpdateState = true;
-        }
-
-        const newStatus = getPomodoroStatus(pomodoro);
-
-        // Handle sound effects
-        if (prevStatus !== newStatus) {
-            if (newStatus === "inProgress" && kitchenTimerStartAudio) {
+const playAudio = (status: "start" | "stop" | "complete") => {
+    switch (status) {
+        case "start":
+            if (kitchenTimerStartAudio) {
                 kitchenTimerStartAudio.pause();
                 kitchenTimerStartAudio.currentTime = 0;
                 kitchenTimerStartAudio.play().catch(error => console.error('Error playing audio:', error));
-
+                
                 // Set a timeout to pause the audio after 5 seconds
                 setTimeout(() => {
                     if (kitchenTimerStartAudio) {
@@ -148,25 +118,42 @@ const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number
                         kitchenTimerStartAudio.currentTime = 0;
                     }
                 }, 5000);
-            } else if (newStatus === "complete") {
-                if (kitchenTimerStartAudio) {
-                    kitchenTimerStartAudio.pause();
-                    kitchenTimerStartAudio.currentTime = 0;
-                }
-                if (dingAudio) {
-                    dingAudio.pause();
-                    dingAudio.currentTime = 0;
-                    dingAudio.play().catch(error => console.error('Error playing audio:', error));
-                }
             }
-        }
+            break;
+        case "stop":
+        case "complete":
+            if (dingAudio) {
+                dingAudio.pause();
+                dingAudio.currentTime = 0;
+                dingAudio.play().catch(error => console.error('Error playing audio:', error));
+            }
+            break;
+    }
+};
 
+const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number, pomodoroDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
+    const now = DateTime.now();
+    let updatedPomodoros = [...pomodoros];
+    let shouldUpdateState = false;
+    let shouldPlayCompleteSound = false;
+
+    updatedPomodoros = updatedPomodoros.map(pomodoro => {
+        if (pomodoro.start <= now && pomodoro.startStatus === "unrealised") {
+            pomodoro.startStatus = "realised";
+            shouldUpdateState = true;
+        }
+        if (pomodoro.end <= now && pomodoro.endStatus === "unrealised") {
+            pomodoro.endStatus = "realised";
+            pomodoro.completionType = "natural";
+            shouldUpdateState = true;
+            shouldPlayCompleteSound = true;
+        }
         return pomodoro;
     });
 
     // Check if we need to create a new planned Pomodoro
     const latestPomodoro = updatedPomodoros[updatedPomodoros.length - 1];
-    if (latestPomodoro && getPomodoroStatus(latestPomodoro) === "complete") {
+    if (latestPomodoro && getPomodoroStatus(latestPomodoro) === "complete" && latestPomodoro.completionType === "natural") {
         const nextPomodoroStart = latestPomodoro.end.plus({ minutes: pomodoroBreakDuration });
         if (now < nextPomodoroStart && !updatedPomodoros.some(p => getPomodoroStatus(p) === "planned")) {
             const newEnd = nextPomodoroStart.plus({ minutes: pomodoroDuration });
@@ -174,7 +161,8 @@ const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number
                 start: nextPomodoroStart,
                 startStatus: "unrealised",
                 end: newEnd,
-                endStatus: "unrealised"
+                endStatus: "unrealised",
+                completionType: "incomplete"
             };
             updatedPomodoros.push(newPomodoro);
             shouldUpdateState = true;
@@ -186,69 +174,38 @@ const updatePomodoroTick = (pomodoros: Pomodoro[], pomodoroBreakDuration: number
         console.log("Updating pomodoro states:", updatedPomodoros);
         setPomodoros(updatedPomodoros);
     }
+
+    if (shouldPlayCompleteSound) {
+        playAudio("complete");
+    }
 };
 
 // Change the pomodoros based on an action
 const handlePomodoroTimerButtonClick = (pomodoros: Pomodoro[], pomodoroDuration: number, pomodoroBreakDuration: number, setPomodoros: React.Dispatch<React.SetStateAction<Pomodoro[]>>) => {
-    let newPomodoros: Pomodoro[] = []; // This will hold the new state
-    if (pomodoros.length === 0) {
-        // Create a new pomodoro that is in progress
-        const start = DateTime.now();
-        const end = start.plus({ minutes: pomodoroDuration });
-        newPomodoros = [{
-            start,
-            startStatus: "realised",
-            end,
-            endStatus: "unrealised"
-        }];
-        // Play start audio
-        if (kitchenTimerStartAudio) {
-            kitchenTimerStartAudio.pause();
-            kitchenTimerStartAudio.currentTime = 0;
-            kitchenTimerStartAudio.play().catch(error => console.error('Error playing audio:', error));
-        }
+    let newPomodoros = [...pomodoros];
+    const latestPomodoro = newPomodoros[newPomodoros.length - 1];
 
-        // Set a timeout to pause the audio after 5 seconds
-        setTimeout(() => {
-            if (kitchenTimerStartAudio) {
-                kitchenTimerStartAudio.pause();
-                kitchenTimerStartAudio.currentTime = 0;
-            }
-        }, 5000);
+    if (latestPomodoro && getPomodoroStatus(latestPomodoro) === "inProgress") {
+        // Stop the current pomodoro
+        latestPomodoro.endStatus = "realised";
+        latestPomodoro.end = DateTime.now();
+        latestPomodoro.completionType = "manual";
+        console.log("Stopping pomodoro:", latestPomodoro);
+        playAudio("stop");
     } else {
-        // Copy the existing pomodoros to a new array
-        newPomodoros = [...pomodoros];
-
-        // Look at the very latest pomodoro
-        const latestPomodoro = newPomodoros[newPomodoros.length - 1];
-
-        // Exhaustively handle all the possible states of the most recent pomodoro
-        if (getPomodoroStatus(latestPomodoro) === "inProgress") {
-            // Then the button stops the pomodoro
-            latestPomodoro.endStatus = "realised";
-            latestPomodoro.end = DateTime.now();
-        } else if (getPomodoroStatus(latestPomodoro) === "complete") {
-            // Problem: Subtle logic bug here. If the timer is stopped prematurely, then then pomodoro is complete and another one should not start
-            // However it does currently start.
-            // Then the button starts another pomodoro immediately
-            const latestPomodoroDuration = latestPomodoro.end.diff(latestPomodoro.start).as('minutes');
-            console.log("latestPomodoroDuration", latestPomodoroDuration)
-
-            // If we completed a whole pomodoro, create a new one after the break
-            // If the pomodoro was interrupted, then don't create any further pomodoros
-            // TODO: Remove the 1 minute duration when debugging is complete
-            // if (latestPomodoroDuration === 25 || latestPomodoroDuration === 50 || latestPomodoroDuration === 1) {
-                newPomodoros.push(createNewPomodoro(true, pomodoroBreakDuration, pomodoroDuration));
-            // }
-        } else if (getPomodoroStatus(latestPomodoro) === "planned") {
-            // Then we're currently in a break, and the pomodoro timer is running
-            // The user is given the option to stop the timer
-            // If they stop the timer, then we need to remove the planned pomodoro
-            // newPomodoros.pop();
-        }
+        // Start a new pomodoro
+        const newPomodoro: Pomodoro = {
+            start: DateTime.now(),
+            startStatus: "realised",
+            end: DateTime.now().plus({ minutes: pomodoroDuration }),
+            endStatus: "unrealised",
+            completionType: "incomplete"
+        };
+        newPomodoros.push(newPomodoro);
+        console.log("Starting new pomodoro:", newPomodoro);
+        playAudio("start");
     }
 
-    // Now we're setting the state with a new array, ensuring React knows it's a state change
     setPomodoros(newPomodoros);
 };
 
@@ -266,6 +223,7 @@ const convertAttrsPomodoros = (attrsPomodoros: AttrPomodoro[]) => {
         startStatus: attrPomodoro.startStatus,
         end: DateTime.fromISO(attrPomodoro.end),
         endStatus: attrPomodoro.endStatus,
+        completionType: attrPomodoro.completionType
     }))
     return pomodoros
 }
@@ -276,6 +234,7 @@ const convertPomodoros = (pomodoros: Pomodoro[]) => {
         startStatus: pomodoro.startStatus,
         end: pomodoro.end.toISO(),
         endStatus: pomodoro.endStatus,
+        completionType: pomodoro.completionType
     }))
     return attrPomodoros
 }
@@ -408,7 +367,8 @@ export const PomodoroTimer = (props: {
                 aria-label={getAllPomodorosStatus(pomodoros) === "stop" ? "Stop timer" : "Start timer"}
                 size="small"
                 onClick={() => {
-                    handlePomodoroTimerButtonClick(pomodoros, Number(props.attrsPomodoroDuration), Number(props.attrsPomodoroBreakDuration), setPomodoros)
+                    console.log("Button clicked. Current status:", getAllPomodorosStatus(pomodoros));
+                    handlePomodoroTimerButtonClick(pomodoros, Number(props.attrsPomodoroDuration), Number(props.attrsPomodoroBreakDuration), setPomodoros);
                 }}
             >
                 {getAllPomodorosStatus(pomodoros) === "stop"? <StopIcon fontSize="medium" /> : <PlayArrow fontSize="medium" />}
