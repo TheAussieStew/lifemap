@@ -274,8 +274,8 @@ export const PomodoroTimer = (props: {
     }, [pomodoros])
 
     // Duration in minutes
-    const [selectedPomodoroDuration, setSelectedPomodoroDuration] = React.useState<string>(`${props.attrsPomodoroDuration}`)
-    const [selectedPomodoroBreakDuration, setSelectedPomodoroBreakDuration] = React.useState<string>(`${props.attrsPomodoroBreakDuration}`)
+    const [selectedPomodoroDuration, ___] = React.useState<string>(props.attrsPomodoroDuration)
+    const [selectedPomodoroBreakDuration, __] = React.useState<string>(props.attrsPomodoroBreakDuration)
 
     // Update the pomodoros' statuses at least once every second
     // Refresh rate is higher because 1000ms is not enough to guarantee that this will fire at least once in every second
@@ -317,7 +317,8 @@ export const PomodoroTimer = (props: {
                 <Option
                     value={"25"}
                     onClick={() => {
-                        setSelectedPomodoroDuration("25");
+                        // Change node attrs
+                        // Deliberately don't change local state, local state is always derived from attrs
                         props.handlePomodoroDurationChange("25");
                         console.log("selectedPomodoroDuration", selectedPomodoroDuration)
                     }}
@@ -331,8 +332,9 @@ export const PomodoroTimer = (props: {
                 <Option
                     value={"50"}
                     onClick={() => {
-                        setSelectedPomodoroDuration("50")
-                        props.handlePomodoroBreakDurationChange("50");
+                        // Change node attrs
+                        // Deliberately don't change local state, local state is always derived from attrs
+                        props.handlePomodoroDurationChange("50");
                         console.log("selectedPomodoroDuration", selectedPomodoroDuration)
                     }}
                 >
@@ -346,7 +348,9 @@ export const PomodoroTimer = (props: {
             <FlowSwitch value={selectedPomodoroBreakDuration} isLens>
                 <Option
                     value={"5"}
-                    onClick={() => { setSelectedPomodoroBreakDuration("5") }}
+                    onClick={() => {
+                        props.handlePomodoroBreakDurationChange("5");
+                    }}
                 >
                     <motion.div>
                         <span style={{}}>
@@ -356,7 +360,9 @@ export const PomodoroTimer = (props: {
                 </Option>
                 <Option
                     value={"10"}
-                    onClick={() => { setSelectedPomodoroBreakDuration("10") }}
+                    onClick={() => {
+                        props.handlePomodoroBreakDurationChange("10");
+                    }}
                 >
                     <motion.div>
                         <span style={{}}>
