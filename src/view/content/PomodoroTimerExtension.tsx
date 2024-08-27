@@ -11,6 +11,7 @@ export type AttrPomodoro = {
     startStatus: "realised" | "unrealised"
     end: string,
     endStatus: "realised" | "unrealised",
+    completionType: "natural" | "manual" | "incomplete";
 }
 
 // Used in addAttributes
@@ -20,24 +21,28 @@ const mockAttrPomodoros: AttrPomodoro[] = [
         startStatus: "realised",
         end: "2024-02-15T06:15:51.000Z",
         endStatus: "realised",
+        completionType: "natural"
     },
     {
         start: "2024-02-14T05:50:51.000Z",
         startStatus: "unrealised",
         end: "2024-02-14T06:15:51.000Z",
         endStatus: "unrealised",
+        completionType: "incomplete"
     },
     {
         start: "2024-02-13T05:50:51.000Z",
         startStatus: "realised",
         end: "2024-02-13T06:15:51.000Z",
         endStatus: "unrealised",
+        completionType: "incomplete"
     },
     {
         start: "2024-02-12T05:50:51.000Z",
         startStatus: "unrealised",
         end: "2024-02-12T06:15:51.000Z",
         endStatus: "realised",
+        completionType: "manual"
     },
 ];
 
