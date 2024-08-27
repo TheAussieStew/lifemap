@@ -6,12 +6,19 @@ import { JSONContent } from '@tiptap/core';
 
 var stringSimilarity = require("string-similarity");
 
-export const generateUniqueID = () => uuidv4()
+export const generateUniqueID = () => uuidv4();
 
-export const singleTickAudio = new Audio("/singleTick.mp3");
-export const kitchenTimerStartAudio = new Audio("/kitchenTimerStart.mp3");
-export const dingAudio = new Audio("/ding.mp3");
-export const rubbishingAudio = new Audio("/rubbishing.mp3");
+const createAudio = (src: string): HTMLAudioElement | null => {
+  if (typeof window !== 'undefined') {
+    return new Audio(src);
+  }
+  return null;
+};
+
+export const singleTickAudio = createAudio("/singleTick.mp3");
+export const kitchenTimerStartAudio = createAudio("/kitchenTimerStart.mp3");
+export const dingAudio = createAudio("/ding.mp3");
+export const rubbishingAudio = createAudio("/rubbishing.mp3");
 
 export const getMathsLoupeFromAttributes = (attrs: Attrs) => {
   let mathsLoupe = new MathsLoupeC()
