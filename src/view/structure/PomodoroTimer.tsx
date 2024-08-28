@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
-import { flowMenuStyle } from "../structure/FlowMenu"
-import { FlowSwitch, Option } from "../structure/FlowSwitch"
+import { flowMenuStyle } from "./FlowMenu"
+import { FlowSwitch, Option } from "./FlowSwitch"
 import React from "react"
 import IconButton from "@mui/material/IconButton"
 import StopIcon from '@mui/icons-material/Stop';
@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { AttrPomodoro } from './PomodoroTimerExtension'
 import { DateTime } from 'ts-luxon'
-import { Tag, TypeTag } from "./Tag"
+import { Tag, TypeTag } from "../content/Tag"
 import { useInterval } from "react-use"
 import _ from "lodash"
 import { kitchenTimerStartAudio, dingAudio, rubbishingAudio } from "../../utils/utils"
