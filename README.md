@@ -1,10 +1,18 @@
-# Project Lifemap
+# Moira Lifemap
 
-Lifemap is a part of a new category of software called personal life organisation.
+Moira Lifemap is a lifemapping tool designed to allow users to map out and actualise their dreams. It integrates higher dimensional thinking that allows the user to more flexibly and effectively resolve their problems and actualise their lives. It also allows the embedding of advanced tools into pages.
 
-Information is organised as part of fundamental units of information called quanta, and ways to view them differently called lenses. The goal of this software is to enable users to think in expanded and non-linear ways, in addition to existing linear ways to organise information. It is the hope of the author that many users in future will use this software to improve their lives on all levels, and eventually improve the lives of the people and societies around them.
+## Architecture
 
-Key focuses
+Moira Lifemap is built on top of the rich text editor framework ProseMirror and its derivative TipTap. The foundation is therefore like an amped up notepad with all sorts of rich text functionality. On top of this foundation are mini-apps, that each handle a unique aspect of its functionality. For example, Moira Chronos handles all linear time related functionality that has to do with synchronising with others. These include pomodoro timers, time zone functionality, meeting scheduling and so on. These mini-apps can be used stand alone, or added into any Moira Lifemap page as required. Moira Lifemap is therefore a super app that composes all these mini-apps.
+
+These mini-apps include:
+
+1. Chronos - linear time and synchronisation with others
+2. Kairos - non-linear and personal time
+3. Natural Scientific Calculator - maths and scientific calculations
+
+## Values
 - Humanist
 
 Lifemap is designed to empower the individual to fully live out their lives. This is in contrast to much existing software which has a productivity maximisation focus.
@@ -15,7 +23,7 @@ Lifemap attempts to utilise as many visual ways of organising information as pos
 
 - Kinesthetic
 
-Lifemap attempts to organise information using their energetic qualities. This means that information has a kind of quality, and this can be visually seen at a glance, allowing the user to easily see the "health" of various areas.
+Lifemap attempts to organise information using their energetic qualities. This means that all quanta has an aura, and this can be visually seen at a glance, allowing the user to easily see the "health" of various areas.
 
 ## Getting Started 
 You'll need the following tools:
