@@ -9,6 +9,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
     const [hasBeenChanged, setHasBeenChanged] = React.useState(false);
     let timer: NodeJS.Timeout | null = null;
     const refs = props.children.map(() => React.createRef<HTMLDivElement>());
+    const [initialScrollComplete, setInitialScrollComplete] = React.useState(false);
 
     const [selectedIndex, setSelectedIndex] = React.useState<number>(() => {
         // Find the index of the child with the matching value prop
@@ -33,20 +34,20 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
             }}
             viewport={{ root: flowSwitchContainerRef, margin: "-13px 0px -13px 0px" }}
             onViewportEnter={(entry) => {
-                // The activation box is a thin line in the middle of the flow switch
-                // and activates when a child element enters this thin line.
-                if (hasBeenChanged) {
-                    // Play sound if audio is available and page has been interacted with
-                    if (singleTickAudio) {
-                        singleTickAudio.play().catch((error) => {
-                            console.log("Failed to play audio:", error.message);
-                        });
+                if (initialScrollComplete) {
+                    // Existing logic for playing sound and updating selected index
+                    if (hasBeenChanged) {
+                        if (singleTickAudio) {
+                            singleTickAudio.play().catch((error) => {
+                                console.log("Failed to play audio:", error.message);
+                            });
+                        }
+                    } else {
+                        setHasBeenChanged(true);
                     }
-                } else {
-                    setHasBeenChanged(true);
+                    console.log("setting selected index to ", index)
+                    setSelectedIndex(index)
                 }
-                console.log("setting selected index to ", index)
-                setSelectedIndex(index)
             }}
             key={index}
         >
@@ -69,25 +70,13 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
             console.log("found, and scrolling to", refs[index].current)
             refs[index].current!.scrollIntoView({ behavior: 'smooth' });
 
-            // // Scroll to the element
-            // const container = flowSwitchContainerRef.current;
-            // const element = refs[index].current;
-
-            // if (container && element) {
-            //     const containerRect = container.getBoundingClientRect();
-            //     const elementRect = element.getBoundingClientRect();
-
-            //     const scrollTop = elementRect.top - containerRect.top - (containerRect.height / 2) + (elementRect.height / 2);
-
-            //     container.scrollTo({
-            //         top: scrollTop,
-            //         left: 0,
-            //         behavior: 'smooth'
-            //     });
-            // }
-
+            // Mark initial scroll as complete after a short delay
+            setTimeout(() => {
+                setInitialScrollComplete(true);
+            }, 100); // Adjust this delay if needed
         } else {
             console.log("not found key")
+            setInitialScrollComplete(true); // Mark as complete even if element is not found
         }
 
     }, [refs, props.value])
@@ -111,19 +100,20 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
             key={props.value}
             ref={flowSwitchContainerRef}
             onScroll={
-                // TODO: In future, see if this can be replaced by onScrollEnd
                 () => {
                     if (timer !== null) {
                         clearTimeout(timer);
                     }
                     timer = setTimeout(function () {
                         setReleaseSelected(selectedIndex)
-                        if (props.onChange) {
-                            props.onChange(releaseSelected);
+                        if (props.onChange && initialScrollComplete) {
+                            props.onChange(selectedIndex);
                         }
-                        // TODO: This is mean to click the currently selected element, think of a better way.
+                        // TODO: This is meant to click the currently selected element, think of a better way.
                         // Basically, find the currently selected element, and invoke its onClick
-                        switchElements[selectedIndex].props.onClick()
+                        if (initialScrollComplete && switchElements[selectedIndex]) {
+                            switchElements[selectedIndex].props.onClick()
+                        }
                     }, 550);
                 }
             }
