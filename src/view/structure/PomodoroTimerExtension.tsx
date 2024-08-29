@@ -54,7 +54,7 @@ export const PomodoroTimerExtension = Node.create({
     addAttributes() {
         return {
             pomodoroDuration: {
-                default: "1"
+                default: "25"
             },
             pomodoroBreakDuration: {
                 default: "5"
