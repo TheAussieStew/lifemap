@@ -10,6 +10,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
     let timer: NodeJS.Timeout | null = null;
     const refs = props.children.map(() => React.createRef<HTMLDivElement>());
     const [initialScrollComplete, setInitialScrollComplete] = React.useState(false);
+    const [isUserScrolling, setIsUserScrolling] = React.useState(false);
 
     const [selectedIndex, setSelectedIndex] = React.useState<number>(() => {
         // Find the index of the child with the matching value prop
@@ -34,8 +35,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
             }}
             viewport={{ root: flowSwitchContainerRef, margin: "-13px 0px -13px 0px" }}
             onViewportEnter={(entry) => {
-                if (initialScrollComplete) {
-                    // Existing logic for playing sound and updating selected index
+                if (initialScrollComplete && isUserScrolling) { // Only play sound if user is scrolling
                     if (hasBeenChanged) {
                         if (singleTickAudio) {
                             singleTickAudio.play().catch((error) => {
@@ -99,25 +99,22 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
         <motion.div className="flow-menu"
             key={props.value}
             ref={flowSwitchContainerRef}
-            onScroll={
-                () => {
-                    if (timer !== null) {
-                        clearTimeout(timer);
-                    }
-                    timer = setTimeout(function () {
-                        setReleaseSelected(selectedIndex)
-                        if (props.onChange && initialScrollComplete) {
-                            props.onChange(selectedIndex);
-                        }
-                        // TODO: This is meant to click the currently selected element, think of a better way.
-                        // Basically, find the currently selected element, and invoke its onClick
-                        if (initialScrollComplete && switchElements[selectedIndex]) {
-                            switchElements[selectedIndex].props.onClick()
-                        }
-                    }, 550);
+            onScroll={() => {
+                if (timer !== null) {
+                    clearTimeout(timer);
                 }
-            }
-
+                setIsUserScrolling(true); // Set to true when scrolling starts
+                timer = setTimeout(() => {
+                    setReleaseSelected(selectedIndex);
+                    setIsUserScrolling(false); // Set to false when scrolling ends
+                    if (props.onChange && initialScrollComplete) {
+                        props.onChange(selectedIndex);
+                    }
+                    if (initialScrollComplete && switchElements[selectedIndex]) {
+                        switchElements[selectedIndex].props.onClick();
+                    }
+                }, 550);
+            }}
             style={{
                 scrollSnapType: `y mandatory`,
                 boxSizing: "border-box",
