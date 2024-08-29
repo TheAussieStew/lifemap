@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
-import { flowMenuStyle } from "./FlowMenu"
-import { FlowSwitch, Option } from "./FlowSwitch"
+import { flowMenuStyle } from "../structure/FlowMenu"
+import { FlowSwitch, Option } from "../structure/FlowSwitch"
 import React from "react"
 import IconButton from "@mui/material/IconButton"
 import StopIcon from '@mui/icons-material/Stop';

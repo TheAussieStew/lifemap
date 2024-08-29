@@ -63,7 +63,7 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
 import { FocusModePlugin } from '../plugins/FocusModePlugin'
-import { PomodoroTimerExtension } from '../structure/PomodoroTimerExtension'
+import { PomodoroTimerExtension } from '../chronos/PomodoroTimerExtension'
 
 lowlight.registerLanguage('js', js)
 
