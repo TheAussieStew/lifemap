@@ -64,6 +64,7 @@ import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
 import { FocusModePlugin } from '../plugins/FocusModePlugin'
 import { PomodoroTimerExtension } from '../chronos/PomodoroTimerExtension'
+import { TemporalEstimateExtension } from '../kairos/TemporalEstimateExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -161,14 +162,13 @@ export const customExtensions: Extensions = [
   CustomLink.configure({
     openOnClick: true,
   }),
-  CustomMention.configure(
-    {
-      HTMLAttributes: {
-        class: 'mention',
-      },
-      suggestion: mentionSuggestionOptions,
-    }
-  ),
+  CustomMention.configure({
+    HTMLAttributes: {
+      class: 'mention',
+    },
+    suggestion: mentionSuggestionOptions,
+  }),
+  ExperimentalPortalExtension,
   FadeIn,
   FocusModePlugin,
   GroupExtension,
@@ -178,13 +178,13 @@ export const customExtensions: Extensions = [
   Markdown,
   MathExtension,
   MessageExtension,
-  PortalExtension,
   PomodoroTimerExtension,
-  ExperimentalPortalExtension,
+  PortalExtension,
   QuoteExtension,
-  TwoDGraphExtension,
+  TemporalEstimateExtension,
   ThreeDExtension,
-  WarningExtension
+  TwoDGraphExtension,
+  WarningExtension,
 ]
 
 export const agents: Extensions = [
@@ -360,7 +360,7 @@ export const issue123Example = () => {
 export const RichTextCodeExample = () => {
   const content = `
   <p>
-    That’s a boring paragraph followed by a fenced code block:
+    That's a boring paragraph followed by a fenced code block:
   </p>
   <span data-type="mention" data-id="🧱 blocked"></span><span data-type="mention" data-id="⭐️ important"></span>
   <p>
