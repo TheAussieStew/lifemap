@@ -3,8 +3,9 @@
 
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF, SoftShadows } from '@react-three/drei';
 import { motion } from 'framer-motion-3d';
+
 
 type DeleteButton3DProps = {
   onClick: () => void;
@@ -41,6 +42,8 @@ export const DeleteButton3D: React.FC<DeleteButton3DProps> = ({ onClick, size = 
       aria-label="Delete All Pomodoros"
       role="button"
     >
+      <SoftShadows />
+
       {/* Lighting Setup */}
       <ambientLight intensity={0.2} /> {/* Soft ambient light */}
 
