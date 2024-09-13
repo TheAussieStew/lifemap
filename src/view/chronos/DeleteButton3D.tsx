@@ -5,7 +5,6 @@ import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import { motion } from 'framer-motion-3d';
-import { MeshStandardMaterial, ShadowMaterial } from 'three';
 
 type DeleteButton3DProps = {
   onClick: () => void;
@@ -14,18 +13,17 @@ type DeleteButton3DProps = {
 };
 
 const Model = () => {
-  const { scene } = useGLTF('/models-3d/starIcon.glb') as any;
+  const { scene } = useGLTF('/models-3d/garbage-bin.glb') as any;
 
   // Enable shadows for all meshes in the model
   scene.traverse((child: any) => {
     if (child.isMesh) {
       child.castShadow = true;    // Model casts shadows
       child.receiveShadow = true; // Model can receive shadows if needed
-      child.material = new MeshStandardMaterial({ color: child.material.color });
     }
   });
 
-  return <primitive object={scene} />;
+  return <primitive object={scene} scale={[4.5, 4.5, 4.5]} />; // Directly scaling the model
 };
 
 export const DeleteButton3D: React.FC<DeleteButton3DProps> = ({ onClick, size = 1, color = 'white' }) => {
@@ -33,7 +31,6 @@ export const DeleteButton3D: React.FC<DeleteButton3DProps> = ({ onClick, size = 
     <Canvas
       shadows // Enables shadow mapping in the renderer
       style={{ width: '40px', height: '40px', cursor: 'pointer' }} // Adjust size as needed
-      camera={{ position: [0, 2, 5], fov: 50 }} // Position camera to capture shadows
       onClick={onClick}
       tabIndex={0} // Makes the canvas focusable for accessibility
       onKeyDown={(e) => {
@@ -49,8 +46,8 @@ export const DeleteButton3D: React.FC<DeleteButton3DProps> = ({ onClick, size = 
 
       {/* Directional Light for Model Illumination and Shadow Casting */}
       <directionalLight
-        position={[-5, 10, 5]}
-        intensity={7}
+        position={[-10, 5, 5]}
+        intensity={20}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
@@ -77,7 +74,7 @@ export const DeleteButton3D: React.FC<DeleteButton3DProps> = ({ onClick, size = 
         <motion.group
           whileHover={{ scale: 1.2 }} // Scales up on hover
           whileTap={{ scale: 0.9 }}   // Scales down on tap/click
-          position={[0, 0, 0]}         // Adjust position if needed
+          position={[0, -2, 0]}         // Adjust position if needed
         >
           <Model />
         </motion.group>
@@ -86,4 +83,4 @@ export const DeleteButton3D: React.FC<DeleteButton3DProps> = ({ onClick, size = 
   );
 };
 
-useGLTF.preload('/models-3d/starIcon.glb'); // Preloads the GLB model for faster loading
+useGLTF.preload('/models-3d/garbage-bin.glb'); // Preloads the GLB model for faster loading
