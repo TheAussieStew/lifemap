@@ -13,6 +13,11 @@ import { Tag, TypeTag } from "../content/Tag"
 import { useInterval } from "react-use"
 import _ from "lodash"
 import { kitchenTimerStartAudio, dingAudio, rubbishingAudio } from "../../utils/utils"
+import dynamic from 'next/dynamic';
+
+// Dynamically import the DeleteButton3D component with no SSR
+const DeleteButton3D = dynamic(() => import('./DeleteButton3D').then(mod => mod.DeleteButton3D), { ssr: false });
+
 
 // These edge cases need to be handled
 //
@@ -381,19 +386,20 @@ export const PomodoroTimer = (props: {
             >
                 {getAllPomodorosStatus(pomodoros) === "stop"? <StopIcon fontSize="medium" /> : <PlayArrow fontSize="medium" />}
             </IconButton>
-            <IconButton
+            <motion.div
                 aria-label="delete all pomodoros"
-                size="small"
-                onClick={() => {
-                    deleteAllPomodorosFromAttrs(setPomodoros)
-                    // Play sound effects
-                    if (rubbishingAudio) {
-                        rubbishingAudio.play();
-                    }
-                }}
+                whileHover={{ opacity: 1 }}
             >
-                <DeleteIcon fontSize="small" />
-            </IconButton>
+                <DeleteButton3D
+                    onClick={() => {
+                        props.handleDelete();
+                        // Play sound effects
+                        if (rubbishingAudio) {
+                            rubbishingAudio.play();
+                        }
+                    }}
+                />
+            </motion.div>
             <motion.div
                 ref={containerRef}
                 style={{ overflowX: 'scroll', display: 'flex', width: '400px', gap: 4 }}
