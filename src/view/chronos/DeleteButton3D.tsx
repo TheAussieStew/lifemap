@@ -1,11 +1,10 @@
 // components/DeleteButton3D.tsx
 'use client'; // Ensures client-side rendering
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, SoftShadows } from '@react-three/drei';
 import { motion } from 'framer-motion-3d';
-
 
 type DeleteButton3DProps = {
   onClick: () => void;
@@ -24,14 +23,27 @@ const Model = () => {
     }
   });
 
-  return <primitive object={scene} scale={[4.5, 4.5, 4.5]} />; // Directly scaling the model
+  // Convert 10 degrees to radians
+  const rotationX = (-10 * Math.PI) / 180;
+
+  return (
+    <primitive 
+      object={scene} 
+      scale={[4.5, 4.5, 4.5]} 
+      position={[0, 0, 0]} // Adjusted y-position
+      rotation={[rotationX, 0, 0]} // Apply rotation: [x, y, z]
+    />
+  );
 };
 
 export const DeleteButton3D: React.FC<DeleteButton3DProps> = ({ onClick, size = 1, color = 'white' }) => {
+  const [fov, _] = useState(34); // Initial FOV value
+
   return (
     <Canvas
       shadows // Enables shadow mapping in the renderer
       style={{ width: '40px', height: '40px', cursor: 'pointer' }} // Adjust size as needed
+      camera={{ position: [0, 3.5, 10], fov: fov }} // Existing camera settings
       onClick={onClick}
       tabIndex={0} // Makes the canvas focusable for accessibility
       onKeyDown={(e) => {
