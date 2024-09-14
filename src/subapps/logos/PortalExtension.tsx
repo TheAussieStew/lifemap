@@ -5,7 +5,7 @@ import { Content, Editor } from '@tiptap/core'
 import React, { useEffect, useState } from 'react'
 import { Attrs, Node as ProseMirrorNode } from 'prosemirror-model'
 import { QuantaId } from '../../core/Model'
-import { MainEditor, TransclusionEditor } from '../content/RichText'
+import { MainEditor, TransclusionEditor } from './RichText'
 import { debounce } from 'lodash'
 
 const REGEX_BLOCK_TILDE = /~[^~]+~/

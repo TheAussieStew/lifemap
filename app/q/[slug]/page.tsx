@@ -3,11 +3,11 @@
 import React from "react";
 import { motion } from 'framer-motion';
 import { Quanta } from "../../../src/core/Quanta";
-import { offWhite } from "../../../src/view/Theme";
-import { Minimap } from "../../../src/view/structure/Minimap";
-import { DocumentFlowMenu } from "../../../src/view/structure/FlowMenu";
+import { offWhite } from "../../../src/subapps/Theme";
+import { Minimap } from "../../../src/subapps/controls/Minimap";
+import { DocumentFlowMenu } from "../../../src/subapps/controls/FlowMenu";
 import { Editor } from "@tiptap/core";
-import { MainEditor } from "../../../src/view/content/RichText";
+import { MainEditor } from "../../../src/subapps/logos/RichText";
 
 export default function Page({ params }: { params: { slug: string } }) {
     return (

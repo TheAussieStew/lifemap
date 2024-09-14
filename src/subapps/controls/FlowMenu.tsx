@@ -1,6 +1,6 @@
 import { Editor, generateHTML } from "@tiptap/core"
 import { BubbleMenu } from "@tiptap/react"
-import { RichTextCodeExample, customExtensions } from "../content/RichText"
+import { RichTextCodeExample, customExtensions } from "../logos/RichText"
 import { motion } from "framer-motion"
 import IconButton from '@mui/joy/IconButton';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
@@ -19,7 +19,7 @@ import { FlowSwitch, FlowSwitchExample, Option } from "./FlowSwitch"
 import React, { CSSProperties } from "react"
 import { NodeSelection } from "prosemirror-state";
 import { Lens, MathLens, displayLenses } from "../../core/Model";
-import { officialExtensions } from "../content/RichText";
+import { officialExtensions } from "../logos/RichText";
 
 export const flowMenuStyle = (): React.CSSProperties => {
     return {

@@ -1,7 +1,7 @@
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
 import { Extension } from '@tiptap/core';
 import { openai } from './AI';
-import { highlightGreen, purple } from '../view/Theme';
+import { highlightGreen, purple } from '../subapps/Theme';
 import { generatePrompt } from '../utils/utils';
 
 export const SophiaAI = Extension.create({

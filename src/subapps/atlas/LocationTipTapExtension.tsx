@@ -1,12 +1,12 @@
 import React from "react";
 import { Node, mergeAttributes, InputRule, wrappingInputRule, markInputRule, Mark, JSONContent, nodeInputRule } from "@tiptap/core";
 import { NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
-import { Math } from "./Math"
+import { Math } from "../natural-scientific-calculator/Math"
 import { MathsLoupeC } from "../../core/Model";
 import { NodeViewProps } from '@tiptap/core'
 import { getMathsLoupeFromAttributes } from "../../utils/utils";
-import { Tag } from "./Tag";
-import { FlowSwitch } from "../structure/FlowSwitch";
+import { Tag } from "../content/Tag";
+import { FlowSwitch } from "../controls/FlowSwitch";
 import { motion } from "framer-motion";
 import { Location } from "./Location";
 

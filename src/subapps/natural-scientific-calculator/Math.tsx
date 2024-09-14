@@ -1,13 +1,13 @@
 import React, { DetailedHTMLProps, HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
 import { DisplayLens, EvaluationLens, MathLens, MathsLoupe, MathsLoupeC, QuantaClass, QuantaType } from '../../core/Model';
-import { RichText } from './RichText';
+import { RichText } from '../logos/RichText';
 import { convertLatexToAsciiMath } from 'mathlive';
 import { JSONContent } from '@tiptap/react';
 import { Quanta } from '../../core/Quanta';
 import { DOMAttributes } from "react";
 import { MathfieldElementAttributes } from 'mathlive'
-import { Group } from '../structure/Group';
+import { Group } from '../logos/Group';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
 import { Attrs } from 'prosemirror-model';

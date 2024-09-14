@@ -1,7 +1,7 @@
 import React from "react";
 import { Node, mergeAttributes, wrappingInputRule } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
-import { Math } from "../content/Math"
+import { Math } from "./Math"
 import { NodeViewProps } from '@tiptap/core'
 
 const REGEX_INLINE_MATH_DOLLARS: RegExp = /\$(.+)\$/; //new RegExp("\$(.+)\$", "i");

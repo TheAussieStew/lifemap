@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Quanta } from '../src/core/Quanta';
-import { offWhite } from '../src/view/Theme';
+import { offWhite } from '../src/subapps/Theme';
 
 const App = () => {
   return (

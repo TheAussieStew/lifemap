@@ -2,7 +2,7 @@ import React from "react";
 import { Node, mergeAttributes, InputRule, wrappingInputRule, markInputRule, Mark } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule, NodeViewContent } from "@tiptap/react";
 import { MathfieldElement, MathfieldOptions } from "mathlive";
-import { Math } from "../content/Math"
+import { Math } from "./Math"
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
 import { Calculation } from "./Calculation";
 
