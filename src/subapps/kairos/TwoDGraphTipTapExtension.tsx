@@ -1,7 +1,7 @@
 import React from "react";
 import { Node, NodeViewProps, mergeAttributes, wrappingInputRule } from "@tiptap/core";
 import { NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule } from "@tiptap/react";
-import { Group } from "./Group";
+import { Group } from "../logos/Group";
 import './styles.scss';
 import { motion } from "framer-motion";
 import { TwoDGraph } from "./TwoDGraph";

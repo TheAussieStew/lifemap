@@ -1,8 +1,8 @@
 import React from "react";
 import { QuantaStoreContext } from "../backend/QuantaStore";
 import { MathsLoupeC, QuantaType, SunT } from "../core/Model";
-import RichText from "./content/RichText";
-import { Math } from "./content/Math";
+import RichText from "./logos/RichText";
+import { Math } from "./natural-scientific-calculator/Math";
 import { JSONContent } from "@tiptap/core";
 import { observer } from "mobx-react-lite";
 

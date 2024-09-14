@@ -5,7 +5,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { DateTime } from 'ts-luxon';
 import { kitchenTimerStartAudio, dingAudio } from '../../utils/utils';
-import { FlowSwitch, Option } from '../structure/FlowSwitch';
+import { FlowSwitch, Option } from '../controls/FlowSwitch';
 
 type TimeBlock = {
     start: DateTime;

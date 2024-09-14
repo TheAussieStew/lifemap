@@ -3,7 +3,7 @@
 import React from "react";
 import { QuantaId, Loupe, MathsLoupeC } from "./Model";
 import { QuantaStore, QuantaStoreContext } from "../backend/QuantaStore";
-import { QuantaView } from "../view/QuantaView";
+import { QuantaView } from "../subapps/QuantaView";
 import NoSSR from "../utils/NoSSR";
 
 export const Quanta = (props: { quantaId: QuantaId; userId: string, loupe?: Loupe }) => {

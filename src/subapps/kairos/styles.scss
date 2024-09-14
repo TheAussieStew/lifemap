@@ -1,0 +1,17 @@
+.flow-menu {
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.flow-menu::-webkit-scrollbar { /* WebKit */
+  width: 0;
+  height: 0;
+}
+
+.green-glow {
+  box-shadow: 0 0 5px #33cc00, 0 0 10px #33cc00, 0 0 15px #33cc00, 0 0 20px #33cc00;
+}
+
+.glow-orange {
+  box-shadow: 0 0 5px #ff7f00, 0 0 20px #ff7f00, 0 0 30px #ff7f00, 0 0 40px #ff7f00;
+}
