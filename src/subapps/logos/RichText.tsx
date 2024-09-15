@@ -65,7 +65,6 @@ import TableRow from '@tiptap/extension-table-row'
 import { FocusModePlugin } from '../plugins/FocusModePlugin'
 import { PomodoroTimerExtension } from '../chronos/PomodoroTimerExtension'
 import { TemporalEstimateExtension } from '../kairos/TemporalEstimateExtension'
-import { ThreeDTextExtension } from './ThreeDTextExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -184,7 +183,6 @@ export const customExtensions: Extensions = [
   QuoteExtension,
   TemporalEstimateExtension,
   ThreeDExtension,
-  ThreeDTextExtension,
   TwoDGraphExtension,
   WarningExtension,
 ]
