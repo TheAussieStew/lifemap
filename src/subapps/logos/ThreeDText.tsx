@@ -3,8 +3,6 @@ import { Canvas, useLoader } from '@react-three/fiber'
 import {
   Center,
   Text3D,
-  Instance,
-  Instances,
   Environment,
   Lightformer,
   OrbitControls,
@@ -20,9 +18,11 @@ interface ThreeDTextProps {
 
 export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
   return (
-    <Canvas shadows camera={{ position: [0, 0, 10], fov: 20 }} gl={{ preserveDrawingBuffer: true }}>
-      <color attach="background" args={['#FFFFFF']} />
-      {/* The text and the grid */}
+    <Canvas
+      shadows
+      camera={{ position: [0, -1, 500], fov: 1 }}
+      gl={{ preserveDrawingBuffer: true, alpha: true }}
+    >
       <Text
         text={text}
         config={{
@@ -37,7 +37,7 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
           temporalDistortion: 0,
           ior: 1.25,
           color: 'white',
-          shadow: '#94cbff'
+          shadow: '#000000'
         }}
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0, 0]}
@@ -47,9 +47,7 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
         target={[0, 0, 0]}
         autoRotate={false}
         autoRotateSpeed={-0.1}
-        zoomSpeed={0.25}
-        minZoom={40}
-        maxZoom={140}
+        enableZoom={false}
         enablePan={false}
         dampingFactor={0.05}
         minPolarAngle={0}
@@ -58,16 +56,12 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
       {/* Environment */}
       <Environment resolution={32}>
         <group rotation={[-Math.PI / 4, -0.3, 0]}>
-          <Lightformer intensity={20} rotation-x={Math.PI / 2} position={[0, 5, -9]} scale={[10, 10, 1]} />
-          <Lightformer intensity={2} rotation-y={Math.PI / 2} position={[-5, 1, -1]} scale={[10, 2, 1]} />
-          <Lightformer intensity={2} rotation-y={Math.PI / 2} position={[-5, -1, -1]} scale={[10, 2, 1]} />
-          <Lightformer intensity={2} rotation-y={-Math.PI / 2} position={[10, 1, 0]} scale={[20, 2, 1]} />
-          <Lightformer type="ring" intensity={2} rotation-y={Math.PI / 2} position={[-0.1, -1, -5]} scale={10} />
+          <Lightformer intensity={20} rotation-x={Math.PI / 4} position={[-15, 10, 10]} scale={[10, 10, 1]} />
         </group>
       </Environment>
       {/* Soft shadows */}
       <AccumulativeShadows
-        frames={100}
+        frames={3}
         color="#94cbff"
         colorBlend={5}
         toneMapped
