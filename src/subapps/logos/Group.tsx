@@ -1,12 +1,35 @@
 import { motion } from 'framer-motion'
 import { Quanta } from '../../core/Quanta';
 import { QuantaId } from '../../core/Model';
-import React from 'react'
-import { offWhite, purple } from '../Theme';
+import React, { useMemo } from 'react'
+import { absoluteWhite } from '../Theme';
 
 export type GroupLenses = "verticalArray";
 
-export const Group = (props: { children: any, lens: GroupLenses, quantaId: QuantaId }) => {
+const textures = [
+    'url("https://www.transparenttextures.com/patterns/groovepaper.png")',
+    'url("https://www.transparenttextures.com/patterns/beige-paper.png")',
+    'url("https://www.transparenttextures.com/patterns/paper.png")',
+];
+
+function hashCode(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+export const Group = (props: { children: any, lens: GroupLenses, quantaId?: QuantaId }) => {
+    const backgroundTexture = useMemo(() => {
+        if (!props.quantaId) {
+            return textures[Math.floor(Math.random() * textures.length)];
+        }
+        const index = Math.abs(hashCode(props.quantaId)) % textures.length;
+        return textures[index];
+    }, [props.quantaId]);
 
     // TODO: Exit animation doesn't work
     // TODO: Fix stretchy border: https://github.com/framer/motion/issues/1249
@@ -29,8 +52,8 @@ export const Group = (props: { children: any, lens: GroupLenses, quantaId: Quant
             }}
             style={{
                 position: "relative",
-                backgroundColor: offWhite,
-                backgroundImage: 'url("https://www.transparenttextures.com/patterns/groovepaper.png")',
+                backgroundColor: absoluteWhite,
+                backgroundImage: backgroundTexture,
                 minHeight: 20,
                 overflow: "hidden",
                 // width: "fit-content",
