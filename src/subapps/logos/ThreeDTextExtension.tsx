@@ -65,7 +65,7 @@ export const ThreeDTextExtension = Node.create({
                             position: 'absolute',
                             zIndex: 1000
                         }}
-                    />
+                  />
                     <ThreeDText text={props.node.attrs.text} />
                 </NodeViewWrapper>
             )
