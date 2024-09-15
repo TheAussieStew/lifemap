@@ -20,22 +20,22 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
   return (
     <Canvas
       shadows
-      camera={{ position: [0, 0, 500], fov: 1 }}
+      camera={{ position: [0, -1, 500], fov: 1 }}
       gl={{ preserveDrawingBuffer: true, alpha: true }}
     >
       <Text
         text={text}
         config={{
           transmission: 1,
-          clearcoat: 5,
-          clearcoatRoughness: 0.9,
-          thickness: 0.2,
+          clearcoat: 1,
+          clearcoatRoughness: 0.0,
+          thickness: 0.3,
           anisotropy: 0.25,
           roughness: 0,
           distortion: 0.5,
           distortionScale: 0.1,
           temporalDistortion: 0,
-          ior: 5.25,
+          ior: 1.25,
           color: 'white',
           shadow: '#000000'
         }}
@@ -68,17 +68,19 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
         alphaTest={1}
         opacity={1}
         scale={30}
+        // Note that the y position should be 0 but this makes it look
+        // visually unappealing with the current material setup
         position={[0, -1, 0]}
       >
         <RandomizedLight
           amount={1}
           radius={1}
-          ambient={0.5}
+          ambient={0.6}
           intensity={3}
-          position={[-15, 20, -10]}
+          position={[-10, 20, -10]}
           size={15}
           mapSize={1024}
-          bias={0.0001}
+          bias={0}
         />
       </AccumulativeShadows>
     </Canvas>
