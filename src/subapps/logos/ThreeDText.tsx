@@ -20,7 +20,7 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
   return (
     <Canvas
       shadows
-      camera={{ position: [0, -1, 500], fov: 1 }}
+      camera={{ position: [0, 0, 500], fov: 1 }}
       gl={{ preserveDrawingBuffer: true, alpha: true }}
     >
       <Text
