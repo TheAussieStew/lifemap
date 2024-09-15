@@ -120,9 +120,9 @@ export const TwoDGraph = () => {
       );
 
     return (
-        <div className="dndflow">
-            <div style={{ height: 'fit-content', width: '100%', borderRadius: 10 }}>
-                <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+        <div className="dndflow" style={{ height: '100vh', width: '100%' }}>
+            <div style={{ height: 'calc(100% - 200px)', width: '100%', borderRadius: 10 }}>
+                <div className="reactflow-wrapper" ref={reactFlowWrapper} style={{ height: '100%' }}>
                     <ReactFlow
                         nodeTypes={nodeTypes}
                         nodes={nodes}
@@ -134,7 +134,7 @@ export const TwoDGraph = () => {
                         onConnect={onConnect}
                         onInit={setReactFlowInstance}
                         fitView
-                        style={rfStyle}
+                        style={{ ...rfStyle, height: '100%' }}
                     >
                         <Background />
                         <Controls />
