@@ -27,15 +27,15 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
         text={text}
         config={{
           transmission: 1,
-          clearcoat: 1,
-          clearcoatRoughness: 0.0,
-          thickness: 0.3,
+          clearcoat: 5,
+          clearcoatRoughness: 0.9,
+          thickness: 0.2,
           anisotropy: 0.25,
           roughness: 0,
           distortion: 0.5,
           distortionScale: 0.1,
           temporalDistortion: 0,
-          ior: 1.25,
+          ior: 5.25,
           color: 'white',
           shadow: '#000000'
         }}
