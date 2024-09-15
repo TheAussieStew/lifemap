@@ -30,6 +30,7 @@ export const Group = (props: { children: any, lens: GroupLenses, quantaId: Quant
             style={{
                 position: "relative",
                 backgroundColor: offWhite,
+                backgroundImage: 'url("https://www.transparenttextures.com/patterns/groovepaper.png")',
                 minHeight: 20,
                 overflow: "hidden",
                 // width: "fit-content",
