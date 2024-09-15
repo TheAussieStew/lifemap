@@ -20,8 +20,8 @@ interface ThreeDTextProps {
 
 export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
   return (
-    <Canvas shadows camera={{ position: [10, 20, 20], fov: 60 }} gl={{ preserveDrawingBuffer: true }}>
-      <color attach="background" args={['#f2f2f5']} />
+    <Canvas shadows camera={{ position: [0, 0, 10], fov: 20 }} gl={{ preserveDrawingBuffer: true }}>
+      <color attach="background" args={['#FFFFFF']} />
       {/* The text and the grid */}
       <Text
         text={text}
@@ -40,10 +40,11 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
           shadow: '#94cbff'
         }}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -1, 2.25]}
+        position={[0, 0, 0]}
       />
       {/* Controls */}
       <OrbitControls
+        target={[0, 0, 0]}
         autoRotate={false}
         autoRotateSpeed={-0.1}
         zoomSpeed={0.25}
@@ -51,8 +52,8 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
         maxZoom={140}
         enablePan={false}
         dampingFactor={0.05}
-        minPolarAngle={Math.PI / 3}
-        maxPolarAngle={Math.PI / 3}
+        minPolarAngle={0}
+        maxPolarAngle={0}
       />
       {/* Environment */}
       <Environment resolution={32}>
@@ -133,31 +134,8 @@ const Text: React.FC<TextProps> = ({ text, config, font = '/fonts/Inter-Medium-R
           <MeshTransmissionMaterial {...config} background={texture} />
         </Text3D>
       </Center>
-      <Grid />
     </group>
   )
 }
-
-interface GridProps {
-  number?: number
-  lineWidth?: number
-  height?: number
-}
-
-const Grid: React.FC<GridProps> = ({ number = 23, lineWidth = 0.026, height = 0.5 }) => (
-  <Instances position={[0, -1.02, 0]}>
-    <planeGeometry args={[lineWidth, height]} />
-    <meshBasicMaterial color="#999" />
-    {Array.from({ length: number }, (_, y) =>
-      Array.from({ length: number }, (_, x) => (
-        <group key={`${x}:${y}`} position={[x * 2 - Math.floor(number / 2) * 2, -0.01, y * 2 - Math.floor(number / 2) * 2]}>
-          <Instance rotation={[-Math.PI / 2, 0, 0]} />
-          <Instance rotation={[-Math.PI / 2, 0, Math.PI / 2]} />
-        </group>
-      ))
-    )}
-    <gridHelper args={[100, 100, '#bbb', '#bbb']} position={[0, -0.01, 0]} />
-  </Instances>
-)
 
 export default ThreeDText
