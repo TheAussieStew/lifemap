@@ -61,21 +61,21 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
       </Environment>
       {/* Soft shadows */}
       <AccumulativeShadows
-        frames={3}
+        frames={50}
         color="#94cbff"
-        colorBlend={5}
+        colorBlend={10}
         toneMapped
-        alphaTest={0.9}
+        alphaTest={1}
         opacity={1}
         scale={30}
-        position={[0, -1.01, 0]}
+        position={[0, -1, 0]}
       >
         <RandomizedLight
-          amount={4}
-          radius={10}
+          amount={1}
+          radius={1}
           ambient={0.5}
-          intensity={1}
-          position={[0, 10, -10]}
+          intensity={3}
+          position={[-15, 20, -10]}
           size={15}
           mapSize={1024}
           bias={0.0001}
