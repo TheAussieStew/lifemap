@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import ReactFlow, {
   Controls,
   Background,
@@ -17,6 +17,7 @@ import 'reactflow/dist/style.css';
 import './react-flow.css';
 import { Quanta } from '../../core/Quanta';
 import { borderRadius } from '../Theme';
+import { motion } from 'framer-motion';
 
 const QuantaNode = ({ data }: { data: { quantaId: string; label: string } }) => {
   const [quantaId, setQuantaId] = useState(data.quantaId || '999999');
@@ -44,20 +45,37 @@ const QuantaNode = ({ data }: { data: { quantaId: string; label: string } }) => 
     >
       <Handle type="target" position={Position.Top} />
       
+      {/* TODO: Need to abstract drag handle and make consistent across components */}
+
       {/* Drag Handle */}
-      <div
+      <motion.div
         className="custom-drag-handle"
-        style={{
-          width: '20px',
-          height: '20px',
-          backgroundColor: 'teal',
-          borderRadius: '4px',
-          cursor: 'grab',
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
+        onMouseLeave={(event) => {
+          event.currentTarget.style.cursor = "grab";
         }}
-      />
+        onMouseDown={(event) => {
+          event.currentTarget.style.cursor = "grabbing";
+        }}
+        onMouseUp={(event) => {
+          event.currentTarget.style.cursor = "grab";
+        }}
+        style={{
+          position: 'absolute',
+          right: -4,
+          top: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          cursor: 'grab',
+          fontSize: '24px',
+          color: 'grey',
+        }}
+        contentEditable="false"
+        suppressContentEditableWarning={true}
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+      >
+        ⠿
+      </motion.div>
       
       <input
         type="text"
