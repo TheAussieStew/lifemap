@@ -39,9 +39,26 @@ const QuantaNode = ({ data }: { data: { quantaId: string; label: string } }) => 
         borderRadius: '8px',
         padding: '10px',
         boxSizing: 'border-box',
+        position: 'relative', // Ensure positioning for the drag handle
       }}
     >
       <Handle type="target" position={Position.Top} />
+      
+      {/* Drag Handle */}
+      <div
+        className="custom-drag-handle"
+        style={{
+          width: '20px',
+          height: '20px',
+          backgroundColor: 'teal',
+          borderRadius: '4px',
+          cursor: 'grab',
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+        }}
+      />
+      
       <input
         type="text"
         value={quantaId}
@@ -82,12 +99,14 @@ export const TwoDGraph = () => {
       type: 'quantaNode',
       position: { x: 0, y: 0 },
       data: { quantaId: '000005', label: 'Node 1' },
+      dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
     {
       id: 'node-2',
       type: 'quantaNode',
       position: { x: 250, y: 100 },
       data: { quantaId: '999999', label: 'Node 2' },
+      dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
   ]);
 
@@ -129,6 +148,7 @@ export const TwoDGraph = () => {
           type: 'quantaNode',
           position,
           data: { quantaId: '999999', label: `${type} node` },
+          dragHandle: '.custom-drag-handle', // Specify the drag handle selector
         };
 
         setNodes((nds) => nds.concat(newNode));
