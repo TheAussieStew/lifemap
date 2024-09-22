@@ -113,7 +113,7 @@ const Text: React.FC<TextProps> = ({ text, config, font = '/fonts/Inter-Medium-R
 
   return (
     <group>
-      <Center scale={[0.8, 1, 1]} {...props}>
+      <Center scale={[1, 1, 1]} {...props}>
         <Text3D
           castShadow
           bevelEnabled
