@@ -1,7 +1,6 @@
 import React from 'react'
 import { Canvas, useLoader } from '@react-three/fiber'
 import {
-  Center,
   Text3D,
   Environment,
   Lightformer,
@@ -20,27 +19,30 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
   return (
     <Canvas
       shadows
-      camera={{ position: [0, -1, 500], fov: 1 }}
+      camera={{ position: [0, 0, 500], fov: 1 }}
       gl={{ preserveDrawingBuffer: true, alpha: true }}
     >
       <Text
         text={text}
         config={{
-          transmission: 1,
-          clearcoat: 1,
-          clearcoatRoughness: 0.0,
+          transmission: 0.98,
           thickness: 0.3,
-          anisotropy: 0.25,
-          roughness: 0,
-          distortion: 0.5,
-          distortionScale: 0.1,
-          temporalDistortion: 0,
-          ior: 1.25,
-          color: 'white',
+          roughness: 0.01,
+          clearcoat: 0.1,
+          clearcoatRoughness: 0.1,
+          ior: 1.2,
+          // @ts-ignore
+          envMapIntensity: 0.1,
+          distortion: 0.05,
+          distortionScale: 0.2,
+          temporalDistortion: 0.05,
+          attenuationDistance: 1,
+          attenuationColor: '#ffffff',
+          color: '#ffffff',
           shadow: '#000000'
         }}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0, 0]}
+        position={[0, 0, 0]} // Keep text at origin
       />
       {/* Controls */}
       <OrbitControls
@@ -67,10 +69,8 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
         toneMapped
         alphaTest={1}
         opacity={1}
-        scale={30}
-        // Note that the y position should be 0 but this makes it look
-        // visually unappealing with the current material setup
-        position={[0, -1, 0]}
+        scale={60} // Increased from 30 to 50
+        position={[0, 0, 0]}
       >
         <RandomizedLight
           amount={1}
@@ -79,7 +79,7 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
           intensity={3}
           position={[-10, 20, -10]}
           size={15}
-          mapSize={1024}
+          mapSize={2048}
           bias={0}
         />
       </AccumulativeShadows>
@@ -112,25 +112,22 @@ const Text: React.FC<TextProps> = ({ text, config, font = '/fonts/Inter-Medium-R
   const texture = useLoader(RGBELoader, 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr')
 
   return (
-    <group>
-      <Center scale={[1, 1, 1]} {...props}>
-        <Text3D
-          castShadow
-          bevelEnabled
-          font={font}
-          scale={5}
-          letterSpacing={-0.03}
-          height={0.25}
-          bevelSize={0.01}
-          bevelSegments={10}
-          curveSegments={128}
-          bevelThickness={0.01}
-        >
-          {text}
-          <MeshTransmissionMaterial {...config} background={texture} />
-        </Text3D>
-      </Center>
-    </group>
+    <Text3D
+      castShadow
+      bevelEnabled
+      font={font}
+      scale={3}
+      letterSpacing={-0.03}
+      height={0.25}
+      bevelSize={0.01}
+      bevelSegments={10}
+      curveSegments={128}
+      bevelThickness={0.01}
+      {...props} // Spread props to include position and rotation
+    >
+      {text}
+      <MeshTransmissionMaterial {...config} background={texture} />
+    </Text3D>
   )
 }
 
