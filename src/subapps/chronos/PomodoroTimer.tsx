@@ -422,7 +422,7 @@ export const PomodoroTimer = (props: {
             </motion.div>
             <motion.div style={{ opacity: 0, position: "absolute", top: -15, right: -15 }} whileHover={{ opacity: 1 }}>
                 <IconButton
-                    aria-label="delete this pomodoro timer"
+                    title="delete this pomodoro timer"
                     size="small"
                     onClick={() => {
                         props.handleDelete()
