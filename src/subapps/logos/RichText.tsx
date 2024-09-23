@@ -335,11 +335,11 @@ export const RichText = observer((props: { quanta?: QuantaType, text: RichTextT,
     }
 
     return (
-      <div key={props.quanta?.id} style={{display: "flex", justifyContent: "center" }}>
+      <div key={props.quanta?.id} style={{width: '100%'}}>
         <div key={`bubbleMenu${props.quanta?.id}`}>
           <FlowMenu editor={editor} />
         </div>
-        <div style={{ maxWidth: 1300 }}>
+        <div style={{ width: '100%' }}>
           <EditorContent editor={editor} />
         </div>
       </div>
