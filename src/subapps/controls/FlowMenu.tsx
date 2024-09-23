@@ -226,7 +226,7 @@ export const DocumentFlowMenu = (props: {editor: Editor}) => {
     const [selectedDocumentLens, setSelectedDocumentLens] = React.useState<string>("Focus mode")
 
     let documentMenuStyle: CSSProperties = flowMenuStyle()
-    documentMenuStyle.width = "80%"
+    documentMenuStyle.width = "100%"
 
     return (
         <motion.div style={documentMenuStyle}>

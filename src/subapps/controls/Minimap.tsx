@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "./minimap.scss";
 // @ts-ignore
 import { domToPng } from 'modern-screenshot'
@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 export const Minimap = () => {
   const [counter, setCounter] = React.useState(0);
+  const [minimapWidth, setMinimapWidth] = useState(0);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);
@@ -76,6 +77,9 @@ export const Minimap = () => {
         sliderContentRef.current.style.transform = 'scale(' + realScale + ')';
         sliderContentRef.current.style.width = (100 / realScale) + '%';
         sliderContentRef.current.style.height = (100 / realScale) + '%';
+      }
+      if (sliderRef.current) {
+        setMinimapWidth(sliderRef.current.clientWidth);
       }
     }
 
@@ -154,11 +158,38 @@ export const Minimap = () => {
   }, [counter]);
 
   return (
-    // The effect is to have components fade in one by one, which creates a visual sense of momentum, even though loading is slow
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={{ duration: 0.5 }} whileHover={{ opacity: 1 }} className="slider" ref={sliderRef}>
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 0.7 }} 
+      transition={{ duration: 0.5 }} 
+      whileHover={{ opacity: 1 }} 
+      className="slider" 
+      ref={sliderRef}
+      style={{ position: 'fixed', top: 0, right: 0, zIndex: 1000 }} // Add this line
+    >
       <div className="slider__size" ref={sliderSizeRef}></div>
       <motion.div className="slider__controller" ref={controllerRef}></motion.div>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="slider__content" ref={sliderContentRef}></motion.div>
     </motion.div>
   );
+};
+
+export const useMinimapWidth = () => {
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    const slider = document.querySelector('.slider');
+    if (slider) {
+      setWidth(slider.clientWidth);
+    }
+    const observer = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        setWidth(entry.contentRect.width);
+      }
+    });
+    if (slider) observer.observe(slider);
+    return () => {
+      if (slider) observer.unobserve(slider);
+    };
+  }, []);
+  return width;
 };

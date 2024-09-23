@@ -4,16 +4,21 @@ import React from "react";
 import { motion } from 'framer-motion';
 import { Quanta } from "../../../src/core/Quanta";
 import { offWhite } from "../../../src/subapps/Theme";
-import { Minimap } from "../../../src/subapps/controls/Minimap";
+import { Minimap, useMinimapWidth } from "../../../src/subapps/controls/Minimap";
 import { DocumentFlowMenu } from "../../../src/subapps/controls/FlowMenu";
 import { MainEditor } from "../../../src/subapps/logos/RichText";
 
 export default function Page({ params }: { params: { slug: string } }) {
+    const minimapWidth = useMinimapWidth();
+    const paddingBuffer = 20; // Add a buffer of 20 pixels
+
     return (
         <div style={{
             backgroundColor: offWhite,
             backgroundImage: 'url("https://www.transparenttextures.com/patterns/paper.png")',
             minHeight: '100vh',
+            paddingLeft: minimapWidth + paddingBuffer,
+            paddingRight: minimapWidth + paddingBuffer,
         }}>
             <Minimap />
             <motion.div style={{display: "grid", placeItems: "center", paddingTop: 15, paddingBottom: 4}}>
