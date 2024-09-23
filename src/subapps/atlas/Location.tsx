@@ -13,8 +13,8 @@ interface LocationProps {
 }
 
 export const Location: React.FC<LocationProps> = (props: LocationProps) => {
-    const [lng, setLng] = useState(151.21512);
-    const [lat, setLat] = useState(-33.861344);
+    const [lng, setLng] = useState(153.5341);
+    const [lat, setLat] = useState(-28.5099);
     const [zoom, setZoom] = useState(9);
 
     return (
