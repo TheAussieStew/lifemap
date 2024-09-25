@@ -48,6 +48,7 @@ const Logo = () => {
         castShadow
       />
 
+      {/* Colour Wheel */}
       <group>
         {Array.from({ length: segments }).map((_, i) => {
           const thetaStart = (i / segments) * Math.PI * 2;
@@ -66,6 +67,7 @@ const Logo = () => {
         })}
       </group>
 
+      {/* Sun */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[2.8, 32, 32]} /> {/* Further increased size for greater visibility */}
         <meshStandardMaterial
@@ -76,6 +78,7 @@ const Logo = () => {
         />
       </mesh>
 
+      {/* Bloom Effect for Sun */}
       <EffectComposer>
         <Bloom
           luminanceThreshold={0}
