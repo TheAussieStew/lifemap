@@ -23,6 +23,8 @@ const pastelColors = [
   '#E1BAFF', // Ultraviolet - Represented as a soft pastel purple
 ];
 
+const reversedPastelColors = pastelColors.reverse();
+
 const CameraSetup = () => {
   const { camera } = useThree();
   React.useEffect(() => {
@@ -51,13 +53,13 @@ const Logo = () => {
       {/* Colour Wheel */}
       <group>
         {Array.from({ length: segments }).map((_, i) => {
-          const thetaStart = (i / segments) * Math.PI * 2;
+          const thetaStart = (i / segments) * Math.PI * 2 + Math.PI / 2;
           const thetaLength = (0.9 / segments) * Math.PI * 2; // Reduced arc angle for gaps
           return (
             <mesh key={i}>
               <circleGeometry args={[5, 32, thetaStart, thetaLength]} />
               <meshStandardMaterial
-                color={pastelColors[i % pastelColors.length]}
+                color={reversedPastelColors[i % reversedPastelColors.length]}
                 side={DoubleSide}
                 metalness={0.1} // Subtle sheen for a more natural look
                 roughness={0.5} // Controls the roughness for diffuse reflection
