@@ -4,7 +4,7 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Canvas, useThree, useLoader } from '@react-three/fiber';
 import { offWhite } from '../src/subapps/Theme';
-import { DoubleSide, AdditiveBlending, TextureLoader } from 'three';
+import { DoubleSide, AdditiveBlending, TextureLoader, MultiplyBlending } from 'three';
 import { OrbitControls, Billboard } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
@@ -50,7 +50,7 @@ const Logo = () => {
     <Canvas>
       <CameraSetup />
       {/* Adjusted ambient light intensity for better visibility */}
-      <ambientLight intensity={2.0} />
+      <ambientLight intensity={2} />
 
       {/* Added a PointLight to illuminate the color segments */}
       <pointLight
@@ -72,8 +72,8 @@ const Logo = () => {
               <meshStandardMaterial
                 color={reversedPastelColors[i % reversedPastelColors.length]}
                 side={DoubleSide}
-                metalness={0.1} // Subtle sheen for a more natural look
-                roughness={0.5} // Controls the roughness for diffuse reflection
+                metalness={0.2} // Subtle sheen for a more natural look
+                roughness={0.8} // Controls the roughness for diffuse reflection
               />
             </mesh>
           );
@@ -82,7 +82,7 @@ const Logo = () => {
 
       {/* Sun */}
       <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[2.8, 32, 32]} /> {/* Further increased size for greater visibility */}
+        <sphereGeometry args={[2.5, 32, 32]} /> {/* Further increased size for greater visibility */}
         <meshStandardMaterial
           color="#FFD700" // Warm, natural yellow color
           emissive="#FFD700" // Emissive to enhance brightness
