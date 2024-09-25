@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, useThree, useLoader } from '@react-three/fiber';
 import { offWhite } from '../src/subapps/Theme';
-import { DoubleSide, AdditiveBlending } from 'three';
-import { OrbitControls } from '@react-three/drei';
+import { DoubleSide, AdditiveBlending, TextureLoader } from 'three';
+import { OrbitControls, Billboard } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
 const segments = 9;
@@ -32,6 +32,17 @@ const CameraSetup = () => {
     camera.lookAt(0, 0, 0); // Make the camera look at the center of the scene
   }, [camera]);
   return null;
+};
+
+const LensFlare = () => {
+  const lensFlareTexture = useLoader(TextureLoader, '/lensflare.png');
+  return (
+    <Billboard position={[0, 0, 0]}>
+      <sprite scale={[10, 10, 1]}>
+        <spriteMaterial map={lensFlareTexture} transparent />
+      </sprite>
+    </Billboard>
+  );
 };
 
 const Logo = () => {
@@ -79,6 +90,9 @@ const Logo = () => {
           blending={AdditiveBlending}
         />
       </mesh>
+
+      {/* Lens Flare */}
+      <LensFlare />
 
       {/* Bloom Effect for Sun */}
       <EffectComposer>
