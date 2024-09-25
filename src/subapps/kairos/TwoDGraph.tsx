@@ -113,22 +113,50 @@ export const TwoDGraph = () => {
     {
       id: 'node-1',
       type: 'quantaNode',
-      position: { x: 0, y: 0 },
+      position: { x: 50, y: 20 },
       data: { quantaId: '000005', label: 'Node 1' },
       dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
     {
       id: 'node-2',
       type: 'quantaNode',
-      position: { x: 0, y: -300 },
+      position: { x: -80, y: -280 },
       data: { quantaId: '59010df8-9321-4864-abfd-5fdbb4dac9f4', label: 'Node 2' },
       dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
     {
       id: 'node-3',
       type: 'quantaNode',
-      position: { x: 700, y: -300 }, // Positioned to the right of node-2
+      position: { x: 680, y: -320 }, // Slightly adjusted from node-2
       data: { quantaId: '1e75b219-0ad5-44be-9898-b970cc986040', label: 'Node 3' },
+      dragHandle: '.custom-drag-handle', // Specify the drag handle selector
+    },
+    {
+      id: 'node-4',
+      type: 'quantaNode',
+      position: { x: 720, y: -580 }, // Slightly adjusted from node-3
+      data: { quantaId: 'a4cc26ce-4fbf-425d-b6ca-8f3ea6258064', label: 'Node 4' },
+      dragHandle: '.custom-drag-handle', // Specify the drag handle selector
+    },
+    {
+      id: 'node-5',
+      type: 'quantaNode',
+      position: { x: -80, y: -580 }, // Positioned above node-2
+      data: { quantaId: '34bb7afb-b959-473c-a2c7-76e32ae91a0f', label: 'Node 5' },
+      dragHandle: '.custom-drag-handle', // Specify the drag handle selector
+    },
+    {
+      id: 'node-6',
+      type: 'quantaNode',
+      position: { x: -80, y: -920 }, // Positioned above node-5
+      data: { quantaId: 'f0c75b08-bb3d-407d-8666-a56a40c8c6cd', label: 'Node 6' },
+      dragHandle: '.custom-drag-handle', // Specify the drag handle selector
+    },
+    {
+      id: 'node-7',
+      type: 'quantaNode',
+      position: { x: -80, y: -1260 }, // Positioned above node-6
+      data: { quantaId: 'abdfbe6d-578c-4fe8-bbd0-2be2b08b5f19', label: 'Node 7' },
       dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
   ]);
@@ -136,6 +164,10 @@ export const TwoDGraph = () => {
   const [edges, setEdges] = useState<Edge[]>([
     { id: 'edge-1', source: 'node-1', target: 'node-2' },
     { id: 'edge-2', source: 'node-1', target: 'node-3' },
+    { id: 'edge-3', source: 'node-3', target: 'node-4' },
+    { id: 'edge-4', source: 'node-5', target: 'node-2' },
+    { id: 'edge-5', source: 'node-6', target: 'node-5' },
+    { id: 'edge-6', source: 'node-7', target: 'node-6' },
   ]);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
