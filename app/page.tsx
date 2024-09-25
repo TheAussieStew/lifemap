@@ -64,7 +64,7 @@ const Logo = () => {
       />
 
       {/* Colour Wheel */}
-      <group>
+      <group rotation={[0, 0, 0.035]}> {/* Applied slight anti-clockwise rotation */}
         {Array.from({ length: segments }).map((_, i) => {
           const thetaStart = (i / segments) * Math.PI * 2 + Math.PI / 2;
           const thetaLength = (0.9 / segments) * Math.PI * 2; // Reduced arc angle for gaps
