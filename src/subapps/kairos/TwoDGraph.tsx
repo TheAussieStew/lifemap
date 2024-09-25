@@ -122,8 +122,8 @@ export const TwoDGraph = () => {
     {
       id: 'node-2',
       type: 'quantaNode',
-      position: { x: 250, y: 100 },
-      data: { quantaId: '999999', label: 'Node 2' },
+      position: { x: 0, y: 300 },
+      data: { quantaId: '59010df8-9321-4864-abfd-5fdbb4dac9f4', label: 'Node 2' },
       dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
   ]);
@@ -175,6 +175,9 @@ export const TwoDGraph = () => {
     [reactFlowInstance]
   );
 
+  // Add this new constant for the default viewport
+  const defaultViewport = { x: 0, y: 0, zoom: 0.2 };
+
   return (
     <div
       style={{
@@ -202,6 +205,7 @@ export const TwoDGraph = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onInit={setReactFlowInstance}
+          defaultViewport={defaultViewport}
           fitView
         >
           <Background />
