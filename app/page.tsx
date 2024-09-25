@@ -39,7 +39,7 @@ const Logo = () => {
       <group>
         {Array.from({ length: segments }).map((_, i) => {
           const thetaStart = (i / segments) * Math.PI * 2;
-          const thetaLength = (0.8 / segments) * Math.PI * 2; // Reduced arc angle for gaps
+          const thetaLength = (0.9 / segments) * Math.PI * 2; // Reduced arc angle for gaps
           return (
             <mesh key={i} rotation={[-Math.PI / 2, 0, 0]}>
               <circleGeometry args={[5, 32, thetaStart, thetaLength]} />
@@ -49,7 +49,7 @@ const Logo = () => {
         })}
       </group>
       <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[3, 32, 32]} /> {/* Further increased size for greater visibility */}
+        <sphereGeometry args={[2.8, 32, 32]} /> {/* Further increased size for greater visibility */}
         <meshStandardMaterial
           color="#FFD700" // Warm, natural yellow color
           emissive="#FFD700" // Emissive to enhance brightness
