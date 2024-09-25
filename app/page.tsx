@@ -4,8 +4,8 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Canvas, useThree, useLoader } from '@react-three/fiber';
 import { offWhite } from '../src/subapps/Theme';
-import { DoubleSide, AdditiveBlending, TextureLoader, MultiplyBlending } from 'three';
-import { OrbitControls, Billboard } from '@react-three/drei';
+import { DoubleSide, AdditiveBlending, TextureLoader, OrthographicCamera } from 'three';
+import { Billboard } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
 const segments = 9;
@@ -28,8 +28,10 @@ const reversedPastelColors = pastelColors.reverse();
 const CameraSetup = () => {
   const { camera } = useThree();
   React.useEffect(() => {
-    camera.position.set(0, 0, 10); // Set the camera position
-    camera.lookAt(0, 0, 0); // Make the camera look at the center of the scene
+    if (camera instanceof OrthographicCamera) {
+      camera.zoom = 0.09; // Adjusted zoom
+      camera.updateProjectionMatrix();
+    }
   }, [camera]);
   return null;
 };
@@ -37,9 +39,9 @@ const CameraSetup = () => {
 const LensFlare = () => {
   const lensFlareTexture = useLoader(TextureLoader, '/lensflare.png');
   return (
-    <Billboard position={[0, 0, 0]}>
-      <sprite scale={[10, 10, 1]}>
-        <spriteMaterial map={lensFlareTexture} transparent />
+    <Billboard>
+      <sprite scale={[10, 10, 1]}> // Adjusted scale
+        <spriteMaterial map={lensFlareTexture} transparent /> // Removed opacity
       </sprite>
     </Billboard>
   );
@@ -47,7 +49,7 @@ const LensFlare = () => {
 
 const Logo = () => {
   return (
-    <Canvas>
+    <Canvas orthographic camera={{ position: [0, 0, 5], near: 0.1, far: 1000 }}>
       <CameraSetup />
       {/* Adjusted ambient light intensity for better visibility */}
       <ambientLight intensity={2} />
@@ -105,7 +107,6 @@ const Logo = () => {
         />
       </EffectComposer>
 
-      <OrbitControls enableZoom={false} />
     </Canvas>
   );
 };
@@ -113,7 +114,11 @@ const Logo = () => {
 const App = () => {
   return (
     <React.StrictMode>
-      <motion.div style={{ padding: '45px', backgroundColor: offWhite }}>
+      <motion.div style={{ 
+        width: '200px',  // Adjusted width
+        height: '200px', // Adjusted height
+        backgroundColor: offWhite 
+      }}>
         <Logo />
       </motion.div>
     </React.StrictMode>
