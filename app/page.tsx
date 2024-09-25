@@ -10,16 +10,17 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
 const segments = 9;
 
+// Rearranged pastel colors to follow the electromagnetic spectrum from Infrared to Ultraviolet
 const pastelColors = [
-  '#FFB3BA', // Pastel Red
-  '#FFDFBA', // Pastel Orange
-  '#FFFFBA', // Pastel Yellow
-  '#BAFFC9', // Pastel Green
-  '#BAE1FF', // Pastel Blue
-  '#D4BAFF', // Pastel Indigo
-  '#FFBAF2', // Pastel Violet
-  '#FFBAE1', // Pastel Magenta
-  '#FFBAD4', // Pastel Deep Pink
+  '#FFB3BA', // Infrared (IR) - Represented as a soft pastel red
+  '#FFDFBA', // Red
+  '#FFFFBA', // Orange
+  '#BAFFC9', // Yellow
+  '#BAE1FF', // Green
+  '#D4BAFF', // Blue
+  '#FFBAF2', // Indigo
+  '#FFBAE1', // Violet
+  '#E1BAFF', // Ultraviolet - Represented as a soft pastel purple
 ];
 
 const CameraSetup = () => {
@@ -35,37 +36,56 @@ const Logo = () => {
   return (
     <Canvas>
       <CameraSetup />
-      <ambientLight intensity={1.5} />
+      {/* Adjusted ambient light intensity for better visibility */}
+      <ambientLight intensity={2.0} />
+
+      {/* Added a PointLight to illuminate the color segments */}
+      <pointLight
+        position={[0, 0, 5]} // Positioned in front of the color wheel
+        color="#FFFFFF" // White light to evenly illuminate colors
+        intensity={10}
+        distance={40}
+        castShadow
+      />
+
       <group>
         {Array.from({ length: segments }).map((_, i) => {
           const thetaStart = (i / segments) * Math.PI * 2;
           const thetaLength = (0.9 / segments) * Math.PI * 2; // Reduced arc angle for gaps
           return (
-            <mesh key={i} rotation={[-Math.PI / 2, 0, 0]}>
+            <mesh key={i}>
               <circleGeometry args={[5, 32, thetaStart, thetaLength]} />
-              <meshStandardMaterial color={pastelColors[i % pastelColors.length]} side={DoubleSide} />
+              <meshStandardMaterial
+                color={pastelColors[i % pastelColors.length]}
+                side={DoubleSide}
+                metalness={0.1} // Subtle sheen for a more natural look
+                roughness={0.5} // Controls the roughness for diffuse reflection
+              />
             </mesh>
           );
         })}
       </group>
+
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[2.8, 32, 32]} /> {/* Further increased size for greater visibility */}
         <meshStandardMaterial
           color="#FFD700" // Warm, natural yellow color
           emissive="#FFD700" // Emissive to enhance brightness
-          emissiveIntensity={0.1} // Increased emissive intensity
+          emissiveIntensity={0.5} // Increased emissive intensity
           blending={AdditiveBlending}
         />
       </mesh>
+
       <EffectComposer>
         <Bloom
           luminanceThreshold={0}
-          luminanceSmoothing={1}
-          intensity={10} // Further increased bloom intensity
+          luminanceSmoothing={2}
+          intensity={4} // Further increased bloom intensity
           mipmapBlur
           kernelSize={1}
         />
       </EffectComposer>
+
       <OrbitControls enableZoom={false} />
     </Canvas>
   );
