@@ -106,7 +106,6 @@ const QuantaNode = ({ data }: { data: { quantaId: string; label: string } }) => 
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
-
 export const TwoDGraph = () => {
   const nodeTypes = React.useMemo(() => ({ quantaNode: QuantaNode }), []);
 
@@ -125,9 +124,19 @@ export const TwoDGraph = () => {
       data: { quantaId: '59010df8-9321-4864-abfd-5fdbb4dac9f4', label: 'Node 2' },
       dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
+    {
+      id: 'node-3',
+      type: 'quantaNode',
+      position: { x: 700, y: -300 }, // Positioned to the right of node-2
+      data: { quantaId: '1e75b219-0ad5-44be-9898-b970cc986040', label: 'Node 3' },
+      dragHandle: '.custom-drag-handle', // Specify the drag handle selector
+    },
   ]);
 
-  const [edges, setEdges] = useState<Edge[]>([{ id: 'edge-1', source: 'node-1', target: 'node-2' }]);
+  const [edges, setEdges] = useState<Edge[]>([
+    { id: 'edge-1', source: 'node-1', target: 'node-2' },
+    { id: 'edge-2', source: 'node-1', target: 'node-3' },
+  ]);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
   const onNodesChange = useCallback(
