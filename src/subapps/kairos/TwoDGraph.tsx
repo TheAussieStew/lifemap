@@ -12,6 +12,7 @@ import ReactFlow, {
   Handle,
   Position,
   ReactFlowInstance,
+  Connection,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './react-flow.css';
@@ -29,8 +30,8 @@ const QuantaNode = ({ data }: { data: { quantaId: string; label: string } }) => 
   return (
     <div
       style={{
-        width: '300px',
-        maxWidth: '300px',
+        width: '550px',
+        maxWidth: '550px',
         maxHeight: '300px',
         display: 'flex',
         flexDirection: 'column',
@@ -122,7 +123,7 @@ export const TwoDGraph = () => {
     {
       id: 'node-2',
       type: 'quantaNode',
-      position: { x: 0, y: 300 },
+      position: { x: 0, y: -300 },
       data: { quantaId: '59010df8-9321-4864-abfd-5fdbb4dac9f4', label: 'Node 2' },
       dragHandle: '.custom-drag-handle', // Specify the drag handle selector
     },
@@ -139,7 +140,7 @@ export const TwoDGraph = () => {
     (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), []);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
