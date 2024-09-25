@@ -7,6 +7,7 @@ import { Attrs, Node as ProseMirrorNode } from 'prosemirror-model'
 import { QuantaId } from '../../core/Model'
 import { MainEditor, TransclusionEditor } from './RichText'
 import { debounce } from 'lodash'
+import { DragRing } from '../controls/DragRing'
 
 const REGEX_BLOCK_TILDE = /~[^~]+~/
 
@@ -142,6 +143,7 @@ export const PortalExtension = Node.create({
             return (
                 <NodeViewWrapper>
                     <input type="text" value={referencedQuantaId} onChange={handleReferencedQuantaIdChange} style={{ border: '1.5px solid #34343430', borderRadius: sharedBorderRadius, outline: 'none', backgroundColor: 'transparent', width: `80px`, position: "absolute", zIndex: 1 }} />
+                    <DragRing editor={props.editor} />
                     <Portal editor={props.editor} referencedQuantaId={referencedQuantaId} />
                 </NodeViewWrapper>
             );
