@@ -32,7 +32,6 @@ const QuantaNode = ({ data }: { data: { quantaId: string; label: string } }) => 
       style={{
         width: '550px',
         maxWidth: '550px',
-        maxHeight: '300px',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -96,7 +95,6 @@ const QuantaNode = ({ data }: { data: { quantaId: string; label: string } }) => 
         style={{
           flex: 1,
           overflow: 'auto',
-          maxHeight: '250px', // Adjust as needed to fit within 300px total
         }}
       >
         <Quanta quantaId={quantaId} userId={'user-id'} />
