@@ -10,16 +10,16 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
 const segments = 9;
 
-const colors = [
-  '#FF0000', // Red
-  '#FF7F00', // Orange
-  '#FFFF00', // Yellow
-  '#00FF00', // Green
-  '#0000FF', // Blue
-  '#4B0082', // Indigo
-  '#8B00FF', // Violet
-  '#FF00FF', // Magenta
-  '#FF1493', // Deep Pink
+const pastelColors = [
+  '#FFB3BA', // Pastel Red
+  '#FFDFBA', // Pastel Orange
+  '#FFFFBA', // Pastel Yellow
+  '#BAFFC9', // Pastel Green
+  '#BAE1FF', // Pastel Blue
+  '#D4BAFF', // Pastel Indigo
+  '#FFBAF2', // Pastel Violet
+  '#FFBAE1', // Pastel Magenta
+  '#FFBAD4', // Pastel Deep Pink
 ];
 
 const CameraSetup = () => {
@@ -35,7 +35,7 @@ const Logo = () => {
   return (
     <Canvas>
       <CameraSetup />
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={1.5} />
       <group>
         {Array.from({ length: segments }).map((_, i) => {
           const thetaStart = (i / segments) * Math.PI * 2;
@@ -43,19 +43,30 @@ const Logo = () => {
           return (
             <mesh key={i} rotation={[-Math.PI / 2, 0, 0]}>
               <circleGeometry args={[5, 32, thetaStart, thetaLength]} />
-              <meshBasicMaterial color={colors[i % colors.length]} side={DoubleSide} />
+              <meshStandardMaterial color={pastelColors[i % pastelColors.length]} side={DoubleSide} />
             </mesh>
           );
         })}
       </group>
-      <mesh position={[0, 0, -1]}>
-        <sphereGeometry args={[2.5, 32, 32]} /> {/* Increased size */}
-        <meshBasicMaterial color="#FFD700" blending={AdditiveBlending} /> {/* Warm, natural yellow color with additive blending */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[3, 32, 32]} /> {/* Further increased size for greater visibility */}
+        <meshStandardMaterial
+          color="#FFD700" // Warm, natural yellow color
+          emissive="#FFD700" // Emissive to enhance brightness
+          emissiveIntensity={0.1} // Increased emissive intensity
+          blending={AdditiveBlending}
+        />
       </mesh>
       <EffectComposer>
-        <Bloom intensity={10.0} /> {/* Increased bloom intensity */}
+        <Bloom
+          luminanceThreshold={0}
+          luminanceSmoothing={1}
+          intensity={10} // Further increased bloom intensity
+          mipmapBlur
+          kernelSize={1}
+        />
       </EffectComposer>
-      <OrbitControls />
+      <OrbitControls enableZoom={false} />
     </Canvas>
   );
 };
