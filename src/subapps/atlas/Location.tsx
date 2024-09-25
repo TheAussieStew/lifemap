@@ -32,7 +32,7 @@ export const Location: React.FC<LocationProps> = (props: LocationProps) => {
         }
 
         // Set the terrain using the DEM source with an exaggeration factor
-        map.setTerrain({ source: 'mapbox-dem', exaggeration: 2.5 });
+        map.setTerrain({ source: 'mapbox-dem', exaggeration: 3 });
 
         // Add a sky layer to enhance the 3D visualization
         if (!map.getLayer('sky')) {
