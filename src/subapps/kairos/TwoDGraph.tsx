@@ -178,7 +178,7 @@ export const TwoDGraph = () => {
   return (
     <div
       style={{
-        height: '100vh',
+        height: '30vh',
         width: '100%',
         padding: '20px',
         boxSizing: 'border-box',
