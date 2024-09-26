@@ -23,8 +23,8 @@ export const ThreeDGraph = () => {
                 graphData={temporalLifeMap}
                 nodeLabel="id"
                 nodeAutoColorBy="group"
-                linkWidth={1}
-                linkOpacity={0.5}
+                linkWidth={1.5}
+                linkOpacity={0.6}
             />
         </div>
     );
