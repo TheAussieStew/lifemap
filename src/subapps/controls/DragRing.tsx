@@ -58,8 +58,8 @@ export const DragRing: React.FC<DragRingProps> = ({ editor }) => {
                     top: 0,
                     left: 0,
                     right: 0,
-                    height: '10px',
-                    borderTop: '10px solid rgba(128, 128, 128, 0.5)',
+                    height: '15px', // 1.5 times the original 10px
+                    borderTop: '15px solid rgba(128, 128, 128, 0.5)', // 1.5 times the original 10px
                     borderLeft: 'none',
                     borderRight: 'none',
                     borderBottom: 'none',
@@ -82,8 +82,8 @@ export const DragRing: React.FC<DragRingProps> = ({ editor }) => {
                     top: 0,
                     right: 0,
                     bottom: 0,
-                    width: '10px',
-                    borderRight: '10px solid rgba(128, 128, 128, 0.5)',
+                    width: '15px', // 1.5 times the original 10px
+                    borderRight: '15px solid rgba(128, 128, 128, 0.5)', // 1.5 times the original 10px
                     borderTop: 'none',
                     borderBottom: 'none',
                     borderLeft: 'none',
@@ -106,8 +106,8 @@ export const DragRing: React.FC<DragRingProps> = ({ editor }) => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    height: '10px',
-                    borderBottom: '10px solid rgba(128, 128, 128, 0.5)',
+                    height: '15px', // 1.5 times the original 10px
+                    borderBottom: '15px solid rgba(128, 128, 128, 0.5)', // 1.5 times the original 10px
                     borderTop: 'none',
                     borderLeft: 'none',
                     borderRight: 'none',
@@ -130,8 +130,8 @@ export const DragRing: React.FC<DragRingProps> = ({ editor }) => {
                     top: 0,
                     left: 0,
                     bottom: 0,
-                    width: '10px',
-                    borderLeft: '10px solid rgba(128, 128, 128, 0.5)',
+                    width: '15px', // 1.5 times the original 10px
+                    borderLeft: '15px solid rgba(128, 128, 128, 0.5)', // 1.5 times the original 10px
                     borderTop: 'none',
                     borderBottom: 'none',
                     borderRight: 'none',
