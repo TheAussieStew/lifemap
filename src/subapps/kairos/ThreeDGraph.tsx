@@ -1,24 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { ForceGraph3D } from 'react-force-graph';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-import { Vector2 } from 'three';
 import { borderRadius } from '../Theme';
 
 
 export const ThreeDGraph = () => {
     const fgRef = useRef<any>();
-
-    useEffect(() => {
-        if (fgRef.current) {
-            // @ts-ignore
-            const bloomPass = new UnrealBloomPass(
-            );
-            bloomPass.strength = 4;
-            bloomPass.radius = 1;
-            bloomPass.threshold = 0.1;
-            fgRef.current.postProcessingComposer().addPass(bloomPass);
-        }
-    }, [fgRef.current]);
 
     return (
         <div style={{
@@ -345,14 +331,14 @@ export const temporalLifeMap = {
         { "id": "LegacySchoolScholarship", "group": 11 },
         { "id": "CommunityLegacyProject", "group": 11 },
         { "id": "GlobalLegacyImpact", "group": 11 },
-        { "id": "FirstCharitableDonation", "group": 7 },
-        { "id": "SustainedCharitableSupport", "group": 7 },
-        { "id": "CharitableFoundation", "group": 7 },
-        { "id": "FirstFoundationGrant", "group": 7 },
-        { "id": "PhilanthropicRecognition", "group": 7 },
-        { "id": "SustainablePhilanthropy", "group": 7 },
-        { "id": "ImpactInvestmentStart", "group": 7 },
-        { "id": "FirstImpactInvestment", "group": 7 },
+        { "id': 'FirstCharitableDonation', 'group': 7 },
+        { 'id': 'SustainedCharitableSupport', 'group': 7 },
+        { 'id': 'CharitableFoundation', 'group': 7 },
+        { 'id': 'FirstFoundationGrant', 'group': 7 },
+        { 'id': 'PhilanthropicRecognition', 'group': 7 },
+        { 'id': 'SustainablePhilanthropy', 'group': 7 },
+        { 'id': 'ImpactInvestmentStart', 'group': 7 },
+        { 'id': 'FirstImpactInvestment', 'group': 7 },
         // Add additional nodes as needed to reach at least 200
     ],
     "links": [
@@ -494,10 +480,10 @@ export const temporalLifeMap = {
         { "source": "TransportationPolicyReform", "target": "FirstPolicyProposal", "value": 1 },
         { "source": "FirstPolicyProposal", "target": "PolicyAdoption", "value": 1 },
         { "source": "PolicyAdoption", "target": "PolicyEffectivenessReview", "value": 1 },
-        { 'source': 'PolicyEffectivenessReview', 'target': 'PolicyRevision', 'value': 1 },
-        { 'source': 'PolicyRevision', 'target': 'PolicyScaling', 'value': 1 },
-        { 'source': 'PolicyScaling', 'target': 'RegionalPolicyAdoption', 'value': 1 },
-        { 'source': 'RegionalPolicyAdoption', 'target': 'LocalPolicyImplementation', 'value': 1 },
+        { "source": "PolicyEffectivenessReview", "target": "PolicyRevision", "value": 1 },
+        { "source": "PolicyRevision", "target": "PolicyScaling", "value": 1 },
+        { "source": "PolicyScaling", "target": "RegionalPolicyAdoption", "value": 1 },
+        { "source": "RegionalPolicyAdoption", "target': 'LocalPolicyImplementation', 'value': 1 },
         { 'source': 'LocalPolicyImplementation', 'target': 'PolicySustainabilityFramework', 'value': 1 },
         { 'source': 'PolicySustainabilityFramework', 'target': 'SustainableDevelopmentGoalAchievement', 'value': 1 },
         { 'source': 'SustainableDevelopmentGoalAchievement', 'target': 'FirstSDGImplemented', 'value': 1 },
