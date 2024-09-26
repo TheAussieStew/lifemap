@@ -25,6 +25,36 @@ export const ThreeDGraph = () => {
                 nodeAutoColorBy="group"
                 linkWidth={1.5}
                 linkOpacity={0.6}
+                showNavInfo={false} 
+            />
+        </div>
+    );
+};
+
+export const MinimapThreeDGraph = () => {
+    const fgRef = useRef<any>();
+
+    return (
+        <div style={{
+            width: '200px',
+            height: '100px',
+            minHeight: '75px',
+            position: 'relative',
+            borderRadius: borderRadius,
+            overflow: 'hidden',
+        }}>
+            <ForceGraph3D
+                ref={fgRef}
+                backgroundColor="#000003"
+                width={200}
+                height={100}
+                graphData={temporalLifeMap}
+                nodeLabel="id"
+                nodeAutoColorBy="group"
+                nodeRelSize={20} // Making the node sizes gigantic
+                linkWidth={0.75}
+                linkOpacity={0.3}
+                showNavInfo={false} 
             />
         </div>
     );
