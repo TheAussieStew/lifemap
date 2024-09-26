@@ -216,7 +216,7 @@ export const TwoDGraph = () => {
   );
 
   // Add this new constant for the default viewport
-  const defaultViewport = { x: 0, y: 0, zoom: 0.2 };
+  const defaultViewport = { x: 0, y: -400, zoom: 0.1 };
 
   return (
     <div
