@@ -4,6 +4,7 @@ import "./minimap.scss";
 import { domToPng } from 'modern-screenshot'
 import { motion } from 'framer-motion';
 import { MinimapThreeDGraph } from '../kairos/ThreeDGraph';
+import { borderRadius } from '../Theme';
 
 export const Minimap = () => {
   const [counter, setCounter] = React.useState(0);
@@ -159,7 +160,22 @@ export const Minimap = () => {
   }, [counter]);
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          position: 'fixed',
+          top: 4,
+          left: 5,
+          borderRadius: borderRadius,
+          overflow: 'hidden',
+          width: `${minimapWidth}px`
+        }}
+      >
+        <MinimapThreeDGraph />
+      </motion.div>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.7 }}
@@ -169,45 +185,22 @@ export const Minimap = () => {
         ref={sliderRef}
         style={{
           position: 'fixed',
-          marginTop: 2,
-          top: 0,
-          right: 0,
+          top: 110,
+          left: 5,
           zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'column',
         }}
-      
       >
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ duration: 0.5 }} 
-          style={{ 
-            flexShrink: 0,
-            minHeight: '100px',
-            overflow: 'hidden'
-          }}
-        >
-          <MinimapThreeDGraph />
-        </motion.div>
-        <motion.div 
-          style={{ 
-            position: 'relative',
-            flexGrow: 1,
-          }}
-        >
-          <div className="slider__size" ref={sliderSizeRef}></div>
-          <motion.div className="slider__controller" ref={controllerRef}></motion.div>
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            transition={{ duration: 0.5 }} 
-            className="slider__content" 
-            ref={sliderContentRef}
-          ></motion.div>
-        </motion.div>
+        <div className="slider__size" ref={sliderSizeRef}></div>
+        <motion.div className="slider__controller" ref={controllerRef}></motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="slider__content"
+          ref={sliderContentRef}
+        ></motion.div>
       </motion.div>
-    </>
+    </div>
   );
 };
 
