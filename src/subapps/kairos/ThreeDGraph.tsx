@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { ForceGraph3D } from 'react-force-graph';
 import { borderRadius } from '../Theme';
 
-
 export const ThreeDGraph = () => {
     const fgRef = useRef<any>();
 
@@ -14,6 +13,7 @@ export const ThreeDGraph = () => {
             position: 'relative',
             borderRadius: borderRadius,
             overflow: 'hidden',
+            margin: '0 auto' // Center the force graph horizontally
         }}>
             <ForceGraph3D
                 ref={fgRef}
@@ -331,11 +331,11 @@ export const temporalLifeMap = {
         { "id": "LegacySchoolScholarship", "group": 11 },
         { "id": "CommunityLegacyProject", "group": 11 },
         { "id": "GlobalLegacyImpact", "group": 11 },
-        { "id': 'FirstCharitableDonation', 'group': 7 },
-        { 'id': 'SustainedCharitableSupport', 'group': 7 },
-        { 'id': 'CharitableFoundation', 'group': 7 },
-        { 'id': 'FirstFoundationGrant', 'group': 7 },
-        { 'id': 'PhilanthropicRecognition', 'group': 7 },
+        { "id": "FirstCharitableDonation", "group": 7 },
+        { "id": "SustainedCharitableSupport", "group": 7 },
+        { "id": "CharitableFoundation", "group": 7 },
+        { "id": "FirstFoundationGrant", "group": 7 },
+        { "id": "PhilanthropicRecognition", "group": 7 },
         { 'id': 'SustainablePhilanthropy', 'group': 7 },
         { 'id': 'ImpactInvestmentStart', 'group': 7 },
         { 'id': 'FirstImpactInvestment', 'group': 7 },
@@ -483,9 +483,9 @@ export const temporalLifeMap = {
         { "source": "PolicyEffectivenessReview", "target": "PolicyRevision", "value": 1 },
         { "source": "PolicyRevision", "target": "PolicyScaling", "value": 1 },
         { "source": "PolicyScaling", "target": "RegionalPolicyAdoption", "value": 1 },
-        { "source": "RegionalPolicyAdoption", "target': 'LocalPolicyImplementation', 'value': 1 },
-        { 'source': 'LocalPolicyImplementation', 'target': 'PolicySustainabilityFramework', 'value': 1 },
-        { 'source': 'PolicySustainabilityFramework', 'target': 'SustainableDevelopmentGoalAchievement', 'value': 1 },
+        { "source": "RegionalPolicyAdoption", "target": "LocalPolicyImplementation", "value": 1 },
+        { "source": "LocalPolicyImplementation", "target": "PolicySustainabilityFramework", "value": 1 },
+        { "source": "PolicySustainabilityFramework", "target": "SustainableDevelopmentGoalAchievement", "value": 1 },
         { 'source': 'SustainableDevelopmentGoalAchievement', 'target': 'FirstSDGImplemented', 'value': 1 },
         { 'source': 'FirstSDGImplemented', 'target': 'SDGProgressReport', 'value': 1 },
         { 'source': 'SDGProgressReport', 'target': 'CommunityFeedbackIntegration', 'value': 1 },
