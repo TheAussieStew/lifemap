@@ -5,8 +5,10 @@ import { Group } from "../logos/Group";
 import './styles.scss';
 import { motion } from "framer-motion";
 import { TwoDGraph } from "./TwoDGraph";
+import { ThreeDGraph } from "./ThreeDGraph"; // Assuming you have a ThreeDGraph component
 
 export const graphInputRegex = /%([^%]*)%/;
+export const threeDGraphInputRegex = /OOO/;
 
 export const TwoDGraphExtension = Node.create({
   name: "two-d-graph",
@@ -40,6 +42,43 @@ export const TwoDGraphExtension = Node.create({
       return (
         <NodeViewWrapper>
           <TwoDGraph/>
+        </NodeViewWrapper>
+      );
+    });
+  },
+});
+
+export const ThreeDGraphExtension = Node.create({
+  name: "three-d-graph",
+  group: "block",
+  content: "block",
+  inline: false,
+  selectable: false,
+  draggable: true,
+  atom: true,
+  parseHTML() {
+    return [
+      {
+        tag: "three-d-graph",
+      },
+    ];
+  },
+  renderHTML({ node, HTMLAttributes }) {
+    return ["three-d-graph", HTMLAttributes, 0];
+  },
+  addInputRules() {
+    return [
+      wrappingInputRule({
+        find: threeDGraphInputRegex,
+        type: this.type,
+      })
+    ]
+  },
+  addNodeView() {
+    return ReactNodeViewRenderer((props: NodeViewProps) => {
+      return (
+        <NodeViewWrapper>
+          <ThreeDGraph/>
         </NodeViewWrapper>
       );
     });

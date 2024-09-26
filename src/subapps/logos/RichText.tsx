@@ -66,6 +66,7 @@ import { FocusModePlugin } from '../plugins/FocusModePlugin'
 import { PomodoroTimerExtension } from '../chronos/PomodoroTimerExtension'
 import { TemporalEstimateExtension } from '../kairos/TemporalEstimateExtension'
 import { ThreeDTextExtension } from './ThreeDTextExtension'
+import { ThreeDGraphExtension } from '../kairos/ThreeDGraphTipTapExtension'
 
 lowlight.registerLanguage('js', js)
 
@@ -184,6 +185,7 @@ export const customExtensions: Extensions = [
   QuoteExtension,
   TemporalEstimateExtension,
   ThreeDExtension,
+  ThreeDGraphExtension,
   ThreeDTextExtension,
   TwoDGraphExtension,
   WarningExtension,
