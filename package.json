@@ -100,6 +100,7 @@
     "prosemirror-view": "^1.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-force-graph": "^1.44.5",
     "react-map-gl": "^7.1.3",
     "react-use": "^17.5.0",
     "reactflow": "^11.10.1",
