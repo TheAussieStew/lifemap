@@ -61,7 +61,7 @@ export const Location: React.FC<LocationProps> = (props: LocationProps) => {
                     bearing: 0  // Optional: Set bearing if needed
                 }}
                 style={{ width: "100%", height: 400 }}
-                mapStyle="mapbox://styles/mapbox/satellite-streets-v12"
+                mapStyle="mapbox://styles/mapbox/outdoors-v12"
                 onLoad={handleMapLoad} // Attach the onLoad handler
             />
         </div>
