@@ -3,21 +3,29 @@ import { motion } from "framer-motion"
 import React from "react"
 import { singleTickAudio } from '../../utils/utils'
 
-export const FlowSwitch = (props: { children: React.ReactElement[], value: string, onChange?: (selectedIndex: number) => void, isLens?: boolean }) => {
+export const FlowSwitch = (props: { 
+  children: React.ReactElement | React.ReactElement[], 
+  value: string, 
+  onChange?: (selectedIndex: number) => void, 
+  isLens?: boolean 
+}) => {
+    // Convert children to an array if it's a single element
+    const children = React.Children.toArray(props.children) as React.ReactElement[];
+
     const flowSwitchContainerRef = React.useRef<HTMLDivElement>(null)
     const [releaseSelected, setReleaseSelected] = React.useState<number>(0)
     const [hasBeenChanged, setHasBeenChanged] = React.useState(false);
     let timer: NodeJS.Timeout | null = null;
-    const refs = props.children.map(() => React.createRef<HTMLDivElement>());
+    const refs = children.map(() => React.createRef<HTMLDivElement>());
     const [initialScrollComplete, setInitialScrollComplete] = React.useState(false);
     const [isUserScrolling, setIsUserScrolling] = React.useState(false);
 
     const [selectedIndex, setSelectedIndex] = React.useState<number>(() => {
         // Find the index of the child with the matching value prop
-        return props.children.findIndex(child => child.props.value === props.value);
+        return children.findIndex(child => child.props.value === props.value);
       });
 
-    const switchElements = props.children.map((child, index) => 
+    const switchElements = children.map((child, index) => 
         (<motion.div
             ref={refs[index]}
             initial={{ opacity: 0.2, scale: 0.8 }}
@@ -58,7 +66,7 @@ export const FlowSwitch = (props: { children: React.ReactElement[], value: strin
     React.useEffect(() => {
         // Scroll to the element with the key === props.value
         // Find the element
-        const index = props.children.findIndex(child => {
+        const index = children.findIndex(child => {
             return child.props.value === props.value
         })
         if (props.value === "25") {

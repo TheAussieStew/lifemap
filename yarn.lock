@@ -1108,6 +1108,14 @@
     uuid "^9.0.0"
     ws "^8.5.0"
 
+"@hocuspocus/transformer@^2.13.6":
+  version "2.13.6"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/transformer/-/transformer-2.13.6.tgz#37fa17f5b131de8afb11b577b67d20b1e45719e1"
+  integrity sha512-Ndl5jidCgywmu0c+zxBsvWRo4n3H/aW3QVnrBlW4Fo/fKwzqiZROMhWPbc3Q1PcWxpklHR3X6jY3Zkj4swx0Dw==
+  dependencies:
+    "@tiptap/core" "^2.1.12"
+    "@tiptap/starter-kit" "^2.1.12"
+
 "@hocuspocus/transformer@^2.8.1":
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/@hocuspocus/transformer/-/transformer-2.8.1.tgz#3f605f29821241b0be8d62ea9bc10c87b3b738b5"
@@ -2107,10 +2115,10 @@
   dependencies:
     "@babel/runtime" "^7.10.2"
 
-"@tiptap-pro/extension-collaboration-history@2.5.1":
-  version "2.5.1"
-  resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-collaboration-history/-/extension-collaboration-history-2.5.1.tgz#f866dfe3fde3d89680c719db4d71b6bed08c1f8f"
-  integrity sha512-E/mbyeOOEWWoyDflM6SgmjwgNRFsgYlQ/kuccDyrhUjkMc1Z2odWLJCAjjP6e707KBHVnPkAdcZezm3CXMHMIg==
+"@tiptap-pro/extension-collaboration-history@^2.11.7":
+  version "2.11.7"
+  resolved "https://registry.tiptap.dev/@tiptap-pro%2fextension-collaboration-history/-/extension-collaboration-history-2.11.7.tgz#521df7f08ea23287396f330b4b5d594dceebd593"
+  integrity sha512-biApnZ7NKQezyAnDviyuMddM5/PqjnJa7SOS1nWp3/x1mUh6HoTFt0lE+mUG2W2pUT9Qo5+COni145A4xgZumg==
 
 "@tiptap-pro/extension-details-content@^2.1.0":
   version "2.1.0"

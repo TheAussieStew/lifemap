@@ -20,6 +20,8 @@ import React, { CSSProperties } from "react"
 import { NodeSelection } from "prosemirror-state";
 import { Lens, MathLens, displayLenses } from "../../core/Model";
 import { officialExtensions } from "../logos/RichText";
+import { renderDate } from "../../utils/utils";
+import { CollabHistoryVersion } from "@tiptap-pro/extension-collaboration-history";
 
 export const flowMenuStyle = (): React.CSSProperties => {
     return {
@@ -184,76 +186,93 @@ const ActionSwitch = (props: { selectedAction: string, editor: Editor }) => {
     )
 }
 
-const VersionHistorySwitch = (props: { selectedVersionHistory: string, editor: Editor }) => {
-    const versions = props.editor.storage.collabHistory.versions
-
-    return (<FlowSwitch value={props.editor.storage.collabHistory.currentVersion}>
-        {versions ? versions.map((version: number) => (
-            <>
-                <Option
-                    value={version.toString()}
-                    onClick={() => props.editor.commands.revertToVersion(version)}
-                >
-                    <>
-                        {version.toString()}
-                    </>
-                </Option>
-            </>)) :
-            <>
-                <Option
-                    value={"000000"}
-                    onClick={() => { }}
-                >
-                    <>
-                        {"No version history available"}
-                    </>
-                </Option>
-                <Option
-                    value={"000000"}
-                    onClick={() => { }}
-                >
-                    <>
-                        {"No version history available"}
-                    </>
-                </Option>
-            </>
-        }
-    </FlowSwitch>)
-}
-
 export const DocumentFlowMenu = (props: {editor: Editor}) => {
     const [selectedAction, setSelectedAction] = React.useState<string>("Copy quanta id")
     const [selectedDocumentLens, setSelectedDocumentLens] = React.useState<string>("Focus mode")
 
+
     let documentMenuStyle: CSSProperties = flowMenuStyle()
     documentMenuStyle.width = "100%"
+
+    const [latestVersion, setLatestVersion] = React.useState<number>(0);
+    const [currentVersion, setCurrentVersion] = React.useState<number>(0);
+    const [versions, setVersions] = React.useState<CollabHistoryVersion[]>([]);
+    const [autoversioningEnabled, setAutoversioningEnabled] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        if (props.editor && props.editor.storage) {
+            setLatestVersion(props.editor.storage.collabHistory.latestVersion);
+            setCurrentVersion(props.editor.storage.collabHistory.currentVersion);
+            setVersions(props.editor.storage.collabHistory.versions);
+            setAutoversioningEnabled(props.editor.storage.collabHistory.versioningEnabled);
+        }
+    }, [props.editor]);
+
+    const getVersionName = (version: CollabHistoryVersion) => {
+        if (version.name) {
+            return version.name
+        }
+
+        if (version.version === 0) {
+            return 'Initial version'
+        }
+
+        return `Version ${version.version}`
+    }
 
     return (
         <motion.div style={documentMenuStyle}>
             <ActionSwitch editor={props.editor} selectedAction={selectedAction} />
-                    <FlowSwitch value={selectedDocumentLens} isLens>
-                        <Option
-                            value={"Editing view"}
-                            onClick={() => { props.editor!.chain().focus().setFontSize('36px').run(); console.log("36 clicked") }}
-                        >
-                            <motion.div>
-                                <span style={{ fontFamily: 'Inter' }}>
-                                    ✏️ Editing view
-                                </span>
-                            </motion.div>
-                        </Option>
-                        <Option
-                            value={"Focus view"}
-                            // @ts-ignore
-                            onClick={() => { props.editor!.toggleFocus()}}
-                        >
-                            <motion.div>
-                                <span style={{ fontFamily: 'Inter' }}>
-                                    🧘🏻‍♀️ Focus view
-                                </span>
-                            </motion.div>
-                        </Option>
-                    </FlowSwitch>
+            {/* This flow switch is for non-temporal views of the content */}
+            <FlowSwitch value={selectedDocumentLens} isLens>
+                <Option
+                    value={"Editing view"}
+                    onClick={() => { props.editor!.chain().focus().setFontSize('36px').run(); console.log("36 clicked") }}
+                >
+                    <motion.div>
+                        <span style={{ fontFamily: 'Inter' }}>
+                            ✏️ Editing view
+                        </span>
+                    </motion.div>
+                </Option>
+                <Option
+                    value={"Focus view"}
+                    // @ts-ignore
+                    onClick={() => { props.editor!.toggleFocus() }}
+                >
+                    <motion.div>
+                        <span style={{ fontFamily: 'Inter' }}>
+                            🧘🏻‍♀️ Focus view
+                        </span>
+                    </motion.div>
+                </Option>
+            </FlowSwitch>
+            {/* This flow switch is for temporal controls (aka versioning) */}
+            <FlowSwitch value={`version_item_${currentVersion}`} isLens>
+                {
+                    versions ? versions.map((version) => (
+                        <>
+                            <Option
+                                value={`version_item_${version.version}`}
+                                onClick={() => props.editor.commands.revertToVersion(version.version)}
+                            >
+                                <>
+                                    {`${getVersionName(version)} - V${version.toString()} - ${renderDate(version.date)}`}
+                                </>
+                            </Option>
+                        </>)) :
+                        <>
+                            <Option
+                                value={"No version history available"}
+                                onClick={() => { }}
+                            >
+                                <>
+                                    {"No version history available"}
+                                </>
+                            </Option>
+                        </>
+                }
+            </FlowSwitch>
         </motion.div>
     )
 }
