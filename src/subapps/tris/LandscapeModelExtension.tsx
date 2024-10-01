@@ -37,15 +37,15 @@ export const LandscapeModelExtension = Node.create({
     return ReactNodeViewRenderer(() => (
       <NodeViewWrapper>
         <LandscapeModel
-          modelPath='/models-3d/chinese-mountains.glb' // Replace with your landscape model path
+          modelPath='/models-3d/woodcutter-house.glb' // Replace with your landscape model path
           onClick={() => {
             // Define onClick behavior if applicable
           }}
-          size={600} // Larger size for landscape models
+          size={800} // Larger size for landscape models
           color='white'
-          scale={[0.1, 0.1, 0.1]} // Adjust scale as needed for landscapes
-          cameraPosition={[0, 10, 20]} // Adjusted camera position for better landscape view
-          fov={60} // Wider field of view for landscapes
+          scale={[0.04, 0.04, 0.04]} // Adjust scale as needed for landscapes
+          cameraPosition={[0, 70, 22]} // Adjusted camera position for better landscape view
+          fov={40} // Wider field of view for landscapes
         />
       </NodeViewWrapper>
     ));
