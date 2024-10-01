@@ -71,7 +71,7 @@ export const LandscapeModel: React.FC<LandscapeModelProps> = ({
 
             <directionalLight
                 position={[-10, 20, -10]}
-                intensity={5}
+                intensity={15}
                 castShadow
                 shadow-mapSize-width={1024}
                 shadow-mapSize-height={1024}
@@ -81,7 +81,7 @@ export const LandscapeModel: React.FC<LandscapeModelProps> = ({
                 shadow-camera-top={20}
                 shadow-camera-bottom={-20}
                 shadow-radius={10}  // Increased shadow radius for softer edges
-                shadow-bias={-0.0001}
+                shadow-bias={0}
             />
 
             <Suspense fallback={null}>
@@ -103,7 +103,7 @@ export const LandscapeModel: React.FC<LandscapeModelProps> = ({
 
             <EffectComposer>
                 <SSAO radius={0.1} intensity={20} luminanceInfluence={0.6} color="black" />
-                <Bloom intensity={0.1} luminanceThreshold={0.8} luminanceSmoothing={0.05} />
+                <Bloom intensity={0.2} luminanceThreshold={0.4} luminanceSmoothing={0.05} />
                 <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
             </EffectComposer>
         </Canvas>
