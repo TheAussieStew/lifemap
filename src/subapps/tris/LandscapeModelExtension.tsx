@@ -44,7 +44,7 @@ export const LandscapeModelExtension = Node.create({
           size={800} // Larger size for landscape models
           color='white'
           scale={[0.04, 0.04, 0.04]} // Adjust scale as needed for landscapes
-          cameraPosition={[0, 70, 22]} // Adjusted camera position for better landscape view
+          cameraPosition={[0, 65, 22]} // Adjusted camera position for better landscape view
           fov={40} // Wider field of view for landscapes
         />
       </NodeViewWrapper>
