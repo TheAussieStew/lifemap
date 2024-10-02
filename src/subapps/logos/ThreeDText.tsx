@@ -19,8 +19,8 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
   return (
     <Canvas
       shadows
-      camera={{ position: [0, 0, 500], fov: 1 }}
-      gl={{ preserveDrawingBuffer: true, alpha: true }}
+      camera={{ position: [0, 0, 100], fov: 1 }}
+      gl={{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
     >
       <Text
         text={text}
@@ -32,7 +32,7 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
           clearcoatRoughness: 0.1,
           ior: 1.2,
           // @ts-ignore
-          envMapIntensity: 0.1,
+          envMapIntensity: 1,
           distortion: 0.05,
           distortionScale: 0.2,
           temporalDistortion: 0.05,
@@ -42,38 +42,35 @@ export const ThreeDText: React.FC<ThreeDTextProps> = ({ text }) => {
           shadow: '#000000'
         }}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0, 0]} // Keep text at origin
+        position={[-2.8, 0, 0]} 
       />
+
       {/* Controls */}
       <OrbitControls
         target={[0, 0, 0]}
         autoRotate={false}
-        autoRotateSpeed={-0.1}
         enableZoom={false}
         enablePan={false}
-        dampingFactor={0.05}
         minPolarAngle={0}
         maxPolarAngle={0}
       />
+
       {/* Environment */}
-      <Environment resolution={32}>
-        <group rotation={[-Math.PI / 4, -0.3, 0]}>
-          <Lightformer intensity={20} rotation-x={Math.PI / 4} position={[-15, 10, 10]} scale={[10, 10, 1]} />
-        </group>
-      </Environment>
+      <Environment preset="studio" />
+
       {/* Soft shadows */}
       <AccumulativeShadows
-        frames={50}
+        frames={60}
         color="#94cbff"
         colorBlend={10}
         toneMapped
         alphaTest={1}
         opacity={1}
-        scale={60} // Increased from 30 to 50
+        scale={6} // Increased from 30 to 50
         position={[0, 0, 0]}
       >
         <RandomizedLight
-          amount={1}
+          amount={5}
           radius={1}
           ambient={0.6}
           intensity={3}
@@ -116,8 +113,8 @@ const Text: React.FC<TextProps> = ({ text, config, font = '/fonts/Inter-Medium-R
       castShadow
       bevelEnabled
       font={font}
-      scale={3}
-      letterSpacing={-0.03}
+      scale={0.7}
+      letterSpacing={-0.02}
       height={0.25}
       bevelSize={0.01}
       bevelSegments={10}

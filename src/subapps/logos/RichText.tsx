@@ -189,7 +189,7 @@ export const customExtensions: Extensions = [
   TemporalEstimateExtension,
   ThreeDExtension,
   ThreeDGraphExtension,
-  // ThreeDTextExtension,
+  ThreeDTextExtension,
   TwoDGraphExtension,
   WarningExtension,
   HorizontalQuantaSectionExtension,
