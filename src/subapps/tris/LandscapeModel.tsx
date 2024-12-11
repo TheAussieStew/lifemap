@@ -110,4 +110,4 @@ export const LandscapeModel: React.FC<LandscapeModelProps> = ({
     );
 };
 
-useGLTF.preload('/models-3d/woodcutter-house.glb');
+useGLTF.preload('/models-3d/cloudy-mountains.glb');

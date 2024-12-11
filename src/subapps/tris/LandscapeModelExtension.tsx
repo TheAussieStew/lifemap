@@ -37,7 +37,7 @@ export const LandscapeModelExtension = Node.create({
     return ReactNodeViewRenderer(() => (
       <NodeViewWrapper>
         <LandscapeModel
-          modelPath='/models-3d/woodcutter-house.glb' // Replace with your landscape model path
+          modelPath='/models-3d/cloudy-mountains.glb' // Replace with your landscape model path
           onClick={() => {
             // Define onClick behavior if applicable
           }}
