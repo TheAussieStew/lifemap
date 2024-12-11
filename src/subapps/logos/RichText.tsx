@@ -46,7 +46,6 @@ import { KeyValuePairExtension } from '../controls/KeyValuePairTipTapExtensions'
 import { QuoteExtension } from './QuoteTipTapExtension'
 import { MessageExtension } from '../content/MessageExtension'
 import { SophiaAI } from '../../agents/Sophia'
-import { ConversationExtension } from '../chronos/ConversationExtension'
 import { LocationExtension } from '../atlas/LocationTipTapExtension'
 import { CommentExtension } from '../chronos/CommentTipTapExtension'
 import { PortalExtension } from './PortalExtension'
@@ -163,7 +162,6 @@ export const officialExtensions = (quantaId: string) => {return [
 export const customExtensions: Extensions = [
   CalculationExtension,
   CommentExtension,
-  ConversationExtension,
   CustomLink.configure({
     openOnClick: true,
   }),
