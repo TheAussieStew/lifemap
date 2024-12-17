@@ -260,7 +260,7 @@ export const GroupExtension = Node.create({
               boxShadow: glowStyles.join(','),
             }}
             transition={{ duration: 0.5, ease: "circOut" }}>
-            <Group lens={"verticalArray"} quantaId={props.node.attrs.qid}>
+            <Group lens={"verticalArray"} quantaId={props.node.attrs.qid} editor={props.editor}>
               <NodeViewContent />
             </Group>
           </motion.div>

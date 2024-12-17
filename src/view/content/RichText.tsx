@@ -28,44 +28,33 @@ import js from 'highlight.js/lib/languages/javascript'
 import { throttle } from 'lodash'
 import { QuantaClass, QuantaType, TextSectionLens, RichTextT } from '../../core/Model'
 import { lowlight } from 'lowlight'
-import { GroupExtension } from '../structure/GroupTipTapExtension'
-import { MathExtension } from './MathTipTapExtension'
+import { GroupExtension } from '../../subapps/logos/GroupTipTapExtension'
+import { MathExtension } from '../../subapps/natural-scientific-calculator/MathTipTapExtension'
 import { Indent } from '../../utils/Indent'
 import TextAlign from '@tiptap/extension-text-align'
-import { DocumentFlowMenu, FlowMenu } from '../structure/FlowMenu'
+import { DocumentFlowMenu, FlowMenu } from '../../subapps/controls/FlowMenu'
 import { observer } from 'mobx-react-lite'
 import { QuantaStoreContext } from '../../backend/QuantaStore'
-import { FontSize } from './FontSizeTipTapExtension'
-import { mentionSuggestionOptions } from './TagTipTapExtension'
+import { FontSize } from '../../subapps/logos/FontSizeTipTapExtension'
+import { mentionSuggestionOptions } from '../../subapps/content/TagTipTapExtension'
 import BubbleMenu from '@tiptap/extension-bubble-menu'
-import { CalculationExtension } from './CalculationTipTapExtension'
-import { FadeIn } from './FadeInExtension'
-import { CustomMention } from './Mention'
-import { CustomLink } from './Link'
-import { KeyValuePairExtension } from '../structure/KeyValuePairTipTapExtensions'
-import { QuoteExtension } from '../structure/QuoteTipTapExtension'
-import { MessageExtension } from './MessageExtension'
+import { FadeIn } from '../../subapps/logos/FadeInExtension'
+import { CustomMention } from '../../subapps/content/Mention'
+import { CustomLink } from '../../subapps/logos/Link'
+import { QuoteExtension } from '../../subapps/logos/QuoteTipTapExtension'
 import { SophiaAI } from '../../agents/Sophia'
-import { ConversationExtension } from '../structure/ConversationExtension'
-import { LocationExtension } from './LocationTipTapExtension'
-import { CommentExtension } from '../structure/CommentTipTapExtension'
-import { PortalExtension } from '../structure/PortalExtension'
-import { generateUniqueID, renderDate } from '../../utils/utils'
+import { LocationExtension } from '../../subapps/atlas/LocationTipTapExtension'
+import { CommentExtension } from '../../subapps/chronos/CommentTipTapExtension'
+import { PortalExtension } from '../../subapps/logos/PortalExtension'
+import { backup, generateUniqueID, renderDate } from '../../utils/utils'
 import { issue123DocumentState } from '../../../bugs/issue-123'
-import { ExperimentalPortalExtension } from '../structure/ExperimentalPortalExtension'
-import { WarningExtension } from '../structure/WarningTipTapExtension'
+import { ExperimentalPortalExtension } from '../../subapps/logos/ExperimentalPortalExtension'
+import { WarningExtension } from '../../subapps/logos/WarningTipTapExtension'
 import { driver } from 'driver.js'
 import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
-import { FocusModePlugin } from '../plugins/FocusModePlugin'
-import { DocumentAttributeExtension } from '../structure/DocumentAttributesExtension'
-import { motion } from 'framer-motion'
-import { SalesGuideTemplate } from './SalesGuideTemplate'
-import { Plugin, Transaction } from 'prosemirror-state'
-import { EmptyNodeCleanupExtension } from '../../extensions/EmptyNodeCleanupExtension'
-import { backup } from '../../backend/backup'
 
 lowlight.registerLanguage('js', js)
 
@@ -160,9 +149,7 @@ export const officialExtensions = (quantaId: string) => {return [
 ] as Extensions}
 
 export const customExtensions: Extensions = [
-  CalculationExtension,
   CommentExtension,
-  ConversationExtension,
   CustomLink.configure({
     openOnClick: true,
   }),
@@ -174,20 +161,15 @@ export const customExtensions: Extensions = [
       suggestion: mentionSuggestionOptions,
     }
   ),
-  DocumentAttributeExtension,
   FadeIn,
-  FocusModePlugin,
   GroupExtension,
   Indent,
-  KeyValuePairExtension,
   LocationExtension,
   MathExtension,
-  MessageExtension,
   PortalExtension,
   ExperimentalPortalExtension,
   QuoteExtension,
   WarningExtension,
-  // EmptyNodeCleanupExtension,
 ]
 
 export const agents: Extensions = [
@@ -208,7 +190,6 @@ export const TransclusionEditor = (information: RichTextT, isQuanta: boolean, re
   const editor = useEditor({
     extensions: [...generatedOfficialExtensions, ...customExtensions, ...agents],
     editable: false,
-    immediatelyRender: false,
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
@@ -243,20 +224,6 @@ export const MainEditor = (information: RichTextT, isQuanta: boolean, readOnly?:
     )
   } 
 
-  // Create memoized throttled backup function (3 minutes = 180000ms)
-  const throttledBackup = React.useMemo(
-    () => throttle((content: any) => {
-      backup.storeValidContent(content)
-    }, 190000, { leading: true, trailing: true }),
-    []
-  );
-
-  // Cleanup throttle on unmount
-  React.useEffect(() => {
-    return () => {
-      throttledBackup.cancel()
-    }
-  }, [throttledBackup])
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -272,6 +239,7 @@ export const MainEditor = (information: RichTextT, isQuanta: boolean, readOnly?:
     shouldRerenderOnTransaction: false,
     
     // Add error handling for invalid content
+    // @ts-ignore
     onContentError: ({ editor, error, disableCollaboration }) => {
       console.error('Editor content error:', error)
       setContentError(error)
@@ -288,20 +256,9 @@ export const MainEditor = (information: RichTextT, isQuanta: boolean, readOnly?:
 
       // Disable further user input
       editor.setEditable(false, emitUpdate)
-
-      // Try to recover by loading backup content
-      try {
-        const backupContent = backup.getLastValidContent()
-        if (backupContent) {
-          editor.commands.setContent(backupContent)
-          editor.setEditable(true)
-          setContentError(null)
-        }
-      } catch (recoveryError) {
-        console.error('Failed to recover editor content:', recoveryError)
-      }
     },
     
+    // @ts-ignore
     onSelectionUpdate: ({ editor }: { editor: Editor }) => {
       // Retrieve document attributes using the custom command
       // @ts-ignore - TODO: this actually does work, not sure why it's not recognised
@@ -338,11 +295,7 @@ export const MainEditor = (information: RichTextT, isQuanta: boolean, readOnly?:
       console.log("Initial Document Attributes", documentAttributes)
     },
     onUpdate: ({ editor }) => {
-      if (!contentError) {
-        throttledBackup(editor.getJSON())
-      }
-
-      // @ts-ignore
+         // @ts-ignore
       editor.commands.ensureDocumentAttributes()
       
       console.log("JSON Output", editor.getJSON())
@@ -391,30 +344,6 @@ export const RichText = observer((props: { quanta?: QuantaType, text: RichTextT,
   // @ts-ignore
   const autoversioningEnabled = editor?.storage.collabHistory.autoVersioning
 
-  // Add a ref to track template application
-  const templateApplied = React.useRef(false);
-
-  // Check for new sales guide template flag
-  React.useEffect(() => {
-    if (!props.quanta?.id || !editor || templateApplied.current) return;
-    
-    const newSalesGuideId = sessionStorage.getItem('newSalesGuide');
-    const urlId = window.location.pathname.split('/').pop();
-
-    // Only apply template if URL ID matches stored ID
-    if (newSalesGuideId === urlId && editor) {
-      setTimeout(() => {
-        (editor as Editor)!.commands.setContent(SalesGuideTemplate);
-        console.log("Applied sales guide template to", urlId);
-        
-        // Mark template as applied
-        templateApplied.current = true;
-        
-        // Now safe to remove from sessionStorage
-        sessionStorage.removeItem('newSalesGuide');
-      }, 300);
-    }
-  }, [props.quanta?.id, editor]);
 
   // TODO: Change this to proper responsiveness for each screen size
   const maxWidth = 1300

@@ -4,8 +4,8 @@ import { NodeViewContent, NodeViewWrapper, ReactNodeViewRenderer, nodeInputRule 
 import { Group } from "../logos/Group";
 import './styles.scss';
 import { motion } from "framer-motion";
-import { TwoDGraph } from "./ExampleReactComponent";
-import { ThreeDGraph } from "./ThreeDGraph"; // Assuming you have a ThreeDGraph component
+import { TwoDGraph } from "../kairos/TwoDGraph";
+import { ThreeDGraph } from "../kairos/ThreeDGraph"; // Assuming you have a ThreeDGraph component
 
 export const graphInputRegex = /%([^%]*)%/;
 export const threeDGraphInputRegex = /OOO/;

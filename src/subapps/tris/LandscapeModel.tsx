@@ -20,9 +20,12 @@ type LandscapeModelProps = {
     fov?: number;
 };
 
+// @ts-ignore
 const LandscapeModelRenderer = ({ modelPath, scale, position, rotation }) => {
+    // @ts-ignore
     const { scene } = useGLTF(modelPath);
 
+    // @ts-ignore
     scene.traverse((child) => {
         if (child.isMesh) {
             child.castShadow = true;
@@ -102,6 +105,7 @@ export const LandscapeModel: React.FC<LandscapeModelProps> = ({
             <Environment preset="sunset" />
 
             <EffectComposer>
+                {/* @ts-ignore */}
                 <SSAO radius={0.1} intensity={20} luminanceInfluence={0.6} color="black" />
                 <Bloom intensity={0.2} luminanceThreshold={0.4} luminanceSmoothing={0.05} />
                 <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />

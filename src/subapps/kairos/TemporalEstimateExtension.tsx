@@ -101,6 +101,7 @@ export const TemporalEstimateExtension = Node.create<TemporalEstimateOptions>({
                     <TemporalEstimate
                         estimatedDuration={props.node.attrs.estimatedDuration}
                         timeBlocks={props.node.attrs.timeBlocks}
+                        // @ts-ignore
                         handleEstimatedDurationChange={handleEstimatedDurationChange}
                         handleTimeBlocksChange={handleTimeBlocksChange}
                         handleDelete={handleDelete}

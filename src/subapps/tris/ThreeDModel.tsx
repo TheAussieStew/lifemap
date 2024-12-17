@@ -20,10 +20,13 @@ type Generic3DModelProps = {
   fov?: number;
 };
 
+// @ts-ignore
 const GenericModel = ({ modelPath, scale, position, rotation }) => {
+  // @ts-ignore
   const { scene } = useGLTF(modelPath);
 
   // Ensure no part of the model casts shadows below its base
+  // @ts-ignore
   scene.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true;
