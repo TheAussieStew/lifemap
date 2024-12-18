@@ -8,7 +8,7 @@ import { TwoDGraph } from "./TwoDGraph";
 import { ThreeDGraph } from "./ThreeDGraph"; // Assuming you have a ThreeDGraph component
 
 export const graphInputRegex = /%([^%]*)%/;
-export const threeDGraphInputRegex = /OOO/;
+export const twoDGraphInputRegex = /222/;
 
 export const TwoDGraphExtension = Node.create({
   name: "two-d-graph",
@@ -69,7 +69,7 @@ export const ThreeDGraphExtension = Node.create({
   addInputRules() {
     return [
       wrappingInputRule({
-        find: threeDGraphInputRegex,
+        find: twoDGraphInputRegex,
         type: this.type,
       })
     ]

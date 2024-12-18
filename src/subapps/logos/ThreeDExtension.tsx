@@ -4,7 +4,7 @@ import { Node } from '@tiptap/react'
 import { borderRadius } from '../Theme'
 import IframeResizer from 'iframe-resizer-react'
 
-const dollarInputRegex = /![^!]+!/
+const threeDFrameInputRegex = /--3DFrame--/
 
 const ThreeD = (props: { src: string }) => {
     return (
@@ -48,7 +48,7 @@ export const ThreeDExtension = Node.create({
     addInputRules() {
         return [
             wrappingInputRule({
-                find: dollarInputRegex,
+                find: threeDFrameInputRegex,
                 type: this.type,
             }),
         ];
