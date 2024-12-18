@@ -50,8 +50,8 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   scale = [1, 1, 1],
   position = [0, 0, 0],
   rotation = [-Math.PI, 0, -Math.PI],
-  cameraPosition = [-0.5, 2.5, -12],
-  fov = 85,
+  cameraPosition = [-0.5, 2.5, -52],
+  fov = 20,
 }) => {
   // Load all texture maps
   const [
@@ -74,7 +74,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   const standSize: [number, number, number] = [9, 1.0, 9];
   const standPosition: [number, number, number] = [0, 0, 0];
   // Raise the model position higher above the stand
-  const modelPosition: [number, number, number] = [0, 1.6, 0];
+  const modelPosition: [number, number, number] = [1, 1.6, 0];
 
   return (
     <Canvas
