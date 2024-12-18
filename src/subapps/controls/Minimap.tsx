@@ -25,7 +25,7 @@ export const Minimap = () => {
     timer = setInterval(() => {
       // Update the minimap every 5 seconds
       setCounter(counter + 1)
-    }, 5000);
+    }, 15000);
 
 
     const win = window;
