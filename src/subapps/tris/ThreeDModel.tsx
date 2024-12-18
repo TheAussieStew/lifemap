@@ -97,7 +97,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 
       <ambientLight intensity={0.1} />
       <directionalLight
-        position={[-5, 10, -5]}
+        position={[-3, 5, 8]}
         intensity={2.8}
         castShadow
         shadow-mapSize-width={1024}
@@ -114,8 +114,12 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
       {/* Environment helps with realistic lighting */}
       <Environment preset="apartment" />
 
-      {/* Floor to catch shadows */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+      {/* Wall to catch shadows - positioned behind model */}
+      <mesh 
+        rotation={[0, 0, 0]}
+        position={[0, 0, - (standSize[0] / 2) ]}
+        receiveShadow
+      >
         <planeGeometry args={[100, 100]} />
         <shadowMaterial opacity={0.5} />
       </mesh>
