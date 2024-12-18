@@ -47,10 +47,10 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   onClick,
   size = 160,
   // Reduce scale if model is too large
-  scale = [1, 1, 1],
+  scale: modelScale = [1, 1, 1],
   position = [0, 0, 0],
-  rotation = [-Math.PI, 0, -Math.PI],
-  cameraPosition = [-0.5, 2.5, -52],
+  rotation: modelRotation = [0, 0, 0],
+  cameraPosition = [0, 2.5, 52],
   fov = 20,
 }) => {
   // Load all texture maps
@@ -71,10 +71,10 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   ]);
 
   // Adjust the stand and model positions
-  const standSize: [number, number, number] = [9, 1.0, 9];
+  const standSize: [number, number, number] = [10, 1.0, 10];
   const standPosition: [number, number, number] = [0, 0, 0];
   // Raise the model position higher above the stand
-  const modelPosition: [number, number, number] = [1, 1.6, 0];
+  const modelPosition: [number, number, number] = [0, 1.6, 0];
 
   return (
     <Canvas
@@ -125,9 +125,9 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
           {/* The Model on top of the stand */}
           <GenericModel
             modelPath={modelPath}
-            scale={scale}
+            scale={modelScale}
             position={modelPosition}
-            rotation={rotation}
+            rotation={modelRotation}
           />
 
           {/* Wooden Stand */}
