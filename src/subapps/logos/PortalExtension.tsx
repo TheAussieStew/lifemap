@@ -126,6 +126,8 @@ export const PortalExtension = Node.create({
     },
     addNodeView() {
         return ReactNodeViewRenderer((props: NodeViewProps) => {
+            // This is the reference implementation of the input control design pattern
+
             // On node instantiation, useState will draw from the node attributes
             // If the attributes are updated, this will re-render, therefore this state is always synced with the node attributes
             const [referencedQuantaId, setReferencedQuantaId] = useState(props.node.attrs.referencedQuantaId);
