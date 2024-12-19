@@ -136,10 +136,6 @@ export const PortalExtension = Node.create({
                 props.updateAttributes({ referencedQuantaId: event.target.value });
             };
 
-            // get node with id, referencedQuantaId
-            // node.textContent
-            // set attrs
-
             return (
                 <NodeViewWrapper>
                     <input type="text" value={referencedQuantaId} onChange={handleReferencedQuantaIdChange} style={{ border: '1.5px solid #34343430', borderRadius: sharedBorderRadius, outline: 'none', backgroundColor: 'transparent', width: `80px`, position: "absolute", zIndex: 1 }} />
