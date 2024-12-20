@@ -76,7 +76,8 @@ export const ThreeDModelExtension = Node.create({
           />
           <Generic3DModel
             modelPath={`/models-3d/${modelPath}.glb`} // Replace with dynamic path if needed
-            size={400} // Adjust size as needed
+            canvasSize={400} // Adjust size as needed
+            modelBaseSize={10} // Adjust size as needed
             color='white' // Adjust color if applicable
           />
         </NodeViewWrapper>
