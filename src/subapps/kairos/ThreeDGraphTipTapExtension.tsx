@@ -6,7 +6,6 @@ export const threeDGraphInputRegex = /OOO/;
 export const ThreeDGraphExtension = Node.create({
   name: 'three-d-graph',
   group: 'block',
-  content: 'block',
   inline: false,
   selectable: false,
   draggable: true,
