@@ -8,7 +8,6 @@ import { EffectComposer, SSAO, Bloom, ToneMapping } from '@react-three/postproce
 import { ToneMappingMode } from 'postprocessing';
 import { Color, TextureLoader, Box3, Vector3 } from 'three';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
-import * as THREE from 'three';
 
 type Generic3DModelProps = {
   modelPath: string;
@@ -180,11 +179,11 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 
       {!isLoading && availableModels.some(path => modelPath.endsWith(path)) && (
         <>
-          <SoftShadows size={15} samples={16} focus={0.9} />
-          <ambientLight intensity={0.9} />
+          <SoftShadows size={20} samples={16} focus={0.7} />
+          <ambientLight intensity={0.1} />
           <directionalLight
             position={[-3, 5, 8]}
-            intensity={1.8}
+            intensity={2.8}
             castShadow
             shadow-mapSize-width={1024}
             shadow-mapSize-height={1024}
@@ -193,21 +192,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
             shadow-camera-right={10}
             shadow-camera-top={10}
             shadow-camera-bottom={-10}
-            shadow-radius={10}
-            shadow-bias={-0.0001}
-          />
-          <directionalLight
-            position={[-1, 5, 8]}
-            intensity={1.8}
-            castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
-            shadow-camera-far={50}
-            shadow-camera-left={-10}
-            shadow-camera-right={10}
-            shadow-camera-top={10}
-            shadow-camera-bottom={-10}
-            shadow-radius={10}
+            shadow-radius={18}
             shadow-bias={-0.0001}
           />
 
@@ -215,18 +200,8 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 
           {/* Shadow-catching plane behind the model */}
           <mesh rotation={[0, 0, 0]} position={[0, 0, -(standSize[0] / 2)]} receiveShadow>
-            <meshStandardMaterial
-              normalMap={normalMap}
-              roughnessMap={roughnessMap}
-              displacementMap={displacementMap}
-              displacementScale={0.05}
-              metalness={0.2}
-              roughness={0.8}
-              transparent={true}
-              opacity={0.9}
-              depthWrite={false}
-            />
             <planeGeometry args={[100, 100]} />
+            <shadowMaterial opacity={0.5} />
           </mesh>
 
           <Suspense fallback={null}>
