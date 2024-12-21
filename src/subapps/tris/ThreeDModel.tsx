@@ -192,7 +192,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
             shadow-camera-right={10}
             shadow-camera-top={10}
             shadow-camera-bottom={-10}
-            shadow-radius={18}
+            shadow-radius={20}
             shadow-bias={-0.0001}
           />
 
@@ -201,7 +201,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
           {/* Shadow-catching plane behind the model */}
           <mesh rotation={[0, 0, 0]} position={[0, 0, -(standSize[0] / 2)]} receiveShadow>
             <planeGeometry args={[100, 100]} />
-            <shadowMaterial opacity={0.5} />
+            <shadowMaterial opacity={0.2} />
           </mesh>
 
           <Suspense fallback={null}>
