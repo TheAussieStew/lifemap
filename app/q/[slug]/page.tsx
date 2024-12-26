@@ -7,7 +7,7 @@ import { offWhite } from "../../../src/subapps/Theme";
 import { Minimap, useMinimapWidth } from "../../../src/subapps/controls/Minimap";
 import { DocumentFlowMenu } from "../../../src/subapps/controls/FlowMenu";
 import { MainEditor } from "../../../src/subapps/logos/RichText";
-import { version } from "../../../package.json";
+import pkg from "../../../package.json";
 
 export default function Page({ params }: { params: { slug: string } }) {
     const minimapWidth = useMinimapWidth();
@@ -41,7 +41,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     fontSize: '13px',
                     zIndex: 1000,
                 }}>
-                Pre-Alpha v{version}
+                Pre-Alpha v{pkg.version}
             </div>
         </div>
     )
