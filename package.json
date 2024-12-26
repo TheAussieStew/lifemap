@@ -124,7 +124,7 @@
     "deploy": "firebase deploy",
     "test": "vitest",
     "initialise-mobile-native": "yarn next build && npx cap add android && npx cap add ios",
-    "dev-web": "kill -9 $(lsof -ti:3000) || true && yarn concurrently -n NEXT,TS -c magenta,cyan \"yarn next dev -p 3000\" \"yarn tsc --watch\"",
+    "dev-web": "kill -9 $(lsof -ti:3000) || true && yarn concurrently -n NEXT,TS -c lightblue,blue \"yarn next dev -p 3000\" \"yarn tsc --watch\"",
     "dev-ios": "npx cap open ios",
     "dev-android": "npx cap open android",
     "build": "CI=false && yarn next build"
