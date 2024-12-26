@@ -1,14 +1,14 @@
 import './MentionList.scss';
 import './styles.scss';
-import { Mention, MentionOptions } from '@tiptap/extension-mention';
-import { Node as ProsemirrorNode } from 'prosemirror-model';
+import { Mention, MentionOptions, MentionNodeAttrs } from '@tiptap/extension-mention';
+import { Node as ProsemirrorNode } from '@tiptap/pm/model';
 import { mergeAttributes, nodeInputRule } from '@tiptap/core';
 
 export const CustomMention = Mention.extend({
   addOptions(): MentionOptions {
     return {
       ...this.parent?.(),
-      renderLabel: ({ node }: { node: ProsemirrorNode }) => ( node.attrs.label ),
+      renderLabel: (props: { options: MentionOptions<any, MentionNodeAttrs>; node: ProsemirrorNode }) => props.node.attrs.label,
     };
   },
   renderHTML({ node, HTMLAttributes }) {
