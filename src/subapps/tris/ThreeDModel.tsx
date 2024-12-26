@@ -157,15 +157,14 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
     '/textures/wood/dark_wood_rough_1k.exr'
   ]);
 
-  const standSize: [number, number, number] = [100, 1.0, 10];
+  const standSize: [number, number, number] = [10, 1.0, 10];
   const standPosition: [number, number, number] = [0, 0, 0];
-  const centerPosition: [number, number, number] = [0, standSize[1] / 2, 0];
 
   return (
     <Canvas
       shadows
-      style={{ width: `${canvasSize * 5}px`, height: `${canvasSize}px`, cursor: 'pointer' }}
-      camera={{ position: [0, 10, 52], fov: fov, up: [0, 1, 0] }}
+      style={{ width: `${canvasSize}px`, height: `${canvasSize}px`, cursor: 'pointer' }}
+      camera={{ position: cameraPosition, fov: fov, up: [0, 1, 0] }}
       tabIndex={0}
       aria-label="3D Model"
       role="button"
@@ -256,7 +255,6 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
             enableZoom={true}
             enableRotate={true}
             makeDefault
-            target={centerPosition}
           />
         </>
       )}
