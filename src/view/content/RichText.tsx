@@ -225,8 +225,9 @@ export const MainEditor = (information: RichTextT, isQuanta: boolean, readOnly?:
   } 
 
 
+  // @ts-ignore
   const editor = useEditor({
-    immediatelyRender: false,
+    immediatelyRender: false as const,
     extensions: [...generatedOfficialExtensions, ...customExtensions, ...agents],
     editable: !readOnly, // Only enable when mounted
     enableContentCheck: true, // Enable content validation
