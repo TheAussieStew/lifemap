@@ -75,23 +75,31 @@ export const mentionSuggestionOptions: MentionOptions["suggestion"] = {
                     props,
                     editor: props.editor,
                 });
+                const referenceClientRect = props.clientRect
+                    ? () => props.clientRect!() || new DOMRect()  // Safely wrap in a function
+                    : undefined;
 
-                popup = tippy("body", {
-                    getReferenceClientRect: props.clientRect,
+                // Pass document.body instead of "body" to avoid type error
+                popup = tippy(document.body, {
+                    getReferenceClientRect: referenceClientRect,
                     appendTo: () => document.body,
                     content: component.element,
                     showOnCreate: true,
                     interactive: true,
                     trigger: "manual",
                     placement: "bottom-start",
-                })[0];
+                });
             },
 
             onUpdate(props) {
                 component?.updateProps(props);
 
+                const referenceClientRect = props.clientRect
+                    ? () => props.clientRect!() || new DOMRect()  // Safely wrap in a function
+                    : undefined;
+
                 popup?.setProps({
-                    getReferenceClientRect: props.clientRect,
+                    getReferenceClientRect: referenceClientRect,
                 });
             },
 
