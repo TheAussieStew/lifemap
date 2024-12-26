@@ -17,8 +17,8 @@
     "@hocuspocus/transformer": "^2.13.6",
     "@mapbox/search-js-react": "^1.0.0-beta.17",
     "@mapbox/search-js-web": "^1.0.0-beta.17",
-    "@material-ui/core": "4.11.0",
-    "@material-ui/icons": "4.9.1",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.11.16",
     "@mui/joy": "^5.0.0-alpha.80",
     "@mui/material": "^5.13.1",
@@ -26,9 +26,9 @@
     "@react-three/fiber": "^8.17.7",
     "@react-three/postprocessing": "^2.16.2",
     "@reactpreview/config": "0.3.3",
-    "@testing-library/jest-dom": "5.11.4",
-    "@testing-library/react": "11.1.0",
-    "@testing-library/user-event": "12.1.10",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "@tiptap-pro/extension-collaboration-history": "^2.11.7",
     "@tiptap-pro/extension-details": "^2.1.0",
     "@tiptap-pro/extension-details-content": "^2.1.0",
@@ -40,8 +40,8 @@
     "@tiptap/extension-bubble-menu": "^2.0.3",
     "@tiptap/extension-code-block": "^2.1.13",
     "@tiptap/extension-code-block-lowlight": "^2.0.3",
-    "@tiptap/extension-collaboration": "^2.0.3",
-    "@tiptap/extension-collaboration-cursor": "^2.0.3",
+    "@tiptap/extension-collaboration": "^2.1.0",
+    "@tiptap/extension-collaboration-cursor": "^2.1.0",
     "@tiptap/extension-color": "^2.0.3",
     "@tiptap/extension-focus": "^2.1.13",
     "@tiptap/extension-font-family": "^2.0.3",
@@ -118,7 +118,8 @@
     "y-indexeddb": "^9.0.9",
     "y-prosemirror": "^1.2.0",
     "y-webrtc": "^10.2.3",
-    "yjs": "^13.5.44"
+    "yjs": "^13.5.44",
+    "y-protocols": "^1.0.6"
   },
   "scripts": {
     "deploy": "firebase deploy",
@@ -157,7 +158,7 @@
     "inquirer": "8.2.0",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7",
-    "ts-jest": "26.4.4",
+    "ts-jest": "^29.1.1",
     "vitest": "^0.34.3",
     "yarn": "^1.22.19"
   }
