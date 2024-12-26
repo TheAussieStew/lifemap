@@ -7,7 +7,8 @@ import { motion } from 'framer-motion-3d';
 import { EffectComposer, SSAO, Bloom, ToneMapping } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
 import { Color, TextureLoader, Box3, Vector3 } from 'three';
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
+import { EXRLoader } from 'three-stdlib';
+import { DataTexture } from 'three';
 
 type Generic3DModelProps = {
   modelPath: string;
@@ -152,7 +153,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   const [
     normalMap,
     roughnessMap
-  ] = useLoader(EXRLoader, [
+  ] = useLoader(TextureLoader, [
     '/textures/wood/dark_wood_nor_gl_1k.exr',
     '/textures/wood/dark_wood_rough_1k.exr'
   ]);
