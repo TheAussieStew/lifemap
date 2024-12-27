@@ -1,7 +1,7 @@
 'use client'; // Ensures client-side rendering
 
 import React, { Suspense, useEffect, useState } from 'react';
-import { Canvas, useLoader } from '@react-three/fiber';
+import { Canvas, useLoader, LoaderProto } from '@react-three/fiber';
 import { useGLTF, Environment, SoftShadows, OrbitControls, Html } from '@react-three/drei';
 import { motion } from 'framer-motion-3d';
 import { EffectComposer, SSAO, Bloom, ToneMapping } from '@react-three/postprocessing';
@@ -153,7 +153,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   const [
     normalMap,
     roughnessMap
-  ] = useLoader(TextureLoader, [
+  ] = useLoader(EXRLoader as unknown as LoaderProto<DataTexture>, [
     '/textures/wood/dark_wood_nor_gl_1k.exr',
     '/textures/wood/dark_wood_rough_1k.exr'
   ]);
