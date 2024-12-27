@@ -1,6 +1,6 @@
 import './MentionList.scss';
 import './styles.scss';
-import { Mention, MentionOptions, MentionNodeAttrs } from '@tiptap/extension-mention';
+import { Mention, MentionOptions } from '@tiptap/extension-mention';
 import { Node as ProsemirrorNode } from '@tiptap/pm/model';
 import { mergeAttributes, nodeInputRule } from '@tiptap/core';
 
