@@ -8,7 +8,7 @@ export const CustomMention = Mention.extend({
   addOptions(): MentionOptions {
     return {
       ...this.parent?.(),
-      renderLabel: (props: { options: MentionOptions<any, MentionNodeAttrs>; node: ProsemirrorNode }) => props.node.attrs.label,
+      renderLabel: (props: { options: MentionOptions; node: ProsemirrorNode }) => props.node.attrs.label,
     };
   },
   renderHTML({ node, HTMLAttributes }) {
