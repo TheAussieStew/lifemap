@@ -114,9 +114,21 @@ const useAvailableModels = () => {
     '/models-3d/garbage-bin.glb',
     '/models-3d/nelson-statue.glb',
     '/models-3d/solar-system.glb',
+    '/models-3d/cash-suitcase.glb',
     '/models-3d/st-pancras.glb',
     '/models-3d/star-icon.glb'
   ];
+
+  // Model-specific configurations
+  const modelConfigs: Record<string, Partial<Generic3DModelProps>> = {
+    'cash-suitcase': {
+      rotation: [0, Math.PI / 2, 0], // Rotate 180 degrees around Y axis to face user
+      modelBaseSize: 8, // Slightly smaller base size
+      position: [0, 0, 0], // Lift slightly off the stand
+      cameraPosition: [0, 8, 30], // Adjusted camera position for better view
+      fov: 25 // Narrower field of view for more detail
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -125,7 +137,7 @@ const useAvailableModels = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  return { availableModels, isLoading };
+  return { availableModels, isLoading, modelConfigs };
 }
 
 export const Generic3DModel: React.FC<Generic3DModelProps> = ({
@@ -139,7 +151,23 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   fov = 20,
   color = 'white',
 }) => {
-  const { availableModels, isLoading } = useAvailableModels();
+  const { availableModels, isLoading, modelConfigs } = useAvailableModels();
+
+  // Extract model name from path
+  const modelName = modelPath.split('/').pop()?.replace('.glb', '');
+  
+  // Get model-specific configuration if it exists
+  const modelConfig = modelName ? modelConfigs[modelName] : undefined;
+
+  // Merge default props with model-specific configuration
+  const finalProps = {
+    modelBaseSize: modelConfig?.modelBaseSize ?? modelBaseSize,
+    modelScale: modelConfig?.scale ?? modelScale,
+    modelPosition: modelConfig?.position ?? modelPosition,
+    modelRotation: modelConfig?.rotation ?? modelRotation,
+    cameraPosition: modelConfig?.cameraPosition ?? cameraPosition,
+    fov: modelConfig?.fov ?? fov
+  };
 
   // Load texture maps for the stand
   const [
@@ -165,7 +193,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
     <Canvas
       shadows
       style={{ width: `${canvasSize}px`, height: `${canvasSize}px`, cursor: 'pointer' }}
-      camera={{ position: cameraPosition, fov: fov, up: [0, 1, 0] }}
+      camera={{ position: finalProps.cameraPosition, fov: finalProps.fov, up: [0, 1, 0] }}
       tabIndex={0}
       aria-label="3D Model"
       role="button"
@@ -210,10 +238,10 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
               {/* The Model on top of the stand, scaled after initial render frame */}
               <GenericModel
                 modelPath={modelPath}
-                modelBaseSize={modelBaseSize}
-                modelScale={modelScale}
-                modelPosition={modelPosition}
-                modelRotation={modelRotation}
+                modelBaseSize={finalProps.modelBaseSize}
+                modelScale={finalProps.modelScale}
+                modelPosition={finalProps.modelPosition}
+                modelRotation={finalProps.modelRotation}
                 standSize={standSize}
                 standPosition={standPosition}
               />
