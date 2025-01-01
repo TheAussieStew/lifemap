@@ -122,14 +122,14 @@ const useAvailableModels = () => {
   // Model-specific configurations
   const modelConfigs: Record<string, Partial<Generic3DModelProps>> = {
     'cash-suitcase': {
-      rotation: [0, Math.PI / 2, 0], // Rotate 180 degrees around Y axis to face user
+      rotation: [0, Math.PI / 2 + Math.PI, 0], // Rotate 180 degrees around Y axis to face user
       modelBaseSize: 8, // Slightly smaller base size
-      modelPosition: [0, 0, 0], // Lift slightly off the stand
-      cameraPosition: [0, 8, 30], // Adjusted camera position for better view
-      fov: 25 // Narrower field of view for more detail
+      modelPosition: [0, 0, 5], // Lift slightly off the stand
+      cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
     },
     'nelson-statue': {
-      modelPosition: [0, 0, 30], // Lift slightly off the stand
+      modelPosition: [0, 0, 5], // Lift slightly off the stand
+      cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
     }
   };
 
@@ -143,6 +143,23 @@ const useAvailableModels = () => {
   return { availableModels, isLoading, modelConfigs };
 }
 
+// Calculate camera settings based on stand dimensions
+const calculateCameraSettings = (standSize: [number, number, number], standPosition: [number, number, number]) => {
+  // Calculate center of the stand
+  const centerX = standPosition[0];
+  const centerY = standPosition[1] + standSize[1] / 2;
+  const centerZ = standPosition[2];
+
+  // Calculate camera position
+  // We want to be far enough back to see the whole scene
+  const distance = Math.max(standSize[0], standSize[1]) * 5; // Adjust multiplier as needed
+  
+  return {
+    cameraPosition: [centerX, centerY, centerZ + distance] as [number, number, number],
+    target: [centerX, centerY, centerZ] as [number, number, number]
+  };
+};
+
 export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   modelPath,
   canvasSize = 400,
@@ -150,11 +167,16 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   scale: modelScale = [1, 1, 1],
   modelPosition: modelPosition = [0, 0, 0],
   rotation: modelRotation = [0, 0, 0],
-  cameraPosition = [0, 10.5, 52],
   fov = 20,
   color = 'white',
 }) => {
   const { availableModels, isLoading, modelConfigs } = useAvailableModels();
+  const standSize: [number, number, number] = [10, 1.0, 10];
+  const standPosition: [number, number, number] = [0, 0, 0];
+  const backStandSize: [number, number, number] = [15, 15, 1];
+
+  // Calculate camera settings based on stand
+  const { cameraPosition, target } = calculateCameraSettings(standSize, standPosition);
 
   // Extract model name from path
   const modelName = modelPath.split('/').pop()?.replace('.glb', '');
@@ -189,15 +211,11 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
     '/textures/wood/dark_wood_rough_1k.exr'
   ]);
 
-  const standSize: [number, number, number] = [10, 1.0, 10];
-  const standPosition: [number, number, number] = [0, 0, 0];
-  const backStandSize: [number, number, number] = [15, 15, 1]; // wider, thinner, and less deep
-
   return (
     <Canvas
       shadows
       style={{ width: `${canvasSize}px`, height: `${canvasSize}px`, cursor: 'pointer' }}
-      camera={{ position: finalProps.cameraPosition, fov: finalProps.fov, up: [0, 1, 0] }}
+      camera={{ position: cameraPosition, fov: fov, up: [0, 1, 0] }}
       tabIndex={0}
       aria-label="3D Model"
       role="button"
@@ -234,7 +252,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
           {/* Shadow-catching plane behind the model */}
           <mesh rotation={[0, 0, 0]} position={[0, 0, 0]} receiveShadow>
             <planeGeometry args={[100, 100]} />
-            <shadowMaterial opacity={0.2} />
+            <shadowMaterial opacity={0.5}/>
           </mesh>
 
           {/* Wooden Backing */}
@@ -307,6 +325,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
             enableZoom={true}
             enableRotate={true}
             makeDefault
+            target={target}
           />
         </>
       )}
