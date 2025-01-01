@@ -22,6 +22,7 @@ import { Lens, MathLens, displayLenses } from "../../core/Model";
 import { officialExtensions } from "../logos/RichText";
 import { renderDate } from "../../utils/utils";
 import { CollabHistoryVersion } from "@tiptap-pro/extension-collaboration-history";
+import { KairosMapTemplate } from "../kairos/KairosMapTemplate";
 
 export const flowMenuStyle = (): React.CSSProperties => {
     return {
@@ -111,6 +112,18 @@ const ActionSwitch = (props: { selectedAction: string, editor: Editor }) => {
 
     return (
         <FlowSwitch value={props.selectedAction} isLens>
+            <Option
+                value={"Replace page with 'Kairos' template"}
+                onClick={() => {
+                    props.editor.commands.setContent(KairosMapTemplate);
+                }}
+            >
+                <motion.div>
+                    <span>
+                        🕰️ Insert Kairos Template
+                    </span>
+                </motion.div>
+            </Option>
             <Option 
                 value={"Insert 2 columns"} 
                 onClick={() => (props.editor.commands.insertTable({ rows: 1, cols: 2, withHeaderRow: false }))}
