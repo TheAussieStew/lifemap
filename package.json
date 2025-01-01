@@ -167,6 +167,6 @@
     }
   },
   "resolutions": {
-    "prosemirror-model": "1.19.0"
+    "prosemirror-model": "2.8.0"
   }
 }
