@@ -940,80 +940,92 @@
     protobufjs "^7.2.4"
     yargs "^17.7.2"
 
-"@hocuspocus/cli@2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/cli/-/cli-2.8.1.tgz#8c1c6e47894cd813a0900363746656175c66d400"
-  integrity sha512-cG4yBOYnphkjvud5VGyVTPqeN8JjYtQni9cUZ4CeM9K28+Mrc8X10eIEx0IlubrlNYSizU/Ke+9ZtnkPusWd5Q==
+"@hocuspocus/cli@2.13.6":
+  version "2.13.6"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/cli/-/cli-2.13.6.tgz#4c5ef64675e8883e67c19ecdbeab8f9e9439cb48"
+  integrity sha512-n0iBRY+35p5iO4RX1S3SjBd5CnC0In8F77m5dw+zouuL+8WN7OAtBJW7GjEcOIYiCZuqCtaMa0RBlhN7rlIqJw==
   dependencies:
-    "@hocuspocus/extension-logger" "^2.8.1"
-    "@hocuspocus/extension-sqlite" "^2.8.1"
-    "@hocuspocus/extension-webhook" "^2.8.1"
-    "@hocuspocus/server" "^2.8.1"
-    meow "^12.0.1"
+    "@hocuspocus/extension-logger" "^2.13.6"
+    "@hocuspocus/extension-sqlite" "^2.13.6"
+    "@hocuspocus/extension-webhook" "^2.13.6"
+    "@hocuspocus/server" "^2.13.6"
+    meow "^13.0.0"
 
-"@hocuspocus/common@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/common/-/common-2.8.1.tgz#5d130393a1ca03b383059f3082143751ee4ed468"
-  integrity sha512-pNXBvmiNmF13X/t/VTNfYMyEnWkLJ9e1gTyc7vFozBTfN9EgX7rexT4INradC288wkQ5Ha1gZb908Q4XBucm9g==
+"@hocuspocus/common@^2.13.6", "@hocuspocus/common@^2.15.0":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/common/-/common-2.15.0.tgz#6b48c02da9eb36ea8d961055fc843bae817acca8"
+  integrity sha512-xmapO5PnQvf3lYFWrrOaYPjmdrEIVYOpyjInuiCkCzkUmMQCZDVM3wXjPdMJbgAtQXEPUDVkwpr6dJTLjZgTTQ==
   dependencies:
     lib0 "^0.2.87"
 
-"@hocuspocus/extension-database@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-database/-/extension-database-2.8.1.tgz#60d907a5bf0ac480fd93f846532fd9c3702b278e"
-  integrity sha512-IAsvThScS5WSiSlgYTTzIJXQ8tbmpyGnk2euoLBjuY41CRlBCBGTKul/de0CjcLDKK1c9MhEEBpvoEuUZnZjFQ==
+"@hocuspocus/extension-database@^2.15.0":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-database/-/extension-database-2.15.0.tgz#edf2b8cb6d87c82e29eb95ee0da7f1c05bb3ffd1"
+  integrity sha512-KWaO2SQZzI1pyDq+ZWw9iYIcqURwCVoYHI0VJ2Fsk9nUnX33BGkumcQZT/0mPAjgy+LxXyar3d4bDPBEoAL0sA==
   dependencies:
-    "@hocuspocus/server" "^2.8.1"
+    "@hocuspocus/server" "^2.15.0"
 
-"@hocuspocus/extension-logger@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-logger/-/extension-logger-2.8.1.tgz#efea81f36ebc17da6d12d3be5b605c11ce89c2c5"
-  integrity sha512-8W65e8U/FHGTJ7LfvwaNtd6zah9Mwsvndu8eQe9O/D3PrmqZYhU14outy6SdM7r8PC+fhKA6j25Vw2LUFW5cRQ==
+"@hocuspocus/extension-logger@^2.13.6":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-logger/-/extension-logger-2.15.0.tgz#915f2fab5788bcd0a21430a14c7b8ea3ca658702"
+  integrity sha512-ZDDcgEDCjIMmBBikca9DukowXIGrdep1AtEHltNG8E2nvuwDd08bCLptPB/YjzwnnbwKF5foIaY7aK3kOoIeHA==
   dependencies:
-    "@hocuspocus/server" "^2.8.1"
+    "@hocuspocus/server" "^2.15.0"
 
-"@hocuspocus/extension-sqlite@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-sqlite/-/extension-sqlite-2.8.1.tgz#7f1898cc2dcd9350e73e67f7d6210372ab1ea0cf"
-  integrity sha512-Li+Fo5uL+OlvthdA4FsHUKq3dvWh5DKkHCG0lvCphfO9/IwPfXQeMzFBvtZX/uvDZdbT4A8mdZbOr/D9+HSnxQ==
+"@hocuspocus/extension-sqlite@^2.13.6":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-sqlite/-/extension-sqlite-2.15.0.tgz#58d2c290a421de5a46437db346bcad373f89bbc3"
+  integrity sha512-S0dZOxDVum9d00+MhNZDhs3IxldFUdAUOzCwM0ySKObuw5FeYaAkbencVJae4/RwUs8mJ7OCVClhkFZYYlp08w==
   dependencies:
-    "@hocuspocus/extension-database" "^2.8.1"
+    "@hocuspocus/extension-database" "^2.15.0"
     kleur "^4.1.4"
     sqlite3 "^5.0.11"
 
-"@hocuspocus/extension-webhook@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-webhook/-/extension-webhook-2.8.1.tgz#7382615864cd732f71b372fb279dc187be116f83"
-  integrity sha512-vTNJlGpRL4D+J3XCskGb5I9DPpoFnXH7T7rF2HRr5tXXSA8z7v92x5nIZB47rYNUwsMCkwmir40QmuokzJBzHA==
+"@hocuspocus/extension-webhook@^2.13.6":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/extension-webhook/-/extension-webhook-2.15.0.tgz#a57e99349d0f04be4bd7be7a2f3836d1ae87e248"
+  integrity sha512-hpOLo/QcjQyQ4Sir+/KcNqSB7IVm701s8dJQh++AT4njDtAfGZAyCrEuQOOGuQbmp5E+xGYAoDdyWv7kHzItKQ==
   dependencies:
-    "@hocuspocus/common" "^2.8.1"
-    "@hocuspocus/server" "^2.8.1"
-    "@hocuspocus/transformer" "^2.8.1"
+    "@hocuspocus/common" "^2.15.0"
+    "@hocuspocus/server" "^2.15.0"
+    "@hocuspocus/transformer" "^2.15.0"
     axios "^1.6.2"
 
-"@hocuspocus/provider@2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/provider/-/provider-2.8.1.tgz#0059cf4e3ca7a431cd27543b2449c823f4a2bdda"
-  integrity sha512-OutRdoUMydPSAIZXcjY9GGkZY8RCSvG6fwAR2lbM8rYdKtFOEs9aKboqtvox4T2peY0yuW2cffTNfwaMhbZ3KQ==
+"@hocuspocus/provider@2.13.6":
+  version "2.13.6"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/provider/-/provider-2.13.6.tgz#feef3a3732897a4e70262ce71299e8a0b42ccc68"
+  integrity sha512-84tBdGU8275SXQirRQ5FbBGwsQ6iLNuIbmV2SV6/f361phBoAVUSobJ+CYAzdIJPlfIYSL2BwGJSRbbDhqJdJw==
   dependencies:
-    "@hocuspocus/common" "^2.8.1"
+    "@hocuspocus/common" "^2.13.6"
     "@lifeomic/attempt" "^3.0.2"
     lib0 "^0.2.87"
-    ws "^8.14.2"
+    ws "^8.17.1"
 
-"@hocuspocus/server@2.8.1", "@hocuspocus/server@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/server/-/server-2.8.1.tgz#19f373bd006db76c9c07a02ea169ffe59ea0b4c9"
-  integrity sha512-3BJFcShMQxB8+A1uPSdKTeL+UZvVg+XS6vbdcyC6yCy3ZScLGjCP+IPAgiNwa5xvcUEr64yp8LCroM+gZHyxbQ==
+"@hocuspocus/server@2.13.6":
+  version "2.13.6"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/server/-/server-2.13.6.tgz#a39b0eef7cdb4cf23aaf3abb032d330fdd90e273"
+  integrity sha512-VqiHkkQlfa2A5mFTe+rdePLt3kHJrk9ZzqDqWJfqQDlYHdyAXpW53cddsXYYDWQ/tZjYj3zQgZAT+78AHrnb/A==
   dependencies:
-    "@hocuspocus/common" "^2.8.1"
+    "@hocuspocus/common" "^2.13.6"
     async-lock "^1.3.1"
     kleur "^4.1.4"
     lib0 "^0.2.47"
-    uuid "^9.0.0"
+    uuid "^10.0.0"
     ws "^8.5.0"
 
-"@hocuspocus/transformer@^2.13.6":
+"@hocuspocus/server@^2.13.6", "@hocuspocus/server@^2.15.0":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/server/-/server-2.15.0.tgz#8394b2756987c1efefd1f72effa70bac2001e9f1"
+  integrity sha512-JfhDOz11EOWLs3uExC5ymX2GZwsHodDpCNIwaaTBImffyQEzUqkkBGOHsnMsT9s6ST0ijnVCxCQ4nXp/qTxDZw==
+  dependencies:
+    "@hocuspocus/common" "^2.15.0"
+    async-lock "^1.3.1"
+    kleur "^4.1.4"
+    lib0 "^0.2.47"
+    uuid "^11.0.3"
+    ws "^8.5.0"
+
+"@hocuspocus/transformer@2.13.6":
   version "2.13.6"
   resolved "https://registry.yarnpkg.com/@hocuspocus/transformer/-/transformer-2.13.6.tgz#37fa17f5b131de8afb11b577b67d20b1e45719e1"
   integrity sha512-Ndl5jidCgywmu0c+zxBsvWRo4n3H/aW3QVnrBlW4Fo/fKwzqiZROMhWPbc3Q1PcWxpklHR3X6jY3Zkj4swx0Dw==
@@ -1021,10 +1033,10 @@
     "@tiptap/core" "^2.1.12"
     "@tiptap/starter-kit" "^2.1.12"
 
-"@hocuspocus/transformer@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@hocuspocus/transformer/-/transformer-2.8.1.tgz#3f605f29821241b0be8d62ea9bc10c87b3b738b5"
-  integrity sha512-0WtE/fxGwD/BEdl22udznD+skggvF6D0kEpw7jTEUdfvqwSJEyUxq3tm1S1hVmZyQI21qDw6yTTgP7Ujf1WbSg==
+"@hocuspocus/transformer@^2.15.0":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@hocuspocus/transformer/-/transformer-2.15.0.tgz#1771188dc16ed4aeb993043ac8a1a46e842d7945"
+  integrity sha512-KxfCUTpchX5AYhRiQbV7yj9K4WppoZt3wbdbJQFJv0BglgkuwInDJng9ENrlz9/LjyWYXQjqv61GS1Db3RF4Sg==
   dependencies:
     "@tiptap/core" "^2.1.12"
     "@tiptap/starter-kit" "^2.1.12"
@@ -6876,10 +6888,10 @@ mdurl@^2.0.0:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-2.0.0.tgz#80676ec0433025dd3e17ee983d0fe8de5a2237e0"
   integrity sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==
 
-meow@^12.0.1:
-  version "12.1.1"
-  resolved "https://registry.yarnpkg.com/meow/-/meow-12.1.1.tgz#e558dddbab12477b69b2e9a2728c327f191bace6"
-  integrity sha512-BhXM0Au22RwUneMPwSCnyhTOizdWoIEPU9sp0Aqa1PnDMR5Wv2FGXYDjuzJEIX+Eo2Rb8xuYe5jrnm5QowQFkw==
+meow@^13.0.0:
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/meow/-/meow-13.2.0.tgz#6b7d63f913f984063b3cc261b6e8800c4cd3474f"
+  integrity sha512-pxQJQzB6djGPXh08dacEloMFopsOqGVRKFPYvPOt9XDZ1HasbgDZA74CJGreSU4G3Ak7EFJGoiH2auq+yXISgA==
 
 merge-stream@^2.0.0:
   version "2.0.0"
@@ -7984,7 +7996,14 @@ prosemirror-menu@^1.2.4:
     prosemirror-history "^1.0.0"
     prosemirror-state "^1.0.0"
 
-prosemirror-model@1.24.1, prosemirror-model@^1.0.0, prosemirror-model@^1.16.0, prosemirror-model@^1.16.1, prosemirror-model@^1.19.0, prosemirror-model@^1.20.0, prosemirror-model@^1.21.0, prosemirror-model@^1.23.0, prosemirror-model@^1.24.1:
+prosemirror-model@1.19.0, prosemirror-model@^1.0.0, prosemirror-model@^1.16.0, prosemirror-model@^1.16.1, prosemirror-model@^1.20.0, prosemirror-model@^1.21.0, prosemirror-model@^1.23.0, prosemirror-model@^1.24.1:
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-model/-/prosemirror-model-1.19.0.tgz#d7ad9a65ada0bb12196f64fe0dd4fc392c841c29"
+  integrity sha512-/CvFGJnwc41EJSfDkQLly1cAJJJmBpZwwUJtwZPTjY2RqZJfM8HVbCreOY/jti8wTRbVyjagcylyGoeJH/g/3w==
+  dependencies:
+    orderedmap "^2.0.0"
+
+prosemirror-model@^1.19.0:
   version "1.24.1"
   resolved "https://registry.yarnpkg.com/prosemirror-model/-/prosemirror-model-1.24.1.tgz#b445e4f9b9cfc8c1a699215057b506842ebff1a9"
   integrity sha512-YM053N+vTThzlWJ/AtPtF1j0ebO36nvbmDy4U7qA2XQB8JVaQp1FmB9Jhrps8s+z+uxhhVTny4m20ptUvhk0Mg==
@@ -9672,6 +9691,11 @@ uuid@^10.0.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
   integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
 
+uuid@^11.0.3:
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.0.3.tgz#248451cac9d1a4a4128033e765d137e2b2c49a3d"
+  integrity sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==
+
 uuid@^9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
@@ -9922,10 +9946,10 @@ ws@^8.11.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.16.0.tgz#d1cd774f36fbc07165066a60e40323eab6446fd4"
   integrity sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==
 
-ws@^8.14.2:
-  version "8.14.2"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.14.2.tgz#6c249a806eb2db7a20d26d51e7709eab7b2e6c7f"
-  integrity sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==
+ws@^8.17.1:
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 ws@^8.5.0:
   version "8.13.0"

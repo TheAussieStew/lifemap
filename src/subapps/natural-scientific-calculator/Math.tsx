@@ -1,4 +1,4 @@
-import React, { DetailedHTMLProps, HTMLAttributes, useCallback, useEffect, useState } from 'react'
+import React, { DetailedHTMLProps, HTMLAttributes, useCallback, useEffect, useState, useRef } from 'react'
 import { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
 import { DisplayLens, EvaluationLens, MathLens, MathsLoupe, MathsLoupeC, QuantaClass, QuantaType } from '../../core/Model';
 import { RichText } from '../logos/RichText';
@@ -10,8 +10,9 @@ import { MathfieldElementAttributes } from 'mathlive'
 import { Group } from '../logos/Group';
 import { observer } from 'mobx-react-lite';
 import { motion } from 'framer-motion';
-import { Attrs } from 'prosemirror-model';
+import { Attrs } from '@tiptap/pm/model';
 import { getMathsLoupeFromAttributes } from '../../utils/utils';
+import { MathfieldElement, MathfieldOptions } from "mathlive";
 
 type CustomElement<T> = Partial<T & DOMAttributes<T>>;
 

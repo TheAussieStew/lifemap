@@ -1,5 +1,5 @@
 import { EditorView } from '@tiptap/pm/view';
-import { Attrs } from 'prosemirror-model';
+import { Attrs } from '@tiptap/pm/model';
 import { v4 as uuidv4 } from 'uuid';
 import { MathsLoupeC } from '../core/Model';
 import { JSONContent } from '@tiptap/core';

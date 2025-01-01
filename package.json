@@ -11,10 +11,10 @@
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@fontsource/public-sans": "^4.5.12",
-    "@hocuspocus/cli": "2.8.1",
-    "@hocuspocus/provider": "2.8.1",
-    "@hocuspocus/server": "2.8.1",
-    "@hocuspocus/transformer": "^2.13.6",
+    "@hocuspocus/cli": "2.13.6",
+    "@hocuspocus/provider": "2.13.6",
+    "@hocuspocus/server": "2.13.6",
+    "@hocuspocus/transformer": "2.13.6",
     "@mapbox/search-js-react": "^1.0.0-beta.17",
     "@mapbox/search-js-web": "^1.0.0-beta.17",
     "@material-ui/core": "4.11.0",
@@ -167,6 +167,6 @@
     }
   },
   "resolutions": {
-    "prosemirror-model": "1.24.1"
+    "prosemirror-model": "1.19.0"
   }
 }
