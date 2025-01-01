@@ -152,7 +152,7 @@ const calculateCameraSettings = (standSize: [number, number, number], standPosit
 
   // Calculate camera position
   // We want to be far enough back to see the whole scene
-  const distance = Math.max(standSize[0], standSize[1]) * 5; // Adjust multiplier as needed
+  const distance = Math.max(standSize[0], standSize[1]) * 6; // Adjust multiplier as needed
   
   return {
     cameraPosition: [centerX, centerY, centerZ + distance] as [number, number, number],
@@ -233,7 +233,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
           <SoftShadows size={20} samples={16} focus={0.7} />
           <ambientLight intensity={0.1} />
           <directionalLight
-            position={[-3, 5, 8]}
+            position={[-5, 5, 7]}
             intensity={2.8}
             castShadow
             shadow-mapSize-width={1024}
