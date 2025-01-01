@@ -16,7 +16,7 @@ type Generic3DModelProps = {
   modelBaseSize?: number;      // Normalized size for the model's largest dimension
   color?: string;
   scale?: [number, number, number];
-  position?: [number, number, number];
+  modelPosition?: [number, number, number];
   rotation?: [number, number, number];
   cameraPosition?: [number, number, number];
   fov?: number;
@@ -124,9 +124,12 @@ const useAvailableModels = () => {
     'cash-suitcase': {
       rotation: [0, Math.PI / 2, 0], // Rotate 180 degrees around Y axis to face user
       modelBaseSize: 8, // Slightly smaller base size
-      position: [0, 0, 0], // Lift slightly off the stand
+      modelPosition: [0, 0, 0], // Lift slightly off the stand
       cameraPosition: [0, 8, 30], // Adjusted camera position for better view
       fov: 25 // Narrower field of view for more detail
+    },
+    'nelson-statue': {
+      modelPosition: [0, 0, 30], // Lift slightly off the stand
     }
   };
 
@@ -145,7 +148,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   canvasSize = 400,
   modelBaseSize = 10,
   scale: modelScale = [1, 1, 1],
-  position: modelPosition = [0, 0, 0],
+  modelPosition: modelPosition = [0, 0, 0],
   rotation: modelRotation = [0, 0, 0],
   cameraPosition = [0, 10.5, 52],
   fov = 20,
@@ -163,7 +166,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   const finalProps = {
     modelBaseSize: modelConfig?.modelBaseSize ?? modelBaseSize,
     modelScale: modelConfig?.scale ?? modelScale,
-    modelPosition: modelConfig?.position ?? modelPosition,
+    modelPosition: modelConfig?.modelPosition ?? modelPosition,
     modelRotation: modelConfig?.rotation ?? modelRotation,
     cameraPosition: modelConfig?.cameraPosition ?? cameraPosition,
     fov: modelConfig?.fov ?? fov
@@ -188,6 +191,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 
   const standSize: [number, number, number] = [10, 1.0, 10];
   const standPosition: [number, number, number] = [0, 0, 0];
+  const backStandSize: [number, number, number] = [15, 15, 1]; // wider, thinner, and less deep
 
   return (
     <Canvas
@@ -228,10 +232,28 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
           <Environment preset="apartment" />
 
           {/* Shadow-catching plane behind the model */}
-          <mesh rotation={[0, 0, 0]} position={[0, 0, -(standSize[0] / 2)]} receiveShadow>
+          <mesh rotation={[0, 0, 0]} position={[0, 0, 0]} receiveShadow>
             <planeGeometry args={[100, 100]} />
             <shadowMaterial opacity={0.2} />
           </mesh>
+
+          {/* Wooden Backing */}
+          <mesh
+            position={[0, 0, backStandSize[2] / 2]}
+                castShadow
+                receiveShadow
+              >
+                <boxGeometry args={backStandSize} />
+                <meshStandardMaterial
+                  map={diffuseMap}
+                  normalMap={normalMap}
+                  roughnessMap={roughnessMap}
+                  displacementMap={displacementMap}
+                  displacementScale={0.05}
+                  metalness={0.2}
+                  roughness={0.8}
+                />
+              </mesh>
 
           <Suspense fallback={null}>
             <motion.group>
@@ -248,7 +270,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 
               {/* Wooden Stand */}
               <mesh
-                position={[standPosition[0], standPosition[1] + standSize[1] / 2, standPosition[2]]}
+                position={[standPosition[0], standPosition[0], standSize[2]/2]}
                 castShadow
                 receiveShadow
               >
@@ -263,6 +285,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
                   roughness={0.8}
                 />
               </mesh>
+
             </motion.group>
           </Suspense>
 
