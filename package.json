@@ -165,5 +165,8 @@
     "overrides": {
       "undici": "5.28.4"
     }
+  },
+  "resolutions": {
+    "prosemirror-model": "1.24.1"
   }
 }
