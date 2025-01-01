@@ -123,8 +123,8 @@ const useAvailableModels = () => {
   const modelConfigs: Record<string, Partial<Generic3DModelProps>> = {
     'cash-suitcase': {
       rotation: [0, Math.PI / 2 + Math.PI, 0], // Rotate 180 degrees around Y axis to face user
-      modelBaseSize: 8, // Slightly smaller base size
-      modelPosition: [0, 0, 5], // Lift slightly off the stand
+      modelBaseSize: 10, // Slightly smaller base size
+      modelPosition: [-0.5, 0, 5], // Lift slightly off the stand
       cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
     },
     'nelson-statue': {
