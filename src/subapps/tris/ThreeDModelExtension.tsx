@@ -52,10 +52,18 @@ export const ThreeDModelExtension = Node.create({
       // If the attributes are updated, this will re-render, therefore this state is always synced with the node attributes
       const [modelPath, setModelPath] = useState(props.node.attrs.modelPath);
 
+      // Use useEffect to sync the state with props to prevent infinite update loops
+      React.useEffect(() => {
+        if (props.node.attrs.modelPath !== modelPath) {
+          setModelPath(props.node.attrs.modelPath);
+        }
+      }, [props.node.attrs.modelPath]);
+
       // If the input is updated, this handler is called
       const handleModelPathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setModelPath(event.target.value);
-        props.updateAttributes({ modelPath: event.target.value });
+        const newValue = event.target.value;
+        setModelPath(newValue);
+        props.updateAttributes({ modelPath: newValue });
       };
 
       return (
@@ -75,10 +83,10 @@ export const ThreeDModelExtension = Node.create({
             }} 
           />
           <Generic3DModel
-            modelPath={`/models-3d/${modelPath}.glb`} // Replace with dynamic path if needed
-            canvasSize={400} // Adjust size as needed
-            modelBaseSize={10} // Adjust size as needed
-            color='white' // Adjust color if applicable
+            modelPath={`/models-3d/${modelPath}.glb`}
+            canvasSize={400}
+            modelBaseSize={10}
+            color='white'
           />
         </NodeViewWrapper>
       );
