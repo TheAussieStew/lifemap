@@ -37,7 +37,16 @@ export const QuantaStore = (props: { quantaId: QuantaId, userId: string, childre
   const appId = 'dy9wzo9x'
 
   //  Sync the document locally
-  new IndexeddbPersistence(roomName, quanta.information)
+  const localProvider = new IndexeddbPersistence(roomName, quanta.information)
+
+  // Clear any arbitrary quanta locally
+  // if (roomName === '0000041') {
+  //   localProvider.clearData().then(() => {
+  //     console.log('Document /q/0000041 cleared successfully')
+  //   }).catch((error) => {
+  //     console.error('Error clearing document:', error)
+  //   })
+  // }
 
   // Generate a JWT Auth Token to verify the user 
   let jwt = ""
