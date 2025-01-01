@@ -172,7 +172,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 }) => {
   const { availableModels, isLoading, modelConfigs } = useAvailableModels();
   const standSize: [number, number, number] = [10, 1.0, 10];
-  const standPosition: [number, number, number] = [0, 0, 0];
+  const standPosition: [number, number, number] = [0, -2, 0]; // Move the stand down slightly off centre
   const backStandSize: [number, number, number] = [15, 15, 1];
 
   // Calculate camera settings based on stand
@@ -288,7 +288,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 
               {/* Wooden Stand */}
               <mesh
-                position={[standPosition[0], standPosition[0], standSize[2]/2]}
+                position={[standPosition[0], standPosition[1], standSize[2]/2]}
                 castShadow
                 receiveShadow
               >
