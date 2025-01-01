@@ -17,7 +17,7 @@ import { black, blue, grey, highlightYellow, purple, red, offWhite } from "../Th
 import FormatColorFill from "@mui/icons-material/FormatColorFill"
 import { FlowSwitch, FlowSwitchExample, Option } from "./FlowSwitch"
 import React, { CSSProperties } from "react"
-import { NodeSelection } from "prosemirror-state";
+import { NodeSelection } from "@tiptap/pm/state";
 import { Lens, MathLens, displayLenses } from "../../core/Model";
 import { officialExtensions } from "../logos/RichText";
 import { renderDate } from "../../utils/utils";

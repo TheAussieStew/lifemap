@@ -1,4 +1,4 @@
-import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
+import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import { Extension } from '@tiptap/core';
 import { openai } from './AI';
 import { highlightGreen, purple } from '../subapps/Theme';

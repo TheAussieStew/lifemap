@@ -1,7 +1,7 @@
 import { Editor, Node, findParentNode, mergeAttributes, nodeInputRule, wrappingInputRule } from '@tiptap/core';
 import { ReactNodeViewRenderer, NodeViewProps, NodeViewWrapper, NodeViewContent } from '@tiptap/react';
 import { Message } from './Message';
-import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
+import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import React from 'react';
 import { blue } from '../Theme';
 
