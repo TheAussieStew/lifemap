@@ -3,12 +3,9 @@ import "./minimap.scss";
 // @ts-ignore
 import { domToPng } from 'modern-screenshot'
 import { motion } from 'framer-motion';
-import { MinimapThreeDGraph } from '../kairos/ThreeDGraph';
-import { borderRadius } from '../Theme';
 
 export const Minimap = () => {
   const [counter, setCounter] = React.useState(0);
-  const [minimapWidth, setMinimapWidth] = useState(0);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const sliderContentRef = useRef<HTMLDivElement>(null);
@@ -79,9 +76,6 @@ export const Minimap = () => {
         sliderContentRef.current.style.transform = 'scale(' + realScale + ')';
         sliderContentRef.current.style.width = (100 / realScale) + '%';
         sliderContentRef.current.style.height = (100 / realScale) + '%';
-      }
-      if (sliderRef.current) {
-        setMinimapWidth(sliderRef.current.clientWidth);
       }
     }
 
@@ -163,21 +157,6 @@ export const Minimap = () => {
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        style={{
-          position: 'fixed',
-          top: 4,
-          left: 5,
-          borderRadius: borderRadius,
-          overflow: 'hidden',
-          width: `${minimapWidth}px`
-        }}
-      >
-        <MinimapThreeDGraph />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0 }}
         animate={{ opacity: 0.7 }}
         transition={{ duration: 0.5 }}
         whileHover={{ opacity: 1 }}
@@ -185,7 +164,7 @@ export const Minimap = () => {
         ref={sliderRef}
         style={{
           position: 'fixed',
-          top: 110,
+          top: 5,
           left: 5,
           zIndex: 1000,
         }}
