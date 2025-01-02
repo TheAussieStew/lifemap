@@ -86,6 +86,7 @@ export const ThreeDModelExtension = Node.create({
             modelPath={`/models-3d/${modelPath}.glb`}
             canvasSize={400}
             modelBaseSize={10}
+            positioningStyle={"onStand"}
             color='white'
           />
         </NodeViewWrapper>

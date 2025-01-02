@@ -10,14 +10,17 @@ import { Color, TextureLoader, Box3, Vector3 } from 'three';
 import { EXRLoader } from 'three-stdlib';
 import { DataTexture } from 'three';
 
+type PositioningStyle = 'onStand' | 'flatOnDisplayBase';
+
 type Generic3DModelProps = {
   modelPath: string;
+  positioningStyle: PositioningStyle;
   canvasSize?: number;         // Size of the rendered canvas in pixels
   modelBaseSize?: number;      // Normalized size for the model's largest dimension
   color?: string;
-  scale?: [number, number, number];
+  modelScale?: [number, number, number];
   modelPosition?: [number, number, number];
-  rotation?: [number, number, number];
+  modelRotation?: [number, number, number];
   cameraPosition?: [number, number, number];
   fov?: number;
 };
@@ -30,6 +33,7 @@ type GenericModelProps = {
   modelRotation: [number, number, number];
   standSize: [number, number, number];
   standPosition: [number, number, number];
+  backStandSize: [number, number, number];
 };
 
 const GenericModel = ({
@@ -39,46 +43,58 @@ const GenericModel = ({
   modelPosition,
   modelRotation,
   standSize,
-  standPosition
+  standPosition,
+  backStandSize
 }: GenericModelProps) => {
-  const { scene } = useGLTF(modelPath);
+  // @ts-ignore - scene actually can be destructured in this way
+  const { scene: gltfModel } = useGLTF(modelPath);
   const [isScaled, setIsScaled] = useState(false);
 
   useEffect(() => {
-    if (scene && !isScaled) {
-      // Defer the bounding box and scale calculation to the next frame
-      // to ensure the scene is fully mounted and ready.
+    if (gltfModel && !isScaled) {
       requestAnimationFrame(() => {
-        const box = new Box3().setFromObject(scene);
+        const box = new Box3().setFromObject(gltfModel);
         const sizeVec = box.getSize(new Vector3());
         const maxDim = Math.max(sizeVec.x, sizeVec.y, sizeVec.z);
 
         // Scale the model so its largest dimension matches modelBaseSize
         const scaleFactor = modelBaseSize / maxDim;
-        scene.scale.setScalar(scaleFactor);
+        gltfModel.scale.setScalar(scaleFactor);
 
         // Recompute bounding box after scaling
-        box.setFromObject(scene);
+        box.setFromObject(gltfModel);
         const center = box.getCenter(new Vector3());
 
-        // Position the model so its base sits at the top of the stand
-        const standTopY = standPosition[1] + standSize[1] / 2;
-        scene.position.x -= center.x;
-        scene.position.z -= center.z;
-        scene.position.y -= box.min.y - standTopY;
+        // Get the model name to determine positioning style
+        const modelName = modelPath.split('/').pop()?.replace('.glb', '');
+        const isOnDisplay = modelName === 'cash-suitcase'; // Add more models here if needed
+
+        // Position the model based on its style
+        if (isOnDisplay) {
+          // For flatOnDisplay style, position at the top of the display base
+          gltfModel.position.x -= center.x;
+          gltfModel.position.z -= center.z;
+          gltfModel.position.y -= box.min.y - backStandSize[2]; // Position on top of the display base
+        } else {
+          // For onStand style, position on top of the stand
+          const standTopY = standPosition[1] + standSize[1] / 2;
+          gltfModel.position.x -= center.x;
+          gltfModel.position.z -= center.z;
+          gltfModel.position.y -= box.min.y - standTopY;
+        }
 
         // Apply user-defined transforms after normalization
-        scene.rotation.set(...modelRotation);
-        scene.scale.x *= modelScale[0];
-        scene.scale.y *= modelScale[1];
-        scene.scale.z *= modelScale[2];
+        gltfModel.rotation.set(...modelRotation);
+        gltfModel.scale.x *= modelScale[0];
+        gltfModel.scale.y *= modelScale[1];
+        gltfModel.scale.z *= modelScale[2];
 
-        scene.position.x += modelPosition[0];
-        scene.position.y += modelPosition[1];
-        scene.position.z += modelPosition[2];
+        gltfModel.position.x += modelPosition[0];
+        gltfModel.position.y += modelPosition[1];
+        gltfModel.position.z += modelPosition[2];
 
         // Enable shadows on all meshes
-        scene.traverse((child: any) => {
+        gltfModel.traverse((child: any) => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
@@ -89,17 +105,18 @@ const GenericModel = ({
       });
     }
   }, [
-    scene,
+    gltfModel,
     isScaled,
     modelBaseSize,
     modelScale,
     modelPosition,
     modelRotation,
     standSize,
-    standPosition
+    standPosition,
+    modelPath
   ]);
 
-  return scene ? <primitive object={scene} /> : null;
+  return gltfModel ? <primitive object={gltfModel} /> : null;
 };
 
 const useAvailableModels = () => {
@@ -122,14 +139,16 @@ const useAvailableModels = () => {
   // Model-specific configurations
   const modelConfigs: Record<string, Partial<Generic3DModelProps>> = {
     'cash-suitcase': {
-      rotation: [0, Math.PI / 2 + Math.PI, 0], // Rotate 180 degrees around Y axis to face user
+      modelRotation: [ Math.PI / 2, Math.PI / 2 + Math.PI, 0], // Rotate - 90 degrees around X axis to sit on display, Rotate 270 degrees around Y axis to face user
       modelBaseSize: 10, // Slightly smaller base size
-      modelPosition: [-0.5, 0, 5], // Lift slightly off the stand
+      modelPosition: [-0.5, 0, 0], 
       cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
+      positioningStyle: 'flatOnDisplayBase'
     },
     'nelson-statue': {
       modelPosition: [0, 0, 5], // Lift slightly off the stand
       cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
+      positioningStyle: 'onStand'
     }
   };
 
@@ -164,11 +183,12 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   modelPath,
   canvasSize = 400,
   modelBaseSize = 10,
-  scale: modelScale = [1, 1, 1],
-  modelPosition: modelPosition = [0, 0, 0],
-  rotation: modelRotation = [0, 0, 0],
+  modelScale = [1, 1, 1],
+  modelPosition = [0, 0, 0],
+  modelRotation = [0, 0, 0],
   fov = 20,
   color = 'white',
+  positioningStyle = 'flatOnDisplayBase'
 }) => {
   const { availableModels, isLoading, modelConfigs } = useAvailableModels();
   const standSize: [number, number, number] = [10, 1.0, 10];
@@ -187,11 +207,12 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
   // Merge default props with model-specific configuration
   const finalProps = {
     modelBaseSize: modelConfig?.modelBaseSize ?? modelBaseSize,
-    modelScale: modelConfig?.scale ?? modelScale,
+    modelScale: modelConfig?.modelScale ?? modelScale,
     modelPosition: modelConfig?.modelPosition ?? modelPosition,
-    modelRotation: modelConfig?.rotation ?? modelRotation,
+    modelRotation: modelConfig?.modelRotation ?? modelRotation,
     cameraPosition: modelConfig?.cameraPosition ?? cameraPosition,
-    fov: modelConfig?.fov ?? fov
+    fov: modelConfig?.fov ?? fov,
+    positioningStyle: modelConfig?.positioningStyle ?? positioningStyle
   };
 
   // Load texture maps for the stand
@@ -255,7 +276,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
             <shadowMaterial opacity={0.5}/>
           </mesh>
 
-          {/* Wooden Backing */}
+          {/* Wooden Display Base */}
           <mesh
             position={[0, 0, backStandSize[2] / 2]}
                 castShadow
@@ -284,10 +305,11 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
                 modelRotation={finalProps.modelRotation}
                 standSize={standSize}
                 standPosition={standPosition}
+                backStandSize={backStandSize}
               />
 
               {/* Wooden Stand */}
-              <mesh
+              {finalProps.positioningStyle === 'onStand' && <mesh
                 position={[standPosition[0], standPosition[1], standSize[2]/2]}
                 castShadow
                 receiveShadow
@@ -302,7 +324,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
                   metalness={0.2}
                   roughness={0.8}
                 />
-              </mesh>
+              </mesh>}
 
             </motion.group>
           </Suspense>
