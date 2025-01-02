@@ -133,20 +133,39 @@ const useAvailableModels = () => {
     '/models-3d/solar-system.glb',
     '/models-3d/cash-suitcase.glb',
     '/models-3d/st-pancras.glb',
-    '/models-3d/star-icon.glb'
+    '/models-3d/star-icon.glb',
+    '/models-3d/seraphim.glb'
   ];
 
   // Model-specific configurations
   const modelConfigs: Record<string, Partial<Generic3DModelProps>> = {
     'cash-suitcase': {
       modelRotation: [ Math.PI / 2, Math.PI / 2 + Math.PI, 0], // Rotate - 90 degrees around X axis to sit on display, Rotate 270 degrees around Y axis to face user
-      modelBaseSize: 10, // Slightly smaller base size
-      modelPosition: [-0.5, 0, 0], 
+      modelBaseSize: 13, // Slightly smaller base size
+      modelPosition: [-1, -1, 0.5], 
       cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
       positioningStyle: 'flatOnDisplayBase'
     },
     'nelson-statue': {
       modelPosition: [0, 0, 5], // Lift slightly off the stand
+      cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
+      positioningStyle: 'onStand'
+    },
+    'seraphim': {
+      modelBaseSize: 10,
+      modelPosition: [0, 0, 5], // Lift slightly off the stand
+      cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
+      positioningStyle: 'onStand'
+    },
+    'buddha-statue': {
+      modelBaseSize: 10,
+      modelPosition: [0, -0.1, 4], // bring down slightly
+      cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
+      positioningStyle: 'onStand'
+    },
+    'buddha-preaching': {
+      modelBaseSize: 10,
+      modelPosition: [0, -0.8, 5], // Bring down and forward
       cameraPosition: [0, 7.5, 52], // Adjusted for straight-on view
       positioningStyle: 'onStand'
     }
@@ -192,7 +211,7 @@ export const Generic3DModel: React.FC<Generic3DModelProps> = ({
 }) => {
   const { availableModels, isLoading, modelConfigs } = useAvailableModels();
   const standSize: [number, number, number] = [10, 1.0, 10];
-  const standPosition: [number, number, number] = [0, -2, 0]; // Move the stand down slightly off centre
+  const standPosition: [number, number, number] = [0, -4, 0]; // Move the stand down slightly off centre
   const backStandSize: [number, number, number] = [15, 15, 1];
 
   // Calculate camera settings based on stand
